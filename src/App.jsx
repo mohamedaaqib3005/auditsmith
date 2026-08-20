@@ -4,7 +4,10 @@
 
 import { PDFViewer } from "@react-pdf/renderer";
 import ReportDocument from "./pdf/ReportDocument";
-import { sampleData } from "./data/sampleData";
+// import { sampleData } from "./data/sampleData";
+
+
+import sampleData from "./data/pagespeed.example.json"
 
 function App() {
   return (
