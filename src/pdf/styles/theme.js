@@ -37,7 +37,7 @@ Font.register({
 });
 
 export const fonts = {
-  heading: "Manrope", // change to "Cabinet Grotesk" after the steps above
+  heading: "Cabinet Grotesk",  // ← was "Manrope"
   body: "Manrope",
   mono: "Geist Mono",
 };
