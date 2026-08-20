@@ -1,6 +1,5 @@
 // src/pdf/ReportDocument.jsx
-// The document shell: header, footer, page setup.
-// All content blocks come from ./blocks via the blockMap registry.
+// Document shell: page setup, header, footer. Blocks come from ./blocks.
 
 import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
 import { blockMap } from "./blocks";
@@ -12,7 +11,7 @@ const styles = StyleSheet.create({
     paddingBottom: 56,
     paddingHorizontal: 48,
     fontSize: 10,
-    fontFamily: fonts.regular,
+    fontFamily: fonts.body,
     color: colors.text,
   },
   headerBar: {
@@ -23,11 +22,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.heading,
+    fontWeight: 700,
     color: colors.primary,
   },
   subtitle: {
     fontSize: 12,
+    fontFamily: fonts.body,
     color: colors.textMuted,
     marginTop: 2,
   },
@@ -38,6 +39,12 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 8,
+    fontFamily: fonts.body,
+    color: colors.textFaint,
+  },
+  metaMono: {
+    fontSize: 8,
+    fontFamily: fonts.mono,
     color: colors.textFaint,
   },
   footer: {
@@ -53,6 +60,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 8,
+    fontFamily: fonts.body,
     color: colors.textFaint,
   },
 });
@@ -74,7 +82,7 @@ const ReportDocument = ({ data }) => (
         <View style={styles.metaRow}>
           <Text style={styles.metaText}>{data.meta.date}</Text>
           {data.meta.reference && (
-            <Text style={styles.metaText}>Ref: {data.meta.reference}</Text>
+            <Text style={styles.metaMono}>Ref: {data.meta.reference}</Text>
           )}
         </View>
       </View>

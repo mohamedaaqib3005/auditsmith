@@ -1,7 +1,5 @@
 // src/pdf/blocks/ScorecardBlock.jsx
-// Renders sections of type "scorecard".
-// Each item: label, score, max (default 100), optional display override.
-// Colour follows Lighthouse bands: 0-49 red, 50-89 amber, 90-100 green.
+// Lighthouse-style score circles, score digits in Geist Mono.
 
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { colors, scoreColor, fonts } from "../styles/theme";
@@ -28,11 +26,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   score: {
-    fontSize: 14,
-    fontFamily: fonts.bold,
+    fontSize: 13,
+    fontFamily: fonts.mono,
   },
   label: {
     fontSize: 8,
+    fontFamily: fonts.body,
     color: colors.textMuted,
     textAlign: "center",
   },

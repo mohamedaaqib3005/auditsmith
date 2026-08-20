@@ -1,7 +1,5 @@
 // src/pdf/blocks/MetricsBlock.jsx
-// Renders sections of type "metrics".
-// Each item: label, value, rating (good | needs-improvement | poor | na).
-// Rating shows as a coloured dot + value in the rating colour.
+// Metric rows: coloured rating dot + label, value in Geist Mono.
 
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { colors, ratingColors, fonts } from "../styles/theme";
@@ -15,7 +13,8 @@ const styles = StyleSheet.create({
   },
   blockTitle: {
     fontSize: 9,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.body,
+    fontWeight: 700,
     color: colors.textMuted,
     textTransform: "uppercase",
     letterSpacing: 0.5,
@@ -41,11 +40,12 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 9.5,
+    fontFamily: fonts.body,
     color: colors.text,
   },
   value: {
-    fontSize: 10.5,
-    fontFamily: fonts.bold,
+    fontSize: 10,
+    fontFamily: fonts.mono,
   },
 });
 

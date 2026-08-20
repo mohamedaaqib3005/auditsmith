@@ -1,6 +1,6 @@
 // src/pdf/blocks/BasicBlocks.jsx
-// The four original block types, moved out of ReportDocument
-// so all blocks live in one folder.
+// heading / paragraph / keyValue / table.
+// Bold is now fontWeight: 700 (registered font weights), not a "-Bold" family name.
 
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { colors, fonts } from "../styles/theme";
@@ -8,12 +8,14 @@ import { colors, fonts } from "../styles/theme";
 const styles = StyleSheet.create({
   heading: {
     fontSize: 13,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.heading,
+    fontWeight: 700,
     color: colors.primary,
     marginTop: 16,
     marginBottom: 6,
   },
   paragraph: {
+    fontFamily: fonts.body,
     lineHeight: 1.4,
     marginBottom: 8,
   },
@@ -30,11 +32,13 @@ const styles = StyleSheet.create({
   },
   kvLabel: {
     width: 90,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.body,
+    fontWeight: 700,
     color: colors.primary,
   },
   kvValue: {
     flex: 1,
+    fontFamily: fonts.body,
   },
 
   table: {
@@ -48,7 +52,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 6,
     color: colors.white,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.body,
+    fontWeight: 700,
     fontSize: 9,
   },
   tableRow: {
@@ -63,6 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 6,
     fontSize: 9,
+    fontFamily: fonts.body,
   },
 });
 

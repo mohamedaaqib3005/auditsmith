@@ -1,7 +1,5 @@
 // src/pdf/blocks/FindingsBlock.jsx
-// Renders sections of type "findings".
-// Each finding is a card: ID + title, severity badge, category,
-// impact line, recommendation. wrap={false} keeps a card on one page.
+// Finding cards: ID (mono), title, severity badge, category, impact, recommendation.
 
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { colors, severityColors, fonts } from "../styles/theme";
@@ -26,12 +24,14 @@ const styles = StyleSheet.create({
   },
   id: {
     fontSize: 8,
+    fontFamily: fonts.mono,
     color: colors.textFaint,
     marginBottom: 1,
   },
   title: {
     fontSize: 10.5,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.heading,
+    fontWeight: 700,
     color: colors.text,
   },
   badge: {
@@ -41,23 +41,27 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 7.5,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.body,
+    fontWeight: 700,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   category: {
     fontSize: 8,
     color: colors.primary,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.body,
+    fontWeight: 700,
     marginBottom: 3,
   },
   label: {
     fontSize: 8,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.body,
+    fontWeight: 700,
     color: colors.textMuted,
   },
   bodyText: {
     fontSize: 9,
+    fontFamily: fonts.body,
     lineHeight: 1.4,
     color: colors.text,
   },
