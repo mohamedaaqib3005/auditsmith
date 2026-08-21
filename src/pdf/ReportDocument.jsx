@@ -1,8 +1,9 @@
 // src/pdf/ReportDocument.jsx
-// Document shell: page setup, header, footer. Blocks come from ./blocks.
+// Document shell: cover page (optional), content pages with header + footer.
 
 import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
 import { blockMap } from "./blocks";
+import CoverPage from "./CoverPage";
 import { colors, fonts } from "./styles/theme";
 
 const styles = StyleSheet.create({
@@ -73,6 +74,8 @@ const SectionRenderer = ({ section }) => {
 
 const ReportDocument = ({ data }) => (
   <Document title={data.meta.title}>
+    {data.cover && <CoverPage cover={data.cover} />}
+
     <Page size="A4" style={styles.page}>
       <View style={styles.headerBar}>
         <Text style={styles.title}>{data.meta.title}</Text>

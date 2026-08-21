@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "title": "Website Audit Report",
+    "subtitle": "vlncy.com",
+    "date": "20 August 2026",
+    "reference": "AUD-VLNCY-2026-001"
+  },
+  "cover": {
+    "reportType": "Website Audit Report",
+    "title": "vlncy.com",
+    "subtitle": "Technical SEO, on-page SEO, AI readiness, backlinks, UI/UX, accessibility and architecture analysis.",
+    "date": "20 August 2026",
+    "reference": "AUD-VLNCY-2026-001",
+    "preparedBy": "Auditsmith",
+    "preparedFor": "Vlncy"
+  },
+  "sections": [
+    {
+      "type": "heading",
+      "text": "Executive Summary"
+    },
+    {
+      "type": "paragraph",
+      "text": "This audit reviews vlncy.com across seven dimensions. The site is fundamentally healthy: Core Web Vitals pass and best practices score well. The largest opportunities sit in image delivery, accessibility labelling, and AI readiness, where quick wins are available before launch traffic scales."
+    },
+    {
+      "type": "scorecard",
+      "items": [
+        { "label": "Performance", "score": 79, "max": 100 },
+        { "label": "Accessibility", "score": 88, "max": 100 },
+        { "label": "Best Practices", "score": 96, "max": 100 },
+        { "label": "SEO", "score": 92, "max": 100 },
+        { "label": "Agentic Browsing", "score": 2, "max": 2, "display": "2/2" }
+      ]
+    },
+
+    {
+      "type": "sectionDivider",
+      "number": "01",
+      "title": "Technical SEO",
+      "description": "Crawlability, indexation, sitemaps, redirects and site health as seen by search engine bots."
+    },
+    {
+      "type": "keyValue",
+      "items": [
+        { "label": "Pages crawled", "value": "42" },
+        { "label": "Indexable", "value": "38" },
+        { "label": "Sitemap", "value": "Present, 4 stale URLs" },
+        { "label": "Robots.txt", "value": "Present, valid" }
+      ]
+    },
+    {
+      "type": "findings",
+      "items": [
+        {
+          "id": "TSEO-001",
+          "title": "Sitemap contains 404 URLs",
+          "severity": "medium",
+          "category": "Technical SEO",
+          "impact": "4 dead URLs waste crawl budget and signal poor maintenance",
+          "recommendation": "Regenerate the sitemap on deploy and remove retired URLs."
+        },
+        {
+          "id": "TSEO-002",
+          "title": "Inefficient cache lifetimes on static assets",
+          "severity": "medium",
+          "category": "Technical SEO",
+          "impact": "Est savings of 4,659 KiB on repeat visits",
+          "recommendation": "Set long Cache-Control max-age with content-hashed filenames."
+        }
+      ]
+    },
+
+    {
+      "type": "sectionDivider",
+      "number": "02",
+      "title": "On-Page SEO",
+      "description": "Titles, meta descriptions, heading structure, content quality and internal linking."
+    },
+    {
+      "type": "table",
+      "columns": ["Element", "Status", "Notes"],
+      "rows": [
+        ["Title tags", "OK", "Unique on all pages"],
+        ["Meta descriptions", "Issues", "Missing on 6 pages"],
+        ["H1 structure", "Issues", "Heading levels skip on homepage"],
+        ["Image alt text", "Issues", "34 images missing alt attributes"]
+      ]
+    },
+    {
+      "type": "findings",
+      "items": [
+        {
+          "id": "OSEO-001",
+          "title": "Heading order not sequential",
+          "severity": "low",
+          "category": "On-Page SEO",
+          "impact": "Weakens document outline for crawlers and assistive tech",
+          "recommendation": "Restructure headings to descend h1, h2, h3 without skips."
+        }
+      ]
+    },
+
+    {
+      "type": "sectionDivider",
+      "number": "03",
+      "title": "AI SEO",
+      "description": "Readiness for AI-driven discovery: structured data, agent browsability, and machine-readable content."
+    },
+    {
+      "type": "keyValue",
+      "items": [
+        { "label": "Agentic Browsing", "value": "2/2 Lighthouse checks passed" },
+        { "label": "Structured data", "value": "Not detected" },
+        { "label": "llms.txt", "value": "Not present" }
+      ]
+    },
+    {
+      "type": "findings",
+      "items": [
+        {
+          "id": "AISEO-001",
+          "title": "No structured data markup",
+          "severity": "medium",
+          "category": "AI SEO",
+          "impact": "AI assistants and rich results cannot extract entity information",
+          "recommendation": "Add JSON-LD Organization and WebSite schema to all pages."
+        }
+      ]
+    },
+
+    {
+      "type": "sectionDivider",
+      "number": "04",
+      "title": "Backlinks",
+      "description": "Authority profile: referring domains, link quality and anchor distribution."
+    },
+    {
+      "type": "keyValue",
+      "items": [
+        { "label": "Referring domains", "value": "12" },
+        { "label": "Total backlinks", "value": "86" },
+        { "label": "Toxic links", "value": "0 detected" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "The profile is small but clean, typical for a pre-launch product. Priority is earning links from press coverage at launch rather than remediation."
+    },
+
+    {
+      "type": "sectionDivider",
+      "number": "05",
+      "title": "UI / UX",
+      "description": "Visual hierarchy, interaction patterns, mobile experience and conversion friction."
+    },
+    {
+      "type": "findings",
+      "items": [
+        {
+          "id": "UX-001",
+          "title": "Layout shift risk from unsized images",
+          "severity": "low",
+          "category": "UI/UX",
+          "impact": "Content can jump during load on slow connections",
+          "recommendation": "Add explicit width and height attributes to all images."
+        }
+      ]
+    },
+
+    {
+      "type": "sectionDivider",
+      "number": "06",
+      "title": "Accessibility",
+      "description": "WCAG conformance: labels, contrast, keyboard navigation and screen reader experience."
+    },
+    {
+      "type": "findings",
+      "items": [
+        {
+          "id": "A11Y-001",
+          "title": "Images missing alt attributes",
+          "severity": "high",
+          "category": "Accessibility",
+          "impact": "Screen readers cannot describe images (34 affected)",
+          "recommendation": "Add descriptive alt text; empty alt for decorative images."
+        },
+        {
+          "id": "A11Y-002",
+          "title": "Insufficient colour contrast",
+          "severity": "medium",
+          "category": "Accessibility",
+          "impact": "Text may be illegible for low-vision users",
+          "recommendation": "Meet WCAG AA ratio of 4.5:1 for body text."
+        }
+      ]
+    },
+
+    {
+      "type": "sectionDivider",
+      "number": "07",
+      "title": "Architecture Analysis",
+      "description": "Site structure, URL design, page depth, redirects and rendering strategy."
+    },
+    {
+      "type": "keyValue",
+      "items": [
+        { "label": "Max crawl depth", "value": "3 clicks" },
+        { "label": "Redirect chains", "value": "None detected" },
+        { "label": "Rendering", "value": "Client-side React, SSR recommended" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "The structure is shallow and clean. The main architectural recommendation is server-side rendering or prerendering for the marketing pages, which benefits performance, SEO, and AI agent readability simultaneously."
+    }
+  ]
+}

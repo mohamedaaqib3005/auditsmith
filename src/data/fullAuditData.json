@@ -1,0 +1,280 @@
+{
+  "meta": {
+    "title": "Website Audit Report",
+    "subtitle": "vlncy.com",
+    "date": "20 August 2026",
+    "reference": "AUD-VLNCY-2026-001"
+  },
+  "cover": {
+    "reportType": "Website Audit Report",
+    "title": "vlncy.com",
+    "subtitle": "Technical SEO, on-page SEO, AI readiness, backlinks, UI/UX, accessibility and architecture analysis.",
+    "date": "20 August 2026",
+    "reference": "AUD-VLNCY-2026-001",
+    "preparedBy": "Mohamed Aaqib",
+    "preparedFor": "Vlncy"
+  },
+  "sections": [
+    {
+      "type": "heading",
+      "text": "Executive Summary"
+    },
+    {
+      "type": "paragraph",
+      "text": "This audit reviews vlncy.com across seven dimensions. The site is fundamentally healthy: Core Web Vitals pass and best practices score well. The largest opportunities sit in image delivery, accessibility labelling, and AI readiness, where quick wins are available before launch traffic scales."
+    },
+    {
+      "type": "sectionDivider",
+      "number": "01",
+      "title": "PageSpeed Insights",
+      "description": "Google PageSpeed Insights results: real-user Core Web Vitals, Lighthouse lab metrics, and prioritised performance findings. Tested 18 August 2026 on mobile (emulated Moto G Power, slow 4G)."
+    },
+    {
+      "type": "heading",
+      "text": "Core Web Vitals Assessment"
+    },
+    {
+      "type": "paragraph",
+      "text": "Field data from real users over the latest 28-day period (Chrome UX Report). Overall assessment: Passed."
+    },
+    {
+      "type": "scorecard",
+      "items": [
+        {
+          "label": "Performance",
+          "score": 79,
+          "max": 100
+        },
+        {
+          "label": "Accessibility",
+          "score": 88,
+          "max": 100
+        },
+        {
+          "label": "Best Practices",
+          "score": 96,
+          "max": 100
+        },
+        {
+          "label": "SEO",
+          "score": 92,
+          "max": 100
+        },
+        {
+          "label": "Agentic Browsing",
+          "score": 2,
+          "max": 2,
+          "display": "2/2"
+        }
+      ]
+    },
+    {
+      "type": "metrics",
+      "title": "Field Data (Real Users)",
+      "items": [
+        {
+          "label": "Largest Contentful Paint (LCP)",
+          "value": "2.2 s",
+          "rating": "good"
+        },
+        {
+          "label": "Interaction to Next Paint (INP)",
+          "value": "N/A",
+          "rating": "na"
+        },
+        {
+          "label": "Cumulative Layout Shift (CLS)",
+          "value": "0",
+          "rating": "good"
+        },
+        {
+          "label": "First Contentful Paint (FCP)",
+          "value": "2 s",
+          "rating": "needs-improvement"
+        },
+        {
+          "label": "Time to First Byte (TTFB)",
+          "value": "1 s",
+          "rating": "needs-improvement"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Lab Metrics (Lighthouse)"
+    },
+    {
+      "type": "metrics",
+      "title": "Single Page Session, Initial Load",
+      "items": [
+        {
+          "label": "First Contentful Paint",
+          "value": "2.5 s",
+          "rating": "needs-improvement"
+        },
+        {
+          "label": "Largest Contentful Paint",
+          "value": "2.5 s",
+          "rating": "good"
+        },
+        {
+          "label": "Total Blocking Time",
+          "value": "480 ms",
+          "rating": "needs-improvement"
+        },
+        {
+          "label": "Cumulative Layout Shift",
+          "value": "0",
+          "rating": "good"
+        },
+        {
+          "label": "Speed Index",
+          "value": "4.6 s",
+          "rating": "needs-improvement"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Performance Findings"
+    },
+    {
+      "type": "findings",
+      "items": [
+        {
+          "id": "PSI-001",
+          "title": "Render-blocking requests",
+          "severity": "high",
+          "category": "Performance",
+          "impact": "Est savings of 1,660 ms",
+          "recommendation": "Defer or inline critical CSS/JS so first paint is not blocked by external requests."
+        },
+        {
+          "id": "PSI-002",
+          "title": "Font display not optimised",
+          "severity": "high",
+          "category": "Performance",
+          "impact": "Est savings of 1,630 ms",
+          "recommendation": "Add font-display: swap to web font declarations so text renders immediately with a fallback."
+        },
+        {
+          "id": "PSI-003",
+          "title": "Forced reflow detected",
+          "severity": "high",
+          "category": "Performance",
+          "impact": "Layout thrashing on main thread",
+          "recommendation": "Batch DOM reads and writes; avoid querying layout properties immediately after DOM mutations."
+        },
+        {
+          "id": "PSI-004",
+          "title": "Inefficient cache lifetimes",
+          "severity": "medium",
+          "category": "Performance",
+          "impact": "Est savings of 4,659 KiB",
+          "recommendation": "Set long Cache-Control max-age headers on static assets with content-hashed filenames."
+        },
+        {
+          "id": "PSI-005",
+          "title": "Unoptimised image delivery",
+          "severity": "medium",
+          "category": "Performance",
+          "impact": "Est savings of 3,097 KiB",
+          "recommendation": "Serve images in modern formats (WebP/AVIF), compress, and size responsively."
+        },
+        {
+          "id": "PSI-006",
+          "title": "Enormous network payload",
+          "severity": "medium",
+          "category": "Performance",
+          "impact": "Total size was 4,910 KiB",
+          "recommendation": "Reduce total transfer size; largest wins are image compression and caching above."
+        },
+        {
+          "id": "PSI-007",
+          "title": "Main-thread work too high",
+          "severity": "medium",
+          "category": "Performance",
+          "impact": "2.3 s of main-thread work, 7 long tasks",
+          "recommendation": "Split long JavaScript tasks and defer non-critical scripts."
+        },
+        {
+          "id": "PSI-008",
+          "title": "Unused CSS and JavaScript",
+          "severity": "low",
+          "category": "Performance",
+          "impact": "Est savings of 65 KiB CSS + 265 KiB JS",
+          "recommendation": "Tree-shake and code-split; remove unused rules and legacy polyfills (13 KiB legacy JS)."
+        },
+        {
+          "id": "PSI-009",
+          "title": "Images missing explicit dimensions",
+          "severity": "low",
+          "category": "Performance",
+          "impact": "Risk of layout shift",
+          "recommendation": "Add width and height attributes to all img elements."
+        },
+        {
+          "id": "PSI-010",
+          "title": "Images missing alt attributes",
+          "severity": "high",
+          "category": "Accessibility",
+          "impact": "Screen readers cannot describe images; also flagged under SEO",
+          "recommendation": "Add descriptive alt text to all images (34 images affected per full crawl)."
+        },
+        {
+          "id": "PSI-011",
+          "title": "Insufficient colour contrast",
+          "severity": "medium",
+          "category": "Accessibility",
+          "impact": "Text may be illegible for low-vision users",
+          "recommendation": "Adjust foreground/background colours to meet WCAG AA contrast ratio (4.5:1 for body text)."
+        },
+        {
+          "id": "PSI-012",
+          "title": "Heading order not sequential",
+          "severity": "low",
+          "category": "Accessibility",
+          "impact": "Confusing document outline for assistive technology",
+          "recommendation": "Ensure heading levels descend sequentially (h1 then h2 then h3, no skips)."
+        },
+        {
+          "id": "PSI-013",
+          "title": "Browser errors logged to console",
+          "severity": "low",
+          "category": "Best Practices",
+          "impact": "Indicates unhandled runtime errors",
+          "recommendation": "Investigate and resolve console errors logged during page load."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Test Conditions"
+    },
+    {
+      "type": "keyValue",
+      "items": [
+        {
+          "label": "Tool",
+          "value": "Lighthouse 13.4.1, HeadlessChromium 151.0.7922.71"
+        },
+        {
+          "label": "Device",
+          "value": "Emulated Moto G Power"
+        },
+        {
+          "label": "Network",
+          "value": "Slow 4G throttling"
+        },
+        {
+          "label": "Session",
+          "value": "Single page session, initial page load"
+        },
+        {
+          "label": "Field data",
+          "value": "Latest 28-day period, Chrome UX Report"
+        }
+      ]
+    }
+  ]
+}
