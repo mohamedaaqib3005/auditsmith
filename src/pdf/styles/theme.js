@@ -22,13 +22,8 @@ Font.register({
   fonts: [{ src: GeistMonoRegular, fontWeight: 400 }],
 });
 
-// --- CABINET GROTESK (headings), 2-minute setup ---
-// Fontshare's licence doesn't allow bundling the file, so add it yourself:
-// 1) Download free from https://www.fontshare.com/fonts/cabinet-grotesk
-// 2) From the zip, copy Fonts/WEB/fonts/CabinetGrotesk-Extrabold.ttf
-//    into src/pdf/fonts/
-// 3) Uncomment the import and Font.register lines below
-// 4) Change fonts.heading to "Cabinet Grotesk"
+// --- CABINET GROTESK (headings),  ---
+
 
 import CabinetGroteskXBold from "../fonts/CabinetGrotesk-Extrabold.ttf";
 Font.register({
