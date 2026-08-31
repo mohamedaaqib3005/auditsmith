@@ -9,7 +9,7 @@
     "reportType": "Website Audit Report",
     "title": "vlncy.com",
     "subtitle": "Technical SEO, on-page SEO, AI readiness, backlinks, UI/UX, accessibility and architecture analysis.",
-    "date": "20 August 2026", // get current date
+    "date": "20 August 2026",
     "reference": "AUD-VLNCY-2026-001",
     "preparedBy": "Mohamed Aaqib",
     "preparedFor": "Vlncy"
@@ -278,4 +278,3 @@
     }
   ]
 }
-// just have data for nw
