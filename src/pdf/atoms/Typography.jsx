@@ -74,3 +74,7 @@ export const Label = ({ children, color = colors.textMuted, style }) => (
     {children}
   </Text>
 );
+
+
+// atoms cannot take children
+// body name and its abstraction is not clear

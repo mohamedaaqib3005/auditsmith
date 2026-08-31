@@ -46,3 +46,6 @@ export const scoreColor = (score, max = 100) => {
   if (pct >= 50) return "#ffa400";
   return "#ff4e42";
 };
+
+
+// severity path  should be constant
