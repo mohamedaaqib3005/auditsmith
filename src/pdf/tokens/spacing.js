@@ -1,35 +1,9 @@
 // src/pdf/tokens/spacing.js
-// DESIGN TOKENS: spacing scale, radii, borders, page geometry.
+// SPACING & SHAPE: semantic exports derived from global.js.
 
-export const space = {
-  xxs: 2,
-  xs: 4,
-  sm: 6,
-  md: 8,
-  lg: 10,
-  xl: 12,
-  "2xl": 16,
-  "3xl": 20,
-  "4xl": 48,
-  "5xl": 56,
-};
+import { global } from "./global";
 
-export const radii = {
-  sm: 3,
-  md: 4,
-  full: 999,
-};
-
-export const borders = {
-  hairline: 1,
-  thick: 2,
-  heavy: 3,
-};
-
-// Page geometry (A4 content area)
-export const page = {
-  paddingTop: 48,
-  paddingBottom: 56,
-  paddingHorizontal: 48,
-  footerBottom: 24,
-};
+export const space = global.spaceScale;
+export const radii = global.radii;
+export const borders = global.borders;
+export const page = global.pageFrame;
