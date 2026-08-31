@@ -1,48 +1,65 @@
 // src/pdf/tokens/colors.js
-// SEMANTIC COLOURS: roles built from global.js raw values. Zero hex codes here.
-// This is what components import.
+// SEMANTIC COLOURS - roles built from global.js primitives. Zero hex codes here.
+// Mirrors the web system's semantic tier (--ds-bg, --ds-text, --ds-primary...).
+// Components import THIS, never global.js.
 
 import { global } from "./global";
 
 const p = global.palette;
 
 export const colors = {
-  primary: p.purple700,
-  primaryTint: p.purple200,
-  primarySoft: p.purple50,
-  text: p.gray900,
-  textMuted: p.gray600,
-  textFaint: p.gray400,
-  border: p.gray100,
-  bgAlt: p.purple100,
-  white: p.white,
+  /* BACKGROUNDS */
+  bg: p.neutral[0],
+  surface: p.purple[100],        /* tinted boxes (was primarySoft) */
+  surfaceSoft: p.purple[50],     /* alternating table rows (was bgAlt) */
 
-  // Cover (on-primary surface)
-  onPrimary: p.white,
-  onPrimaryMuted: p.purple400,
-  onPrimaryFaint: p.purple300,
-  onPrimaryBorder: p.purple500,
+  /* TEXT */
+  text: p.neutral[900],
+  textMuted: p.neutral[600],
+  textFaint: p.neutral[500],
+  textInverse: p.neutral[0],
+
+  /* BORDERS */
+  border: p.neutral[200],
+
+  /* PRIMARY */
+  primary: p.purple[900],
+  primarySoft: p.purple[100],
+  primaryTint: p.purple[400],
+  primaryForeground: p.neutral[0],
+
+  /* ON-PRIMARY (cover surface) */
+  onPrimary: p.neutral[0],
+  onPrimaryMuted: p.purple[300],
+  onPrimaryFaint: p.purple[500],
+  onPrimaryBorder: p.purple[700],
+
+  /* kept for backwards compatibility with existing components */
+  white: p.neutral[0],
+  bgAlt: p.purple[50],
 };
 
+/* SEVERITY (finding badges) */
 export const severityColors = {
-  critical: { bg: p.red900, text: p.white },
-  high: { bg: p.red500, text: p.white },
-  medium: { bg: p.amber500, text: p.gray900 },
-  low: { bg: p.blue500, text: p.white },
-  info: { bg: p.gray500, text: p.white },
+  critical: { bg: p.reject[800], text: p.neutral[0] },
+  high: { bg: p.reject[500], text: p.neutral[0] },
+  medium: { bg: p.warning[500], text: p.neutral[900] },
+  low: { bg: p.blue[400], text: p.neutral[0] },
+  info: { bg: p.neutral[400], text: p.neutral[0] },
 };
 
+/* RATINGS (Core Web Vitals convention) */
 export const ratingColors = {
-  good: { color: p.cwvGreen, label: "Good" },
-  "needs-improvement": { color: p.cwvAmber, label: "Needs Improvement" },
-  poor: { color: p.cwvRed, label: "Poor" },
-  na: { color: p.gray500, label: "N/A" },
+  good: { color: p.success[400], label: "Good" },
+  "needs-improvement": { color: p.warning[400], label: "Needs Improvement" },
+  poor: { color: p.reject[400], label: "Poor" },
+  na: { color: p.neutral[400], label: "N/A" },
 };
 
-// Lighthouse score bands: 0-49 red, 50-89 amber, 90-100 green
+/* Lighthouse score bands: 0-49 reject, 50-89 warning, 90-100 success */
 export const scoreColor = (score, max = 100) => {
   const pct = (score / max) * 100;
-  if (pct >= 90) return p.cwvGreen;
-  if (pct >= 50) return p.cwvAmber;
-  return p.cwvRed;
+  if (pct >= 90) return p.success[400];
+  if (pct >= 50) return p.warning[400];
+  return p.reject[400];
 };

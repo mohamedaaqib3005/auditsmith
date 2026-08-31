@@ -1,7 +1,7 @@
 // src/pdf/tokens/typography.js
-// TYPOGRAPHY: font registration + semantic exports derived from global.js.
-// Font files live in src/pdf/fonts/. Family names come from global.fontFamilies
-// so a swap (e.g. to Poppins) is: register the new files, change ONE value in global.js.
+// SEMANTIC TYPOGRAPHY - font registration + exports derived from global.js.
+// Family names come from global.fontFamilies; a font swap is: register the
+// new files here, change one value in global.js.
 
 import { Font } from "@react-pdf/renderer";
 import { global } from "./global";
@@ -13,29 +13,39 @@ import GeistMonoRegular from "../fonts/GeistMono-Regular.ttf";
 // and copy Fonts/WEB/fonts/CabinetGrotesk-Extrabold.ttf into src/pdf/fonts/
 import CabinetGroteskXBold from "../fonts/CabinetGrotesk-Extrabold.ttf";
 
+const W = global.fontWeights;
+
 Font.register({
-  family: global.fontFamilies.body,
+  family: global.fontFamilies.sans,
   fonts: [
-    { src: ManropeRegular, fontWeight: 400 },
-    { src: ManropeBold, fontWeight: 700 },
+    { src: ManropeRegular, fontWeight: W.regular },
+    { src: ManropeBold, fontWeight: W.bold },
   ],
 });
 
 Font.register({
   family: global.fontFamilies.mono,
-  fonts: [{ src: GeistMonoRegular, fontWeight: 400 }],
+  fonts: [{ src: GeistMonoRegular, fontWeight: W.regular }],
 });
 
 Font.register({
   family: global.fontFamilies.heading,
-  fonts: [{ src: CabinetGroteskXBold, fontWeight: 700 }],
+  fonts: [{ src: CabinetGroteskXBold, fontWeight: W.bold }],
 });
 
 // Disable hyphenation (react-pdf hyphenates aggressively by default)
 Font.registerHyphenationCallback((word) => [word]);
 
-// Semantic exports (components import these, never global directly)
-export const fonts = global.fontFamilies;
+// Semantic exports (components import these, never global directly).
+// fonts.body is an alias of fonts.sans so existing components keep working.
+export const fonts = {
+  heading: global.fontFamilies.heading,
+  sans: global.fontFamilies.sans,
+  body: global.fontFamilies.sans,
+  mono: global.fontFamilies.mono,
+};
+
+export const fontWeights = global.fontWeights;
 export const fontSizes = global.fontSizeScale;
 export const lineHeights = global.lineHeightScale;
 export const letterSpacing = global.letterSpacingScale;
