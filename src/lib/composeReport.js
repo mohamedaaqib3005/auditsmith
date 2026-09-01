@@ -1,17 +1,47 @@
 // src/lib/composeReport.js
-// COMPOSER: turns raw audit data (what users type) into the document JSON
-// (what the renderer consumes). All report boilerplate lives HERE:
-// section order, headings, divider text, metric labels, test conditions.
+// COMPOSER: turns minimal audit data (what users type) into the document JSON.
+// Users type: site URL, device, scores, fieldData, labMetrics. Everything else
+// is a constant or computed here.
 //
-// Users type numbers; ratings are COMPUTED from Google's official
-// Core Web Vitals / Lighthouse thresholds. date: "auto" stamps today.
+// Derived automatically:
+//   client      - brand name from the URL (vlncy.com -> Vlncy)
+//   reference   - AUD-<BRAND>-<YEAR>-001
+//   date        - today (also used for testedOn)
+//   summary     - constant template with the site substituted in
+//   assessment  - computed from field-data Core Web Vitals ratings
+//   ratings     - computed from Google's official thresholds
 
-// ---------- Google thresholds (good ≤ first, poor > second) ----------
-// Times in the unit users type: seconds, except tbt/inp in ms, cls unitless.
-const THRESHOLDS = {
-  lcp: { good: 2.5, poor: 4.0, unit: "s", label: "Largest Contentful Paint (LCP)" },
-  inp: { good: 200, poor: 500, unit: "ms", label: "Interaction to Next Paint (INP)" },
-  cls: { good: 0.1, poor: 0.25, unit: "", label: "Cumulative Layout Shift (CLS)" },
+/* =========================================
+   CONSTANTS - change once, applies to every report
+========================================= */
+const PREPARED_BY = "Mohamed Aaqib";
+const REPORT_TYPE = "Website Audit Report";
+const COVER_SUBTITLE =
+  "Technical SEO, on-page SEO, AI readiness, backlinks, UI/UX, accessibility and architecture analysis.";
+const SUMMARY = (site) =>
+  `This audit reviews ${site} across seven dimensions. The site is fundamentally healthy: Core Web Vitals pass and best practices score well. The largest opportunities sit in image delivery, accessibility labelling, and AI readiness, where quick wins are available before launch traffic scales.`;
+
+const TEST_CONDITIONS = {
+  mobile: {
+    deviceDetail: "Emulated Moto G Power",
+    tool: "Lighthouse 13.4.1, HeadlessChromium 151.0.7922.71",
+    network: "Slow 4G throttling",
+  },
+  desktop: {
+    deviceDetail: "Emulated desktop",
+    tool: "Lighthouse 13.4.1, HeadlessChromium 151.0.7922.71",
+    network: "Custom throttling",
+  },
+};
+
+/* =========================================
+   Google thresholds (good <= first, poor > second)
+   Units as typed: seconds, except tbt/inp in ms, cls unitless
+========================================= */
+const FIELD_THRESHOLDS = {
+  lcp: { good: 2.5, poor: 4.0, unit: "s", label: "Largest Contentful Paint (LCP)", core: true },
+  inp: { good: 200, poor: 500, unit: "ms", label: "Interaction to Next Paint (INP)", core: true },
+  cls: { good: 0.1, poor: 0.25, unit: "", label: "Cumulative Layout Shift (CLS)", core: true },
   fcp: { good: 1.8, poor: 3.0, unit: "s", label: "First Contentful Paint (FCP)" },
   ttfb: { good: 0.8, poor: 1.8, unit: "s", label: "Time to First Byte (TTFB)" },
 };
@@ -24,7 +54,7 @@ const LAB_THRESHOLDS = {
   speedIndex: { good: 3.4, poor: 5.8, unit: "s", label: "Speed Index" },
 };
 
-// ---------- helpers ----------
+/* ---------- helpers ---------- */
 const rate = (value, t) => {
   if (value === null || value === undefined) return "na";
   if (value <= t.good) return "good";
@@ -46,13 +76,33 @@ const metricItems = (data = {}, thresholds) =>
       rating: rate(data[key], t),
     }));
 
-const stampDate = (date) => {
-  if (date && date !== "auto") return date;
-  return new Date().toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+// Brand from URL: "https://www.vlncy.com/x" -> "Vlncy"
+const brandFromSite = (site = "") => {
+  const host = site
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .split("/")[0];
+  const name = host.split(".")[0] || host;
+  return name.charAt(0).toUpperCase() + name.slice(1);
+};
+
+// Clean site for display: strip protocol and path
+const displaySite = (site = "") =>
+  site.replace(/^https?:\/\//, "").replace(/\/$/, "").split("/")[0];
+
+const todayLong = () =>
+  new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+// AUD-VLNCY-2026-001
+const makeReference = (brand) =>
+  `AUD-${brand.toUpperCase()}-${new Date().getFullYear()}-001`;
+
+// Core Web Vitals assessment: every core metric WITH data must rate "good".
+// (Google's rule: LCP, INP, CLS; metrics without field data are skipped.)
+const assess = (fieldData = {}) => {
+  const cores = Object.entries(FIELD_THRESHOLDS).filter(([k, t]) => t.core && fieldData[k] != null);
+  if (cores.length === 0) return "Not available";
+  return cores.every(([k, t]) => rate(fieldData[k], t) === "good") ? "Passed" : "Failed";
 };
 
 const SCORE_LABELS = {
@@ -66,7 +116,6 @@ const SCORE_LABELS = {
 const scoreItems = (scores = {}) =>
   Object.entries(scores).map(([key, v]) => {
     const label = SCORE_LABELS[key] || key;
-    // "2/2"-style string scores become display overrides
     if (typeof v === "string" && v.includes("/")) {
       const [num, max] = v.split("/").map(Number);
       return { label, score: num, max, display: v };
@@ -74,27 +123,28 @@ const scoreItems = (scores = {}) =>
     return { label, score: v, max: 100 };
   });
 
-// ---------- section builders ----------
-const pagespeedSections = (ps) => {
+/* ---------- section builders ---------- */
+const pagespeedSections = (ps, date) => {
   if (!ps) return [];
   const s = [];
+  const device = ps.device === "desktop" ? "desktop" : "mobile";
+  const cond = TEST_CONDITIONS[device];
+  const assessment = assess(ps.fieldData);
 
   s.push({
     type: "sectionDivider",
     number: "01",
     title: "PageSpeed Insights",
-    description: `Google PageSpeed Insights results: real-user Core Web Vitals, Lighthouse lab metrics, and prioritised performance findings.${
-      ps.testedOn ? ` Tested ${ps.testedOn} on ${ps.device || "mobile"}.` : ""
-    }`,
+    description: `Google PageSpeed Insights results: real-user Core Web Vitals, Lighthouse lab metrics. Tested ${date} on ${device}.`,
   });
 
-  s.push({ type: "heading", text: "Core Web Vitals Assessment" });
-  s.push({
-    type: "paragraph",
-    text: `Field data from real users over the latest 28-day period (Chrome UX Report). Overall assessment: ${
-      ps.assessment || "Not available"
-    }.`,
-  });
+  if (ps.fieldData) {
+    s.push({ type: "heading", text: "Core Web Vitals Assessment" });
+    s.push({
+      type: "paragraph",
+      text: `Field data from real users over the latest 28-day period (Chrome UX Report). Overall assessment: ${assessment}.`,
+    });
+  }
 
   if (ps.scores) s.push({ type: "scorecard", items: scoreItems(ps.scores) });
 
@@ -102,7 +152,7 @@ const pagespeedSections = (ps) => {
     s.push({
       type: "metrics",
       title: "Field Data (Real Users)",
-      items: metricItems(ps.fieldData, THRESHOLDS),
+      items: metricItems(ps.fieldData, FIELD_THRESHOLDS),
     });
 
   if (ps.labMetrics) {
@@ -123,9 +173,9 @@ const pagespeedSections = (ps) => {
   s.push({
     type: "keyValue",
     items: [
-      { label: "Tool", value: ps.tool || "Google PageSpeed Insights (Lighthouse)" },
-      { label: "Device", value: ps.deviceDetail || (ps.device === "desktop" ? "Desktop" : "Emulated mobile device") },
-      { label: "Network", value: ps.network || "Slow 4G throttling" },
+      { label: "Tool", value: cond.tool },
+      { label: "Device", value: cond.deviceDetail },
+      { label: "Network", value: cond.network },
       { label: "Session", value: "Single page session, initial page load" },
       { label: "Field data", value: "Latest 28-day period, Chrome UX Report" },
     ],
@@ -134,37 +184,33 @@ const pagespeedSections = (ps) => {
   return s;
 };
 
-// ---------- the composer ----------
+/* ---------- the composer ---------- */
 export function composeReport(data) {
   // Escape hatch: already a document? Render as-is.
   if (data.sections) return data;
 
-  const date = stampDate(data.date);
+  const site = displaySite(data.site);
+  const brand = brandFromSite(data.site);
+  const date = todayLong();
+  const reference = makeReference(brand);
 
   const sections = [
     { type: "heading", text: "Executive Summary" },
-    ...(data.summary ? [{ type: "paragraph", text: data.summary }] : []),
+    { type: "paragraph", text: SUMMARY(site) },
     ...(data.auditResults ? [{ type: "auditResults", ...data.auditResults }] : []),
-    ...pagespeedSections(data.pagespeed),
+    ...pagespeedSections(data.pagespeed, date),
   ];
 
   return {
-    meta: {
-      title: "Website Audit Report",
-      subtitle: data.site,
-      date,
-      reference: data.reference,
-    },
+    meta: { title: REPORT_TYPE, subtitle: site, date, reference },
     cover: {
-      reportType: "Website Audit Report",
-      title: data.site,
-      subtitle:
-        data.coverSubtitle ||
-        "Technical SEO, on-page SEO, AI readiness, backlinks, UI/UX, accessibility and architecture analysis.",
+      reportType: REPORT_TYPE,
+      title: site,
+      subtitle: COVER_SUBTITLE,
       date,
-      reference: data.reference,
-      preparedBy: data.preparedBy,
-      preparedFor: data.client,
+      reference,
+      preparedBy: PREPARED_BY,
+      preparedFor: brand,
     },
     sections,
   };
