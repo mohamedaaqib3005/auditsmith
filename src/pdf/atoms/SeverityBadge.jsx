@@ -1,10 +1,8 @@
-// src/pdf/atoms/SeverityBadge.jsx
-// ATOM: coloured severity pill. Used by FindingCard; reusable anywhere.
-
+// ATOM: coloured severity pill.
 import { View, Text } from "@react-pdf/renderer";
 import { severityColors, fonts, fontSizes, radii, letterSpacing, space } from "../tokens";
 
-const SeverityBadge = ({ severity }) => {
+export const SeverityBadge = ({ severity }) => {
   const palette = severityColors[severity] || severityColors.info;
   return (
     <View

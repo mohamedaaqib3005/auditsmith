@@ -1,25 +1,6 @@
-// src/pdf/atoms/Surfaces.jsx
-// ATOMS: container surfaces. TintedBox (soft background) and Card (bordered).
-
+// ATOM: bordered card container.
 import { View } from "@react-pdf/renderer";
 import { colors, radii, space, borders } from "../tokens";
-
-export const TintedBox = ({ children, style }) => (
-  <View
-    wrap={false}
-    style={[
-      {
-        backgroundColor: colors.primarySoft,
-        borderRadius: radii.md,
-        padding: space.xl,
-        marginBottom: space.lg,
-      },
-      style,
-    ]}
-  >
-    {children}
-  </View>
-);
 
 export const Card = ({ children, style }) => (
   <View
@@ -38,3 +19,5 @@ export const Card = ({ children, style }) => (
     {children}
   </View>
 );
+
+export default Card;

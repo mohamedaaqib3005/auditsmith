@@ -1,0 +1,392 @@
+{
+  "meta": {
+    "title": "Auditsmith Gallery",
+    "subtitle": "Every block, every variant, every edge case",
+    "date": "21 August 2026",
+    "reference": "GALLERY-000"
+  },
+  "cover": {
+    "reportType": "Design System Gallery",
+    "title": "Auditsmith",
+    "subtitle": "The component showroom. If a change looks wrong anywhere, it shows up here first.",
+    "date": "21 August 2026",
+    "reference": "GALLERY-000",
+    "preparedBy": "Mohamed Aaqib",
+    "preparedFor": "Internal"
+  },
+  "sections": [
+    {
+      "type": "heading",
+      "text": "How to use this gallery"
+    },
+    {
+      "type": "paragraph",
+      "text": "This file exercises every block type with dummy data, including deliberate edge cases. After changing any token, atom, or block, render this file and scan every page. Blocks appear in the order: heading, paragraph, keyValue, scorecard, metrics, findings, table, sectionDivider."
+    },
+    {
+      "type": "sectionDivider",
+      "number": "01",
+      "title": "Text Blocks",
+      "description": "heading and paragraph, including long-content wrapping tests."
+    },
+    {
+      "type": "heading",
+      "text": "A normal heading"
+    },
+    {
+      "type": "paragraph",
+      "text": "A normal paragraph with a single sentence."
+    },
+    {
+      "type": "heading",
+      "text": "A deliberately long heading to check how the heading style wraps when it runs past a single line width"
+    },
+    {
+      "type": "paragraph",
+      "text": "A long paragraph to test line height and wrapping. Performance budgets only work when the whole team can see them, so this report is generated from a single source of truth and rendered identically every time. Repetition, repetition, repetition: the paragraph needs at least four lines to properly show the rhythm of the body face, its line height, and the spacing to the next block. Numbers inside a paragraph like 4,659 KiB and 2.5 s render in the body font, not the mono font."
+    },
+    {
+      "type": "sectionDivider",
+      "number": "02",
+      "title": "Key-Value Box",
+      "description": "Label widths, long values, and many rows."
+    },
+    {
+      "type": "keyValue",
+      "items": [
+        {
+          "label": "Short",
+          "value": "Simple value"
+        },
+        {
+          "label": "Long value",
+          "value": "A long value that should wrap within the box rather than overflow it, staying aligned to the value column while the label column keeps its fixed width"
+        },
+        {
+          "label": "Long label test",
+          "value": "Label longer than the 90pt column"
+        },
+        {
+          "label": "URL",
+          "value": "https://example.com/a/fairly/long/path?with=query&params=true"
+        },
+        {
+          "label": "Fifth row",
+          "value": "Boxes with many rows should not split across pages"
+        }
+      ]
+    },
+    {
+      "type": "sectionDivider",
+      "number": "03",
+      "title": "Scorecard",
+      "description": "All three colour bands, the display override, and a non-100 max."
+    },
+    {
+      "type": "scorecard",
+      "items": [
+        {
+          "label": "Poor Band (0-49)",
+          "score": 32,
+          "max": 100
+        },
+        {
+          "label": "Amber Band (50-89)",
+          "score": 79,
+          "max": 100
+        },
+        {
+          "label": "Green Band (90-100)",
+          "score": 96,
+          "max": 100
+        },
+        {
+          "label": "Display Override",
+          "score": 2,
+          "max": 2,
+          "display": "2/2"
+        },
+        {
+          "label": "Edge: Exactly 90",
+          "score": 90,
+          "max": 100
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Expected: red, amber, green, green (2/2), green. A score of exactly 90 sits in the green band; exactly 50 would sit in amber."
+    },
+    {
+      "type": "sectionDivider",
+      "number": "04",
+      "title": "Metrics",
+      "description": "All four ratings including the grey fallback, plus a typo test."
+    },
+    {
+      "type": "metrics",
+      "title": "All Rating States",
+      "items": [
+        {
+          "label": "Good rating",
+          "value": "1.2 s",
+          "rating": "good"
+        },
+        {
+          "label": "Needs improvement rating",
+          "value": "2.8 s",
+          "rating": "needs-improvement"
+        },
+        {
+          "label": "Poor rating",
+          "value": "6.4 s",
+          "rating": "poor"
+        },
+        {
+          "label": "Not applicable rating",
+          "value": "N/A",
+          "rating": "na"
+        },
+        {
+          "label": "Typo in rating (should render grey)",
+          "value": "0.9 s",
+          "rating": "goood"
+        },
+        {
+          "label": "A metric label long enough to test how the row handles wrapping against the value",
+          "value": "480 ms",
+          "rating": "needs-improvement"
+        }
+      ]
+    },
+    {
+      "type": "metrics",
+      "items": [
+        {
+          "label": "Metrics box without a title",
+          "value": "OK",
+          "rating": "good"
+        }
+      ]
+    },
+    {
+      "type": "sectionDivider",
+      "number": "05",
+      "title": "Findings",
+      "description": "All five severities, minimal vs maximal fields, and long-text wrapping."
+    },
+    {
+      "type": "findings",
+      "items": [
+        {
+          "id": "GAL-001",
+          "title": "Critical severity card",
+          "severity": "critical",
+          "category": "Gallery",
+          "description": "A card using every available field: id, title, severity, category, description, impact, recommendation.",
+          "impact": "Demonstrates the darkest badge colour",
+          "recommendation": "Use critical sparingly; it should mean production is at risk."
+        },
+        {
+          "id": "GAL-002",
+          "title": "High severity card",
+          "severity": "high",
+          "category": "Gallery",
+          "impact": "Red badge, white text",
+          "recommendation": "The standard urgent finding."
+        },
+        {
+          "id": "GAL-003",
+          "title": "Medium severity card",
+          "severity": "medium",
+          "category": "Gallery",
+          "impact": "Amber badge, dark text for contrast",
+          "recommendation": "The most common severity in practice."
+        },
+        {
+          "id": "GAL-004",
+          "title": "Low severity card",
+          "severity": "low",
+          "category": "Gallery",
+          "impact": "Blue badge",
+          "recommendation": "Nice-to-fix items."
+        },
+        {
+          "id": "GAL-005",
+          "title": "Info severity card",
+          "severity": "info",
+          "category": "Gallery",
+          "impact": "Grey badge",
+          "recommendation": "Observations that need no action."
+        },
+        {
+          "title": "Minimal card: title and severity only, no id, category, impact, or recommendation",
+          "severity": "medium"
+        },
+        {
+          "id": "GAL-007",
+          "title": "Typo severity falls back to the info style",
+          "severity": "hgih",
+          "category": "Gallery",
+          "recommendation": "If this badge is not grey, the fallback logic broke."
+        },
+        {
+          "id": "GAL-008",
+          "title": "A very long finding title that should wrap onto a second line while the severity badge stays pinned to the top right corner of the card",
+          "severity": "high",
+          "category": "A Fairly Long Category Name",
+          "description": "Long description test. The description, impact, and recommendation lines should all wrap cleanly inside the card border with consistent line height, and the card itself should never split across a page break because of the wrap=false rule on cards.",
+          "impact": "Long impact line: est savings of 4,659 KiB across 37 assets on 12 templates, affecting every landing page variant currently in rotation",
+          "recommendation": "Long recommendation line: consolidate the asset pipeline, enable content hashing, set immutable cache headers, and re-run the audit to confirm the savings landed as projected."
+        }
+      ]
+    },
+    {
+      "type": "sectionDivider",
+      "number": "06",
+      "title": "Table",
+      "description": "Alternating rows, many columns, and cell wrapping."
+    },
+    {
+      "type": "table",
+      "columns": [
+        "ID",
+        "Name",
+        "Status",
+        "Value"
+      ],
+      "rows": [
+        [
+          "T-01",
+          "First row (white)",
+          "OK",
+          "100"
+        ],
+        [
+          "T-02",
+          "Second row (tinted)",
+          "OK",
+          "200"
+        ],
+        [
+          "T-03",
+          "Third row (white)",
+          "Issues",
+          "300"
+        ],
+        [
+          "T-04",
+          "A cell with long content that should wrap inside its column instead of pushing the table wider",
+          "OK",
+          "400"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "columns": [
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six"
+      ],
+      "rows": [
+        [
+          "Six",
+          "column",
+          "table",
+          "narrow",
+          "cell",
+          "test"
+        ]
+      ]
+    },
+    {
+      "type": "sectionDivider",
+      "number": "07",
+      "title": "Section Divider",
+      "description": "This block is itself the specimen: numeral in mono, rule, this description line. The next divider tests the no-number variant."
+    },
+    {
+      "type": "sectionDivider",
+      "title": "Divider without a number"
+    },
+    {
+      "type": "paragraph",
+      "text": "Above: a divider with no number and no description should still render its title and rule cleanly."
+    },
+    {
+      "type": "sectionDivider",
+      "number": "08",
+      "title": "Failure Modes",
+      "description": "Unknown block types must be skipped silently. Between this line and the closing paragraph below, the JSON contains a block of type doesNotExist. If you can read the closing paragraph, graceful skipping works."
+    },
+    {
+      "type": "doesNotExist",
+      "text": "This block should never appear in the PDF."
+    },
+    {
+      "type": "paragraph",
+      "text": "Closing paragraph: if this renders and nothing odd appears above it, unknown-type handling is healthy. End of gallery."
+    },
+    {
+      "type": "sectionDivider",
+      "number": "09",
+      "title": "Audit Results",
+      "description": "The results overview block: banner, hero grade, sub-grade row. All five grade colours, modifier handling (C+ colours as C), and the unknown-grade grey fallback."
+    },
+    {
+      "type": "auditResults",
+      "banner": "Audit Results",
+      "overall": {
+        "grade": "C",
+        "caption": "Your page could be better"
+      },
+      "grades": [
+        {
+          "label": "On-Page SEO",
+          "grade": "C+"
+        },
+        {
+          "label": "GEO",
+          "grade": "D"
+        },
+        {
+          "label": "Usability",
+          "grade": "B"
+        },
+        {
+          "label": "Performance",
+          "grade": "F"
+        },
+        {
+          "label": "AI Readiness",
+          "grade": "A"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Expected: hero C in amber; sub-grades C+ amber, D deep amber, B deep green, F red, A green."
+    },
+    {
+      "type": "auditResults",
+      "overall": {
+        "grade": "Z",
+        "caption": "Unknown grade renders grey"
+      },
+      "grades": [
+        {
+          "label": "No banner variant",
+          "grade": "B"
+        },
+        {
+          "label": "Unknown letter",
+          "grade": "?"
+        }
+      ]
+    }
+  ]
+}

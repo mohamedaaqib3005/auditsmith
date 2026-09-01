@@ -56,6 +56,21 @@ export const ratingColors = {
   na: { color: p.neutral[400], label: "N/A" },
 };
 
+/* Rating -> colour lookup (safe fallback to na) */
+export const ratingColor = (rating) =>
+  (ratingColors[rating] || ratingColors.na).color;
+
+/* LETTER GRADES (A-F, modifiers ignored: "C+" colours as "C") */
+const gradeMap = {
+  A: p.success[400],
+  B: p.success[500],
+  C: p.warning[400],
+  D: p.warning[500],
+  F: p.reject[500],
+};
+export const gradeColor = (grade) =>
+  gradeMap[String(grade).trim().charAt(0).toUpperCase()] || p.neutral[400];
+
 /* Lighthouse score bands: 0-49 reject, 50-89 warning, 90-100 success */
 export const scoreColor = (score, max = 100) => {
   const pct = (score / max) * 100;
