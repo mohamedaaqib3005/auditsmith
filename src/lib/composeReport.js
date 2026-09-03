@@ -123,6 +123,42 @@ const scoreItems = (scores = {}) =>
     return { label, score: v, max: 100 };
   });
 
+/* =========================================
+   Technical SEO knowledge - status enums -> display text + verdict
+========================================= */
+const TECH_CHECKS = {
+  sitemap: {
+    label: "XML Sitemap",
+    ok: { status: "OK", notes: "Present, valid" },
+    stale: { status: "Issues", notes: "Present, contains stale URLs" },
+    missing: { status: "Missing", notes: "Not found" },
+  },
+  robotsTxt: {
+    label: "Robots.txt",
+    ok: { status: "OK", notes: "Present, valid" },
+    missing: { status: "Missing", notes: "Not found" },
+  },
+  https: {
+    label: "HTTPS",
+    ok: { status: "OK", notes: "Enforced site-wide" },
+    partial: { status: "Issues", notes: "Not enforced on all pages" },
+  },
+};
+
+/* =========================================
+   On-Page SEO knowledge - field -> label + issue phrasing
+   Counts of pages with each problem; 0 means the check passes.
+========================================= */
+const ONPAGE_CHECKS = {
+  missingTitles: { label: "Page titles", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}` },
+  duplicateTitles: { label: "Duplicate titles", issue: (n) => `${n} page${n === 1 ? "" : "s"} share a title` },
+  missingMeta: { label: "Meta descriptions", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}` },
+  duplicateMeta: { label: "Duplicate meta descriptions", issue: (n) => `${n} page${n === 1 ? "" : "s"} share one` },
+  missingH1: { label: "H1 headings", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}` },
+  multipleH1: { label: "Multiple H1s", issue: (n) => `${n} page${n === 1 ? "" : "s"} have more than one` },
+  thinPages: { label: "Thin content", issue: (n) => `${n} page${n === 1 ? "" : "s"} under 200 words` },
+};
+
 /* ---------- section builders ---------- */
 const pagespeedSections = (ps, date) => {
   if (!ps) return [];
@@ -184,6 +220,114 @@ const pagespeedSections = (ps, date) => {
   return s;
 };
 
+const technicalSeoSections = (ts) => {
+  if (!ts) return [];
+  const s = [];
+
+  const pct =
+    ts.pagesCrawled > 0 && ts.indexable != null
+      ? Math.round((ts.indexable / ts.pagesCrawled) * 100)
+      : null;
+
+  const rows = [];
+  for (const [key, check] of Object.entries(TECH_CHECKS)) {
+    if (ts[key] == null) continue;
+    const state = check[ts[key]] || {
+      status: "Unknown",
+      notes: `Unrecognised value "${ts[key]}"`,
+    };
+    rows.push([check.label, state.status, state.notes]);
+  }
+  if (ts.brokenLinks != null)
+    rows.push([
+      "Broken internal links",
+      ts.brokenLinks === 0 ? "OK" : "Issues",
+      ts.brokenLinks === 0 ? "None detected" : `${ts.brokenLinks} found`,
+    ]);
+  if (ts.redirectChains != null)
+    rows.push([
+      "Redirect chains",
+      ts.redirectChains === 0 ? "OK" : "Issues",
+      ts.redirectChains === 0 ? "None detected" : `${ts.redirectChains} found`,
+    ]);
+
+  const issueCount = rows.filter((r) => r[1] !== "OK").length;
+
+  s.push({
+    type: "sectionDivider",
+    number: "02",
+    title: "Technical SEO",
+    description:
+      "Crawlability, indexation, sitemaps, redirects and site health as seen by search engine bots.",
+  });
+
+  s.push({ type: "heading", text: "Crawl Overview" });
+  s.push({
+    type: "paragraph",
+    text:
+      issueCount === 0
+        ? `A crawl of ${ts.pagesCrawled} pages found no technical issues across the checks below.`
+        : `A crawl of ${ts.pagesCrawled} pages found ${issueCount} check${issueCount === 1 ? "" : "s"} needing attention, detailed below.`,
+  });
+  s.push({
+    type: "keyValue",
+    items: [
+      ts.pagesCrawled != null && { label: "Pages crawled", value: `${ts.pagesCrawled}` },
+      ts.indexable != null && {
+        label: "Indexable",
+        value: pct != null ? `${ts.indexable} (${pct}%)` : `${ts.indexable}`,
+      },
+    ].filter(Boolean),
+  });
+
+  if (rows.length) {
+    s.push({ type: "heading", text: "Health Checks" });
+    s.push({ type: "table", columns: ["Check", "Status", "Notes"], rows });
+  }
+
+  return s;
+};
+
+const onPageSeoSections = (op) => {
+  if (!op) return [];
+  const s = [];
+
+  const rows = [];
+  for (const [key, check] of Object.entries(ONPAGE_CHECKS)) {
+    if (op[key] == null) continue;
+    const n = op[key];
+    rows.push([
+      check.label,
+      n === 0 ? "OK" : "Issues",
+      n === 0 ? "No issues found" : check.issue(n),
+    ]);
+  }
+  const issueCount = rows.filter((r) => r[1] !== "OK").length;
+
+  s.push({
+    type: "sectionDivider",
+    number: "03",
+    title: "On-Page SEO",
+    description:
+      "Titles, meta descriptions, heading structure and content depth across the crawled pages.",
+  });
+
+  s.push({ type: "heading", text: "Content Checks" });
+  s.push({
+    type: "paragraph",
+    text:
+      issueCount === 0
+        ? "All on-page checks passed across the crawled pages."
+        : `${issueCount} on-page check${issueCount === 1 ? "" : "s"} need${issueCount === 1 ? "s" : ""} attention, detailed below.`,
+  });
+
+  if (rows.length) {
+    s.push({ type: "table", columns: ["Check", "Status", "Notes"], rows });
+  }
+
+  return s;
+};
+
 /* ---------- the composer ---------- */
 export function composeReport(data) {
   // Escape hatch: already a document? Render as-is.
@@ -199,6 +343,8 @@ export function composeReport(data) {
     { type: "paragraph", text: SUMMARY(site) },
     ...(data.auditResults ? [{ type: "auditResults", ...data.auditResults }] : []),
     ...pagespeedSections(data.pagespeed, date),
+    ...technicalSeoSections(data.technicalSeo),
+    ...onPageSeoSections(data.onPageSeo),
   ];
 
   return {

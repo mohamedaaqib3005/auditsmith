@@ -29,5 +29,14 @@
     "indexable": 36,
     "brokenLinks": 1,
     "https": "ok"
+  },
+  "onPageSeo": {
+    "missingTitles": 0,
+    "duplicateTitles": 7,
+    "missingMeta": 0,
+    "duplicateMeta": 7,
+    "missingH1": 22,
+    "multipleH1": 14,
+    "thinPages": 2
   }
 }
