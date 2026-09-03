@@ -2,7 +2,6 @@
   "site": "vlncy.com",
   "pagespeed": {
     "device": "mobile",
-
     "scores": {
       "performance": 79,
       "accessibility": 88,
@@ -10,7 +9,6 @@
       "seo": 92,
       "agenticBrowsing": "2/2"
     },
-
     "fieldData": {
       "lcp": 2.2,
       "inp": null,
@@ -18,7 +16,6 @@
       "fcp": 2,
       "ttfb": 1
     },
-
     "labMetrics": {
       "fcp": 2.5,
       "lcp": 2.5,
@@ -26,5 +23,11 @@
       "cls": 0,
       "speedIndex": 4.6
     }
+  },
+  "technicalSeo": {
+    "pagesCrawled": 37,
+    "indexable": 36,
+    "brokenLinks": 1,
+    "https": "ok"
   }
 }
