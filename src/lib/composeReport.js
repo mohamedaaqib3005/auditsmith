@@ -149,13 +149,17 @@ const TECH_CHECKS = {
    On-Page SEO knowledge - field -> label + issue phrasing
    Counts of pages with each problem; 0 means the check passes.
 ========================================= */
+// severe(n, pages): when a check's count escalates it from amber to red.
+// Structural checks go red past half the crawled pages; cosmetic ones never do.
+const MOST_PAGES = (n, pages) => pages > 0 && n / pages > 0.5;
+
 const ONPAGE_CHECKS = {
-  missingTitles: { label: "Page titles", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}` },
+  missingTitles: { label: "Page titles", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}`, severe: MOST_PAGES },
   duplicateTitles: { label: "Duplicate titles", issue: (n) => `${n} page${n === 1 ? "" : "s"} share a title` },
-  missingMeta: { label: "Meta descriptions", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}` },
+  missingMeta: { label: "Meta descriptions", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}`, severe: MOST_PAGES },
   duplicateMeta: { label: "Duplicate meta descriptions", issue: (n) => `${n} page${n === 1 ? "" : "s"} share one` },
-  missingH1: { label: "H1 headings", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}` },
-  multipleH1: { label: "Multiple H1s", issue: (n) => `${n} page${n === 1 ? "" : "s"} have more than one` },
+  missingH1: { label: "H1 headings", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}`, severe: MOST_PAGES },
+  multipleH1: { label: "Multiple H1s", issue: (n) => `${n} page${n === 1 ? "" : "s"} have more than one`, severe: MOST_PAGES },
   thinPages: { label: "Thin content", issue: (n) => `${n} page${n === 1 ? "" : "s"} under 200 words` },
 };
 
@@ -305,7 +309,7 @@ const technicalSeoSections = (ts) => {
   return s;
 };
 
-const onPageSeoSections = (op) => {
+const onPageSeoSections = (op, pages) => {
   if (!op) return [];
   const s = [];
 
@@ -316,7 +320,12 @@ const onPageSeoSections = (op) => {
     items.push({
       label: check.label,
       value: n === 0 ? "No issues found" : check.issue(n),
-      rating: n === 0 ? "good" : "needs-improvement",
+      rating:
+        n === 0
+          ? "good"
+          : check.severe && check.severe(n, pages || 0)
+          ? "poor"
+          : "needs-improvement",
     });
   }
   const issueCount = items.filter((i) => i.rating !== "good").length;
@@ -361,7 +370,7 @@ export function composeReport(data) {
     ...(data.auditResults ? [{ type: "auditResults", ...data.auditResults }] : []),
     ...pagespeedSections(data.pagespeed, date),
     ...technicalSeoSections(data.technicalSeo),
-    ...onPageSeoSections(data.onPageSeo),
+    ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
   ];
 
   return {
