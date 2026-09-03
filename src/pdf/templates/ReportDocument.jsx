@@ -9,7 +9,13 @@ import { Heading, Body, Mono } from "../atoms";
 import { colors, fonts, fontSizes, space, borders, page } from "../tokens";
 
 const SectionRenderer = ({ section }) => {
-  const Block = blockMap[section.type];
+  const Block = blockMap[section.type];// fetch the function into a variable
+  //   export const blockMap = {
+  //   heading: HeadingBlock,
+  //   metrics: MetricsBlock,
+  //   findings: FindingsBlock,
+  //   // ...nine entries
+  // };
   if (!Block) return null; // unknown types are skipped gracefully
   return <Block {...section} />;
 };
@@ -83,3 +89,7 @@ const ReportDocument = ({ data }) => (
 );
 
 export default ReportDocument;
+
+{/* <Document> --> react pdf root element */ }
+{/* <Page> --> react pdf single page element */ }
+{/* <View> --> react pdf div equivalent */ }
