@@ -253,6 +253,14 @@ const technicalSeoSections = (ts) => {
 
   const issueCount = rows.filter((r) => r[1] !== "OK").length;
 
+  // Same data, section-01 presentation: each check as a rated metric row.
+  const STATUS_RATING = { OK: "good", Issues: "needs-improvement", Missing: "poor" };
+  const checkItems = rows.map(([label, status, notes]) => ({
+    label,
+    value: notes,
+    rating: STATUS_RATING[status] || "na",
+  }));
+
   s.push({
     type: "sectionDivider",
     number: "02",
@@ -269,20 +277,29 @@ const technicalSeoSections = (ts) => {
         ? `A crawl of ${ts.pagesCrawled} pages found no technical issues across the checks below.`
         : `A crawl of ${ts.pagesCrawled} pages found ${issueCount} check${issueCount === 1 ? "" : "s"} needing attention, detailed below.`,
   });
-  s.push({
-    type: "keyValue",
-    items: [
-      ts.pagesCrawled != null && { label: "Pages crawled", value: `${ts.pagesCrawled}` },
-      ts.indexable != null && {
-        label: "Indexable",
-        value: pct != null ? `${ts.indexable} (${pct}%)` : `${ts.indexable}`,
-      },
-    ].filter(Boolean),
-  });
+  // Indexability as a section-01 style score ring
+  if (pct != null) {
+    s.push({
+      type: "scorecard",
+      items: [
+        {
+          label: `Indexable (${ts.indexable} of ${ts.pagesCrawled} pages)`,
+          score: ts.indexable,
+          max: ts.pagesCrawled,
+          display: `${pct}%`,
+        },
+      ],
+    });
+  } else if (ts.pagesCrawled != null) {
+    s.push({
+      type: "keyValue",
+      items: [{ label: "Pages crawled", value: `${ts.pagesCrawled}` }],
+    });
+  }
 
-  if (rows.length) {
+  if (checkItems.length) {
     s.push({ type: "heading", text: "Health Checks" });
-    s.push({ type: "table", columns: ["Check", "Status", "Notes"], rows });
+    s.push({ type: "metrics", title: "Crawl & Site Health", items: checkItems });
   }
 
   return s;
@@ -292,17 +309,17 @@ const onPageSeoSections = (op) => {
   if (!op) return [];
   const s = [];
 
-  const rows = [];
+  const items = [];
   for (const [key, check] of Object.entries(ONPAGE_CHECKS)) {
     if (op[key] == null) continue;
     const n = op[key];
-    rows.push([
-      check.label,
-      n === 0 ? "OK" : "Issues",
-      n === 0 ? "No issues found" : check.issue(n),
-    ]);
+    items.push({
+      label: check.label,
+      value: n === 0 ? "No issues found" : check.issue(n),
+      rating: n === 0 ? "good" : "needs-improvement",
+    });
   }
-  const issueCount = rows.filter((r) => r[1] !== "OK").length;
+  const issueCount = items.filter((i) => i.rating !== "good").length;
 
   s.push({
     type: "sectionDivider",
@@ -321,8 +338,8 @@ const onPageSeoSections = (op) => {
         : `${issueCount} on-page check${issueCount === 1 ? "" : "s"} need${issueCount === 1 ? "s" : ""} attention, detailed below.`,
   });
 
-  if (rows.length) {
-    s.push({ type: "table", columns: ["Check", "Status", "Notes"], rows });
+  if (items.length) {
+    s.push({ type: "metrics", title: "Titles, Descriptions & Headings", items });
   }
 
   return s;

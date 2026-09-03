@@ -12,6 +12,7 @@
 import { useState } from "react";
 import Papa from "papaparse";
 import { deriveFromCrawl, mergeCrawl } from "../lib/deriveFromCrawl";
+import { colors } from "../pdf/tokens/colors";
 
 const ui = {
   bar: {
@@ -19,27 +20,27 @@ const ui = {
     alignItems: "center",
     gap: 12,
     padding: "10px 16px",
-    background: "#460073",
-    color: "#ffffff",
+    background: colors.primary,
+    color: colors.onPrimary,
     fontFamily: "system-ui, sans-serif",
     fontSize: 13,
   },
   drop: (active) => ({
-    border: `2px dashed ${active ? "#ffffff" : "#b795d1"}`,
+    border: `2px dashed ${active ? colors.onPrimary : colors.onPrimaryFaint}`,
     borderRadius: 6,
     padding: "8px 14px",
     cursor: "pointer",
-    background: active ? "#6d3396" : "transparent",
-    color: active ? "#ffffff" : "#d9c7ea",
+    background: active ? colors.onPrimaryBorder : "transparent",
+    color: active ? colors.onPrimary : colors.onPrimaryMuted,
   }),
-  status: { flex: 1, color: "#d9c7ea" },
-  error: { flex: 1, color: "#ffb4ac" },
+  status: { flex: 1, color: colors.onPrimaryMuted },
+  error: { flex: 1, color: colors.onPrimaryDanger },
   button: {
-    border: "1px solid #b795d1",
+    border: `1px solid ${colors.onPrimaryFaint}`,
     borderRadius: 6,
     padding: "8px 14px",
     background: "transparent",
-    color: "#ffffff",
+    color: colors.onPrimary,
     cursor: "pointer",
     fontSize: 13,
   },
@@ -52,6 +53,11 @@ const CrawlImport = ({ data, onData }) => {
 
   const handleFile = (file) => {
     if (!file) return;
+    if (!/\.csv$/i.test(file.name)) {
+      setStatus(null);
+      setError(`"${file.name}" is not a .csv file. Export "Internal All" from Screaming Frog as CSV.`);
+      return;
+    }
     setError(null);
     setStatus(`Reading ${file.name}...`);
 
