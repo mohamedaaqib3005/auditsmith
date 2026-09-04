@@ -77,6 +77,7 @@ You type 5 things. The system derives the rest:
 | `labMetrics` | The Lab Metrics rows, each colour-rated |
 | `technicalSeo` (3 fields) | You type only `sitemap`, `robotsTxt`, `redirectChains`. The crawl numbers come from the script (section 7) and together they build the "02 Technical SEO" chapter |
 | (the crawl script) | `onPageSeo` counts and the "03 On-Page SEO" chapter, entirely automatic |
+| `aiReadiness` (5 fields) | The "04 AI Readiness" chapter, five one-word checks you verify in a browser |
 | (nothing) | Today's date, on the cover and in the header, automatically |
 
 You never type: dates, names, ratings, labels, section headings, or the
@@ -178,7 +179,33 @@ type only three things the crawl cannot know:
 Lowercase, in quotes (the number without quotes). A misspelled value shows
 as "Unknown" in the report table, visibly, so you can catch it.
 
-### 3g. `onPageSeo` (never typed)
+### 3g. `aiReadiness` (five one-word checks, about five minutes)
+
+Whether AI systems (ChatGPT, Claude, Perplexity, Google AI) can read the
+site. Each field takes `"ok"`, `"partial"`, or `"missing"` (lowercase, in
+quotes; `llmsTxt` has no partial):
+
+```json
+"aiReadiness": {
+  "llmsTxt": "missing",
+  "aiCrawlers": "ok",
+  "structuredData": "missing",
+  "metaRobots": "ok",
+  "contentAccess": "ok"
+}
+```
+
+| Field | How to check |
+|---|---|
+| `llmsTxt` | Open `https://the-site.com/llms.txt`. A text file loads = ok. Error page = missing |
+| `aiCrawlers` | Open `https://the-site.com/robots.txt`. Search for GPTBot, ClaudeBot, PerplexityBot, Google-Extended. None blocked = ok. Some blocked = partial. All or everything blocked = missing |
+| `structuredData` | Paste the site URL into Google's Rich Results Test (search.google.com/test/rich-results). Markup detected = ok. Only on some pages = partial. None = missing |
+| `metaRobots` | In the Screaming Frog crawl, check the "Meta Robots 1" column. No noindex on real pages = ok. A few accidental ones = partial. Key pages blocked = missing |
+| `contentAccess` | In Chrome DevTools press Ctrl+Shift+P, type "Disable JavaScript", reload the site. Content still visible = ok. Some missing = partial. Blank page = missing |
+
+Delete any field you did not check; its row simply will not appear.
+
+### 3h. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
 from the CSV (missing and duplicate titles, meta descriptions, H1 problems,
