@@ -217,6 +217,7 @@ category's Passed and Failed counts:
 
 ```json
 "accessibility": {
+  "score": 44.61,
   "categories": {
     "titles": { "passed": 0, "failed": 11 },
     "graphics": { "passed": 3, "failed": 4 },
@@ -230,9 +231,12 @@ category's Passed and Failed counts:
 
 Category keys (all lowercase): `clickables`, `titles`, `lists`,
 `graphics`, `forms`, `document`, `readability`, `tables`, `general`,
-`media`. When the checker says "Not Applicable or It May Require Manual
-Audit" for a category, leave that category out entirely, only audited
-categories appear in the report. The overall ring and every card's
+`media`. `score` is the checker's own "Accessibility Score" percentage, copied as
+a plain number (44.61, not "44.61%"); omit it if not shown. The other two
+rings (checks passed, WCAG failed count) are computed from the category
+counts, never typed. When the checker says "Not Applicable or It May
+Require Manual Audit" for a category, leave that category out entirely,
+only audited categories appear in the report. The overall ring and every card's
 pass/fail wording are computed; you only copy the two counts per category.
 
 ### 3i. `onPageSeo` (never typed)
