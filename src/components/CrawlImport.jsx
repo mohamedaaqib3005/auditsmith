@@ -12,6 +12,7 @@
 import { useState } from "react";
 import Papa from "papaparse";
 import { deriveFromCrawl, mergeCrawl } from "../lib/deriveFromCrawl";
+import { applySiteCheck } from "../lib/checkSite";
 import { colors } from "../pdf/tokens/colors";
 
 const ui = {
@@ -50,6 +51,34 @@ const CrawlImport = ({ data, onData }) => {
   const [dragOver, setDragOver] = useState(false);
   const [status, setStatus] = useState(null);
   const [error, setError] = useState(null);
+  const [checking, setChecking] = useState(false);
+
+  // "Check live site": ask the dev server to fetch the site's facts
+  // (llms.txt, robots.txt, sitemap, homepage) and merge them into the preview.
+  const checkLiveSite = async () => {
+    if (!data.site) {
+      setError("No site in the data to check.");
+      return;
+    }
+    setError(null);
+    setChecking(true);
+    setStatus(`Checking ${data.site}...`);
+    try {
+      const res = await fetch(`/api/check-site?site=${encodeURIComponent(data.site)}`);
+      if (!res.ok) throw new Error(`server said ${res.status}`);
+      const result = await res.json();
+      if (result.error) throw new Error(result.error);
+      onData(applySiteCheck(data, result));
+      const facts = [...Object.values(result.aiReadiness), ...Object.values(result.technicalSeo)];
+      const written = facts.filter((f) => f.value).length;
+      setStatus(`${result.origin}: ${written} of ${facts.length} checks written. Sections 02 and 04 updated.`);
+    } catch (e) {
+      setStatus(null);
+      setError(`Live check failed: ${e.message}`);
+    } finally {
+      setChecking(false);
+    }
+  };
 
   const handleFile = (file) => {
     if (!file) return;
@@ -133,6 +162,10 @@ const CrawlImport = ({ data, onData }) => {
           {status || "Preview updates on drop. Nothing is uploaded."}
         </span>
       )}
+
+      <button style={ui.button} onClick={checkLiveSite} disabled={checking}>
+        {checking ? "Checking..." : "Check live site"}
+      </button>
 
       <button style={ui.button} onClick={copyJson}>
         Copy JSON
