@@ -442,6 +442,85 @@ const AI_SCORE_LABELS = {
   structuredData: "Structured Data",
 };
 
+/* =========================================
+   Accessibility knowledge - Skynet checker categories.
+   User types passed/failed per category (docs 3i); omitted = not audited.
+========================================= */
+const ACCESS_CATEGORIES = {
+  clickables: { label: "Clickables", fix: "Give every interactive element a discernible name and keyboard focus." },
+  titles: { label: "Titles", fix: "Add unique, descriptive titles to pages and frames." },
+  lists: { label: "Lists", fix: "Mark up lists with proper list elements so screen readers announce them." },
+  graphics: { label: "Graphics", fix: "Add descriptive alt text to informative images; mark decorative ones as such." },
+  forms: { label: "Forms", fix: "Label every form field and associate errors with their inputs." },
+  document: { label: "Document", fix: "Declare the page language and a valid document structure." },
+  readability: { label: "Readability", fix: "Raise text contrast and sizing to meet WCAG AA for readable content." },
+  tables: { label: "Tables", fix: "Use header cells and scope attributes so table data reads correctly." },
+  general: { label: "General", fix: "Resolve the remaining WCAG failures flagged in the checker's General group." },
+  media: { label: "Audio & Video", fix: "Provide captions and transcripts for audio and video content." },
+};
+
+const accessibilitySections = (a) => {
+  if (!a || !a.categories) return [];
+  const s = [];
+
+  let totalPassed = 0;
+  let totalFailed = 0;
+  const items = [];
+  for (const [key, counts] of Object.entries(a.categories)) {
+    if (counts == null) continue;
+    const meta = ACCESS_CATEGORIES[key] || { label: key };
+    const passed = counts.passed ?? 0;
+    const failed = counts.failed ?? 0;
+    totalPassed += passed;
+    totalFailed += failed;
+    const rating =
+      failed === 0 ? "good" : failed > passed ? "poor" : "needs-improvement";
+    items.push({
+      label: meta.label,
+      value:
+        failed === 0
+          ? `All ${passed} checks passed`
+          : `${failed} of ${passed + failed} checks failed`,
+      rating,
+      recommendation: rating !== "good" ? meta.fix : undefined,
+    });
+  }
+  if (!items.length) return [];
+
+  const total = totalPassed + totalFailed;
+  const pct = total ? Math.round((totalPassed / total) * 100) : null;
+
+  s.push({
+    type: "sectionDivider",
+    number: "05",
+    title: "Accessibility",
+    description:
+      "Whether people with disabilities can perceive and use the site: structure, labels, contrast and assistive-technology support, audited category by category.",
+  });
+
+  s.push({ type: "heading", text: "WCAG Category Checks" });
+  s.push({
+    type: "paragraph",
+    text:
+      totalFailed === 0
+        ? `All ${total} automated accessibility checks passed across ${items.length} categories.`
+        : `${totalFailed} of ${total} automated checks failed across ${items.length} audited categories, detailed below. Categories the tool could not audit automatically are not shown.`,
+  });
+
+  if (pct != null) {
+    s.push({
+      type: "scorecard",
+      items: [
+        { label: `Checks passed (${totalPassed} of ${total})`, score: totalPassed, max: total, display: `${pct}%`, size: 72 },
+      ],
+    });
+  }
+
+  s.push({ type: "checks", items });
+
+  return s;
+};
+
 const aiReadinessSections = (ai) => {
   if (!ai) return [];
   const s = [];
@@ -521,6 +600,7 @@ export function composeReport(data) {
     ...technicalSeoSections(data.technicalSeo),
     ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
     ...aiReadinessSections(data.aiReadiness),
+    ...accessibilitySections(data.accessibility),
   ];
 
   return {

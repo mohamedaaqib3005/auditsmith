@@ -209,7 +209,33 @@ appear. Note `structuredData` appears twice by design: the automatic
 ok/missing check, and this typed 0-100 score, they are different
 measurements.
 
-### 3h. `onPageSeo` (never typed)
+### 3h. `accessibility` (typed from the Skynet checker)
+
+Run the site through
+https://www.skynettechnologies.com/accessibility-checker and copy each
+category's Passed and Failed counts:
+
+```json
+"accessibility": {
+  "categories": {
+    "titles": { "passed": 0, "failed": 11 },
+    "graphics": { "passed": 3, "failed": 4 },
+    "forms": { "passed": 0, "failed": 1 },
+    "document": { "passed": 3, "failed": 0 },
+    "readability": { "passed": 25, "failed": 88 },
+    "general": { "passed": 6, "failed": 5 }
+  }
+}
+```
+
+Category keys (all lowercase): `clickables`, `titles`, `lists`,
+`graphics`, `forms`, `document`, `readability`, `tables`, `general`,
+`media`. When the checker says "Not Applicable or It May Require Manual
+Audit" for a category, leave that category out entirely, only audited
+categories appear in the report. The overall ring and every card's
+pass/fail wording are computed; you only copy the two counts per category.
+
+### 3i. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
 from the CSV (missing and duplicate titles, meta descriptions, H1 problems,
