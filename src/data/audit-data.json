@@ -60,5 +60,33 @@
       "socials": 40,
       "structuredData": 25
     }
+  },
+  "accessibility": {
+    "categories": {
+      "titles": {
+        "passed": 0,
+        "failed": 11
+      },
+      "graphics": {
+        "passed": 3,
+        "failed": 4
+      },
+      "forms": {
+        "passed": 0,
+        "failed": 1
+      },
+      "document": {
+        "passed": 3,
+        "failed": 0
+      },
+      "readability": {
+        "passed": 25,
+        "failed": 88
+      },
+      "general": {
+        "passed": 6,
+        "failed": 5
+      }
+    }
   }
 }
