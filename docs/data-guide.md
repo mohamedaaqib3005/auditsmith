@@ -239,7 +239,16 @@ Require Manual Audit" for a category, leave that category out entirely,
 only audited categories appear in the report. The overall ring and every card's
 pass/fail wording are computed; you only copy the two counts per category.
 
-### 3i. `onPageSeo` (never typed)
+### 3i. `technology` (automatic, never typed)
+
+The whole "06 Technology" chapter is written by `scripts/check-tech.js`:
+detected stack (CMS, analytics, libraries), web server, IP, charset, and
+the domain's SPF and DMARC email-security records via DNS. Run it with the
+other scripts (section 5); there is nothing to type or verify by hand. A
+DMARC of `p=none` shows amber ("present but not enforcing"), that is the
+record's real state, not an error.
+
+### 3j. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
 from the CSV (missing and duplicate titles, meta descriptions, H1 problems,
@@ -282,13 +291,15 @@ and 04 completely:
 ```
 node scripts/csv-to-data.js ~/Downloads/vlncy_internal_all.csv
 node scripts/check-ai.js
+node scripts/check-tech.js
 ```
 
 The first reads the crawl CSV: chapter 02's numbers, all of chapter 03,
 and the metaRobots check. The second visits the live site: llms.txt,
 robots.txt and AI crawler access, sitemap, Schema.org markup, and no-JS
-readability. Both print what they found and write it into
-`audit-data.json`; the preview updates by itself.
+readability. The third detects the technology stack, server details, and
+email-security DNS records for chapter 06. All print what they found and
+write it into `audit-data.json`; the preview updates by itself.
 
 Rerun either any time. They only replace what they measure; a hand-typed
 `redirectChains` or `"stale"` sitemap override is kept.

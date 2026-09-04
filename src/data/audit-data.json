@@ -12,9 +12,9 @@
     "fieldData": {
       "lcp": 2.2,
       "inp": null,
-      "cls": 0,
-      "fcp": 2,
-      "ttfb": 1
+      "cls": 0.3,
+      "fcp": 2.2,
+      "ttfb": 1.7
     },
     "labMetrics": {
       "fcp": 2.5,
@@ -56,7 +56,7 @@
     "structuredData": "missing",
     "contentAccess": "ok",
     "scores": {
-      "eeat": 65,
+      "EEAT": 65,
       "socials": 40,
       "structuredData": 25
     }
