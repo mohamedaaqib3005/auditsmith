@@ -333,58 +333,43 @@
     },
     {
       "type": "sectionDivider",
-      "number": "09",
-      "title": "Audit Results",
-      "description": "The results overview block: banner, hero grade, sub-grade row. All five grade colours, modifier handling (C+ colours as C), and the unknown-grade grey fallback."
+      "number": "10",
+      "title": "Checks",
+      "description": "The checks block: status icons in all four states, with and without value and recommendation, long-text wrapping, and the unknown-rating fallback."
     },
     {
-      "type": "auditResults",
-      "banner": "Audit Results",
-      "overall": {
-        "grade": "C",
-        "caption": "Your page could be better"
-      },
-      "grades": [
+      "type": "checks",
+      "items": [
         {
-          "label": "On-Page SEO",
-          "grade": "C+"
+          "label": "Passing check",
+          "value": "Everything in order",
+          "rating": "good"
         },
         {
-          "label": "GEO",
-          "grade": "D"
+          "label": "Amber check with recommendation",
+          "value": "Some pages affected",
+          "rating": "needs-improvement",
+          "recommendation": "The recommendation line explains what to do about it, and can run long enough to wrap onto a second line within the card body."
         },
         {
-          "label": "Usability",
-          "grade": "B"
+          "label": "Red check with recommendation",
+          "value": "Not found",
+          "rating": "poor",
+          "recommendation": "Fix the missing thing."
         },
         {
-          "label": "Performance",
-          "grade": "F"
+          "label": "Unknown rating renders grey dash",
+          "value": "Unrecognised state",
+          "rating": "surprise"
         },
         {
-          "label": "AI Readiness",
-          "grade": "A"
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "text": "Expected: hero C in amber; sub-grades C+ amber, D deep amber, B deep green, F red, A green."
-    },
-    {
-      "type": "auditResults",
-      "overall": {
-        "grade": "Z",
-        "caption": "Unknown grade renders grey"
-      },
-      "grades": [
-        {
-          "label": "No banner variant",
-          "grade": "B"
+          "label": "Minimal card: label and rating only",
+          "rating": "good"
         },
         {
-          "label": "Unknown letter",
-          "grade": "?"
+          "label": "A deliberately long check label to see how the header row shares space",
+          "value": "A long verdict value that should wrap within its right-hand column",
+          "rating": "needs-improvement"
         }
       ]
     }

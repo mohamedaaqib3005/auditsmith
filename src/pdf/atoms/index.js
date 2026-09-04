@@ -9,3 +9,4 @@ export { ScoreCircle } from "./ScoreCircle";
 export { TintedBox } from "./TintedBox";
 export { Card } from "./Card";
 export { Banner } from "./Banner";
+export { StatusIcon } from "./StatusIcon";

@@ -163,6 +163,47 @@ const ONPAGE_CHECKS = {
   thinPages: { label: "Thin content", issue: (n) => `${n} page${n === 1 ? "" : "s"} under 200 words` },
 };
 
+/* =========================================
+   AI Readiness knowledge - can AI systems read and use this site?
+   Enum values: ok | partial | missing (typed by hand; see docs 3h)
+========================================= */
+const AI_CHECKS = {
+  llmsTxt: {
+    label: "llms.txt",
+    ok: { status: "OK", notes: "Present at /llms.txt" },
+    missing: { status: "Missing", notes: "No /llms.txt file found" },
+    fix: "Add an llms.txt file at the site root describing the site and its key pages for AI systems.",
+  },
+  aiCrawlers: {
+    label: "AI crawler access",
+    ok: { status: "OK", notes: "GPTBot, ClaudeBot, PerplexityBot allowed" },
+    partial: { status: "Issues", notes: "Some AI crawlers blocked in robots.txt" },
+    missing: { status: "Missing", notes: "AI crawlers blocked in robots.txt" },
+    fix: "Remove the robots.txt Disallow rules for the AI crawlers the site should be visible to.",
+  },
+  structuredData: {
+    label: "Structured data (Schema.org)",
+    ok: { status: "OK", notes: "Schema.org markup present" },
+    partial: { status: "Issues", notes: "Only some pages or types marked up" },
+    missing: { status: "Missing", notes: "No Schema.org markup detected" },
+    fix: "Add Schema.org JSON-LD (Organization, WebSite, and page-type markup) so AI systems can interpret the site.",
+  },
+  metaRobots: {
+    label: "Meta robots",
+    ok: { status: "OK", notes: "No accidental noindex or noai blocking" },
+    partial: { status: "Issues", notes: "Some pages carry blocking directives" },
+    missing: { status: "Missing", notes: "Key pages blocked from indexing" },
+    fix: "Remove accidental noindex/none directives from pages that should be visible.",
+  },
+  contentAccess: {
+    label: "Content without JavaScript",
+    ok: { status: "OK", notes: "Core content readable without JS" },
+    partial: { status: "Issues", notes: "Some content requires JS to appear" },
+    missing: { status: "Missing", notes: "Page is empty without JS execution" },
+    fix: "Server-render or statically generate key content; many AI crawlers do not execute JavaScript.",
+  },
+};
+
 /* ---------- section builders ---------- */
 const pagespeedSections = (ps, date) => {
   if (!ps) return [];
@@ -306,6 +347,47 @@ const technicalSeoSections = (ts) => {
     s.push({ type: "metrics", title: "Crawl & Site Health", items: checkItems });
   }
 
+  // Indexability breakdown (why pages are excluded), when the crawl knows it
+  if (ts.nonIndexable && Object.keys(ts.nonIndexable).length) {
+    s.push({ type: "heading", text: "Indexability" });
+    s.push({
+      type: "keyValue",
+      items: Object.entries(ts.nonIndexable).map(([reason, n]) => ({
+        label: `${n} page${n === 1 ? "" : "s"}`,
+        value: reason,
+      })),
+    });
+  }
+
+  // Architecture, URLs and assets from the crawl's structural columns
+  const archItems = [
+    ts.parameterUrls != null && {
+      label: "Parameterised URLs",
+      value: ts.parameterUrls === 0 ? "None found" : `${ts.parameterUrls} URL${ts.parameterUrls === 1 ? "" : "s"} with query parameters`,
+      rating: ts.parameterUrls === 0 ? "good" : "needs-improvement",
+    },
+    ts.deepPages != null && {
+      label: "Deep pages (4+ clicks from home)",
+      value: ts.deepPages === 0 ? "None found" : `${ts.deepPages} page${ts.deepPages === 1 ? "" : "s"}`,
+      rating: ts.deepPages === 0 ? "good" : "needs-improvement",
+    },
+    ts.weakPages != null && {
+      label: "Weakly linked pages (1 or fewer inlinks)",
+      value: ts.weakPages === 0 ? "None found" : `${ts.weakPages} page${ts.weakPages === 1 ? "" : "s"}, orphan candidates`,
+      rating: ts.weakPages === 0 ? "good" : "needs-improvement",
+    },
+    ts.largeImages != null && {
+      label: "Large images (over 100 KB)",
+      value: ts.largeImages === 0 ? "None found" : `${ts.largeImages} of ${ts.imagesCrawled} images`,
+      rating: ts.largeImages === 0 ? "good" : "needs-improvement",
+    },
+  ].filter(Boolean);
+
+  if (archItems.length) {
+    s.push({ type: "heading", text: "Architecture & Assets" });
+    s.push({ type: "metrics", title: "Structure, Linking & Images", items: archItems });
+  }
+
   return s;
 };
 
@@ -354,6 +436,52 @@ const onPageSeoSections = (op, pages) => {
   return s;
 };
 
+const aiReadinessSections = (ai) => {
+  if (!ai) return [];
+  const s = [];
+
+  const STATUS_RATING = { OK: "good", Issues: "needs-improvement", Missing: "poor" };
+  const items = [];
+  for (const [key, check] of Object.entries(AI_CHECKS)) {
+    if (ai[key] == null) continue;
+    const state = check[ai[key]] || {
+      status: "Unknown",
+      notes: `Unrecognised value "${ai[key]}"`,
+    };
+    const rating = STATUS_RATING[state.status] || "na";
+    items.push({
+      label: check.label,
+      value: state.notes,
+      rating,
+      recommendation: rating !== "good" ? check.fix : undefined,
+    });
+  }
+  const issueCount = items.filter((i) => i.rating !== "good").length;
+
+  s.push({
+    type: "sectionDivider",
+    number: "04",
+    title: "AI Readiness",
+    description:
+      "Whether AI systems, the crawlers behind ChatGPT, Claude, Perplexity and Google's AI features, can find, read and correctly interpret this site.",
+  });
+
+  s.push({ type: "heading", text: "AI Visibility Checks" });
+  s.push({
+    type: "paragraph",
+    text:
+      issueCount === 0
+        ? "All AI readiness checks passed. The site is legible to AI crawlers and assistants."
+        : `${issueCount} of ${items.length} checks need attention. AI systems may be missing or misreading parts of this site.`,
+  });
+
+  if (items.length) {
+    s.push({ type: "checks", items });
+  }
+
+  return s;
+};
+
 /* ---------- the composer ---------- */
 export function composeReport(data) {
   // Escape hatch: already a document? Render as-is.
@@ -371,6 +499,7 @@ export function composeReport(data) {
     ...pagespeedSections(data.pagespeed, date),
     ...technicalSeoSections(data.technicalSeo),
     ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
+    ...aiReadinessSections(data.aiReadiness),
   ];
 
   return {
