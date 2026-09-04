@@ -17,7 +17,15 @@ export const COLS = {
   h1: ["H1-1", "H1 1"],
   h1b: ["H1-2", "H1 2"],
   words: ["Word Count"],
+  indexStatus: ["Indexability Status"],
+  depth: ["Crawl Depth"],
+  uniqueInlinks: ["Unique Inlinks"],
+  size: ["Size (bytes)", "Size (Bytes)", "Size"],
+  metaRobots: ["Meta Robots 1", "Meta Robots"],
 };
+
+const DEEP_CLICKS = 4;        // pages this many clicks or more from home
+const LARGE_IMAGE_KB = 100;   // images over this size get flagged
 
 const pickCol = (row, names) => names.find((n) => n in row) ?? null;
 const empty = (v) => v == null || String(v).trim() === "";
@@ -63,6 +71,23 @@ export function deriveFromCrawl(parsedRows) {
   // On-page checks only make sense on OK pages (a 404 has no title by nature)
   const okPages = pages.filter((r) => statusOf(r) === 200);
 
+  // Non-indexable breakdown by Screaming Frog's stated reason
+  let nonIndexable;
+  if (C.indexability && C.indexStatus) {
+    nonIndexable = {};
+    for (const r of pages) {
+      if (String(r[C.indexability] || "") === "Indexable") continue;
+      const reason = String(r[C.indexStatus] || "").trim() || "Unspecified";
+      nonIndexable[reason] = (nonIndexable[reason] || 0) + 1;
+    }
+    if (Object.keys(nonIndexable).length === 0) nonIndexable = undefined;
+  }
+
+  // Architecture & assets from the ignored columns
+  const images = C.contentType
+    ? rows.filter((r) => String(r[C.contentType] || "").startsWith("image/"))
+    : [];
+
   const technicalSeo = {
     pagesCrawled: pages.length,
     indexable: C.indexability
@@ -74,7 +99,35 @@ export function deriveFromCrawl(parsedRows) {
     https: rows.every((r) => String(r[C.address]).startsWith("https://"))
       ? "ok"
       : "partial",
+    nonIndexable,
+    parameterUrls: pages.filter((r) => String(r[C.address]).includes("?")).length,
+    deepPages: C.depth
+      ? okPages.filter((r) => Number(r[C.depth]) >= DEEP_CLICKS).length
+      : undefined,
+    weakPages: C.uniqueInlinks
+      ? okPages.filter(
+          (r) => Number(r[C.depth] ?? 1) > 0 && Number(r[C.uniqueInlinks]) <= 1
+        ).length
+      : undefined,
+    imagesCrawled: images.length || undefined,
+    largeImages:
+      images.length && C.size
+        ? images.filter((r) => Number(r[C.size]) > LARGE_IMAGE_KB * 1024).length
+        : undefined,
   };
+
+  // aiReadiness.metaRobots from the crawl's Meta Robots column:
+  // indexable-intended pages carrying noindex/none are accidents.
+  let aiReadiness;
+  if (C.metaRobots) {
+    const blocked = okPages.filter((r) =>
+      /noindex|\bnone\b/i.test(String(r[C.metaRobots] || ""))
+    ).length;
+    aiReadiness = {
+      metaRobots:
+        blocked === 0 ? "ok" : blocked / (okPages.length || 1) >= 0.5 ? "missing" : "partial",
+    };
+  }
 
   const onPageSeo = {};
   if (C.title) {
@@ -98,6 +151,7 @@ export function deriveFromCrawl(parsedRows) {
   return {
     ok: true,
     technicalSeo: clean(technicalSeo),
+    aiReadiness,
     onPageSeo,
     info: {
       rows: rows.length,
@@ -117,5 +171,8 @@ export function mergeCrawl(data, derived) {
     ...data,
     technicalSeo: { ...(data.technicalSeo || {}), ...derived.technicalSeo },
     onPageSeo: { ...(data.onPageSeo || {}), ...derived.onPageSeo },
+    ...(derived.aiReadiness
+      ? { aiReadiness: { ...(data.aiReadiness || {}), ...derived.aiReadiness } }
+      : {}),
   };
 }

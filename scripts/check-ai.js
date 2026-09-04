@@ -1,13 +1,20 @@
 // scripts/check-ai.js
-// AI-readiness fetcher: checks the two URL-checkable facts and writes them
-// into audit-data.json's aiReadiness block.
+// Site fetcher: every fact checkable by requesting URLs, written into
+// audit-data.json. Evidence only - a failed fetch writes nothing.
 //
-//   llmsTxt    - does https://site/llms.txt exist?
-//   aiCrawlers - does robots.txt block GPTBot / ClaudeBot / PerplexityBot /
-//                Google-Extended?
+// aiReadiness:
+//   llmsTxt        - /llms.txt exists?
+//   aiCrawlers     - robots.txt blocks GPTBot/ClaudeBot/PerplexityBot/Google-Extended?
+//   structuredData - homepage carries Schema.org markup? (homepage-only check)
+//   contentAccess  - homepage text readable WITHOUT JavaScript? (a plain fetch
+//                    runs no JS - it sees exactly what AI crawlers see)
+// technicalSeo:
+//   robotsTxt      - /robots.txt exists?
+//   sitemap        - /sitemap.xml (or /sitemap_index.xml) exists?
+//                    ("stale" cannot be fetched; overwrite by hand if known)
 //
-// The three judgment fields (structuredData, metaRobots, contentAccess)
-// stay typed by hand; this script never touches them.
+// metaRobots comes from the crawl CSV (csv-to-data.js). redirectChains needs
+// Screaming Frog's Redirect Chains report; absent = its row simply not shown.
 //
 // Usage:
 //   node scripts/check-ai.js            (site read from audit-data.json)
@@ -105,17 +112,77 @@ const checkAiCrawlers = async () => {
   };
 };
 
+// ---- structured data: Schema.org markup on the homepage ----
+const checkStructuredData = async (html) => {
+  if (html == null) return { value: null, detail: "homepage not fetched" };
+  const ldJson = /<script[^>]+application\/ld\+json/i.test(html);
+  const microdata = /itemtype\s*=\s*["']https?:\/\/schema\.org/i.test(html);
+  return ldJson || microdata
+    ? { value: "ok", detail: `homepage has ${ldJson ? "JSON-LD" : "microdata"} markup` }
+    : { value: "missing", detail: "no Schema.org markup on homepage" };
+};
+
+// ---- content access: readable text without JavaScript ----
+// This fetch executed no JS, so the text below is what AI crawlers get.
+const checkContentAccess = async (html) => {
+  if (html == null) return { value: null, detail: "homepage not fetched" };
+  const text = html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z#0-9]+;/gi, " ");
+  const words = text.split(/\s+/).filter((w) => w.length > 1).length;
+  if (words >= 100) return { value: "ok", detail: `${words} words readable without JS` };
+  if (words >= 20) return { value: "partial", detail: `only ${words} words without JS` };
+  return { value: "missing", detail: `page nearly empty without JS (${words} words)` };
+};
+
+// ---- sitemap: /sitemap.xml or /sitemap_index.xml ----
+const checkSitemap = async () => {
+  for (const path of ["/sitemap.xml", "/sitemap_index.xml"]) {
+    const r = await get(`${origin}${path}`);
+    if (r.status === 200 && /<(urlset|sitemapindex)/i.test(r.text))
+      return { value: "ok", detail: `found at ${path}` };
+    if (r.status === 0) return { value: null, detail: `could not check (${r.error})` };
+  }
+  return { value: "missing", detail: "no sitemap.xml or sitemap_index.xml" };
+};
+
+const homepage = await get(`${origin}/`);
+const html = homepage.status === 200 ? homepage.text : null;
+
 const llms = await checkLlmsTxt();
+const crawlersRes = await get(`${origin}/robots.txt`);
 const crawlers = await checkAiCrawlers();
+const structured = await checkStructuredData(html);
+const access = await checkContentAccess(html);
+const sitemap = await checkSitemap();
+const robotsTxt =
+  crawlersRes.status === 200
+    ? { value: "ok", detail: "present" }
+    : crawlersRes.status === 404
+    ? { value: "missing", detail: "HTTP 404" }
+    : { value: null, detail: `could not check (${crawlersRes.error || `HTTP ${crawlersRes.status}`})` };
 
 data.aiReadiness = { ...(data.aiReadiness || {}) };
-if (llms.value) data.aiReadiness.llmsTxt = llms.value;
-if (crawlers.value) data.aiReadiness.aiCrawlers = crawlers.value;
+for (const [k, r] of [["llmsTxt", llms], ["aiCrawlers", crawlers], ["structuredData", structured], ["contentAccess", access]]) {
+  if (r.value) data.aiReadiness[k] = r.value;
+}
+data.technicalSeo = { ...(data.technicalSeo || {}) };
+if (sitemap.value && data.technicalSeo.sitemap !== "stale") data.technicalSeo.sitemap = sitemap.value;
+if (robotsTxt.value) data.technicalSeo.robotsTxt = robotsTxt.value;
+
 fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2) + "\n");
 
 const line = (name, r) =>
-  `  ${name.padEnd(12)}: ${(r.value || "not written").padEnd(11)} (${r.detail})`;
+  `  ${name.padEnd(15)}: ${(r.value || "not written").padEnd(11)} (${r.detail})`;
 console.log(`Checked ${origin}:`);
+console.log("aiReadiness:");
 console.log(line("llmsTxt", llms));
 console.log(line("aiCrawlers", crawlers));
-console.log(`\nWritten to ${DATA_PATH}. Hand-checked fields untouched.`);
+console.log(line("structuredData", structured));
+console.log(line("contentAccess", access));
+console.log("technicalSeo:");
+console.log(line("sitemap", sitemap));
+console.log(line("robotsTxt", robotsTxt));
+console.log(`\nWritten to ${DATA_PATH}. metaRobots comes from the crawl CSV; redirectChains from SF's Redirect Chains report.`);

@@ -28,7 +28,17 @@
     "pagesCrawled": 37,
     "indexable": 36,
     "brokenLinks": 1,
-    "https": "ok"
+    "https": "ok",
+    "nonIndexable": {
+      "Client Error": 1
+    },
+    "parameterUrls": 4,
+    "deepPages": 0,
+    "weakPages": 11,
+    "imagesCrawled": 69,
+    "largeImages": 27,
+    "sitemap": "ok",
+    "robotsTxt": "ok"
   },
   "onPageSeo": {
     "missingTitles": 0,
@@ -41,6 +51,9 @@
   },
   "aiReadiness": {
     "llmsTxt": "missing",
-    "aiCrawlers": "ok"
+    "aiCrawlers": "ok",
+    "metaRobots": "ok",
+    "structuredData": "missing",
+    "contentAccess": "ok"
   }
 }
