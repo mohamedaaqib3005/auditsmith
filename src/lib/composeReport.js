@@ -406,8 +406,8 @@ const onPageSeoSections = (op, pages) => {
         n === 0
           ? "good"
           : check.severe && check.severe(n, pages || 0)
-          ? "poor"
-          : "needs-improvement",
+            ? "poor"
+            : "needs-improvement",
     });
   }
   const issueCount = items.filter((i) => i.rating !== "good").length;
@@ -504,17 +504,36 @@ const accessibilitySections = (a) => {
     text:
       totalFailed === 0
         ? `All ${total} automated accessibility checks passed across ${items.length} categories.`
-        : `${totalFailed} of ${total} automated checks failed across ${items.length} audited categories, detailed below. Categories the tool could not audit automatically are not shown.`,
+        : `${totalFailed} of ${total} automated checks failed across ${items.length} audited categories, so the site is not compliant under WCAG 2.0, 2.1 and 2.2. Categories the tool could not audit automatically are not shown.`,
   });
 
-  if (pct != null) {
-    s.push({
-      type: "scorecard",
-      items: [
-        { label: `Checks passed (${totalPassed} of ${total})`, score: totalPassed, max: total, display: `${pct}%`, size: 72 },
-      ],
+  const rings = [];
+  if (a.score != null) {
+    rings.push({
+      label: "Accessibility Score",
+      score: a.score,
+      max: 100,
+      display: `${Math.round(a.score)}`,
+      size: 72,
     });
   }
+  if (pct != null) {
+    rings.push({
+      label: `Checks passed (${totalPassed} of ${total})`,
+      score: totalPassed,
+      max: total,
+      display: `${pct}%`,
+      size: 72,
+    });
+    rings.push({
+      label: "WCAG 2.0, 2.1 & 2.2 failed",
+      score: totalPassed,
+      max: total,
+      display: `${totalFailed}`,
+      size: 72,
+    });
+  }
+  if (rings.length) s.push({ type: "scorecard", items: rings });
 
   s.push({ type: "checks", items });
 
