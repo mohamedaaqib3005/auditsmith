@@ -406,8 +406,8 @@ const onPageSeoSections = (op, pages) => {
         n === 0
           ? "good"
           : check.severe && check.severe(n, pages || 0)
-            ? "poor"
-            : "needs-improvement",
+          ? "poor"
+          : "needs-improvement",
     });
   }
   const issueCount = items.filter((i) => i.rating !== "good").length;
@@ -457,6 +457,76 @@ const ACCESS_CATEGORIES = {
   tables: { label: "Tables", fix: "Use header cells and scope attributes so table data reads correctly." },
   general: { label: "General", fix: "Resolve the remaining WCAG failures flagged in the checker's General group." },
   media: { label: "Audio & Video", fix: "Provide captions and transcripts for audio and video content." },
+};
+
+/* =========================================
+   Technology knowledge - email security checks (script-measured, docs 5)
+========================================= */
+const EMAIL_CHECKS = {
+  spf: {
+    label: "SPF record",
+    ok: { value: "Present, senders authorised", rating: "good" },
+    missing: { value: "No SPF record found", rating: "poor" },
+    fix: "Add an SPF TXT record listing the servers allowed to send mail for this domain.",
+  },
+  dmarc: {
+    label: "DMARC record",
+    ok: { value: "Present and enforcing", rating: "good" },
+    partial: { value: "Present but not enforcing (p=none)", rating: "needs-improvement" },
+    missing: { value: "No DMARC record found", rating: "poor" },
+    fix: "Publish a _dmarc record with p=quarantine or p=reject to protect the domain from spoofing.",
+  },
+};
+
+const technologySections = (t) => {
+  if (!t) return [];
+  const s = [];
+
+  s.push({
+    type: "sectionDivider",
+    number: "06",
+    title: "Technology",
+    description:
+      "The stack the site runs on - platform, libraries and server - and whether the domain's email is protected against spoofing.",
+  });
+
+  const kv = [
+    t.server && { label: "Web server", value: t.server },
+    t.ip && { label: "IP address", value: t.ip },
+    t.charset && { label: "Charset", value: t.charset },
+    t.detected?.length && { label: "Detected technologies", value: t.detected.join(", ") },
+  ].filter(Boolean);
+
+  if (kv.length) {
+    s.push({ type: "heading", text: "Stack & Server" });
+    s.push({ type: "keyValue", items: kv });
+  }
+
+  const emailItems = [];
+  for (const [key, check] of Object.entries(EMAIL_CHECKS)) {
+    if (t[key] == null) continue;
+    const state = check[t[key]] || { value: `Unrecognised value "${t[key]}"`, rating: "na" };
+    emailItems.push({
+      label: check.label,
+      value: state.value,
+      rating: state.rating,
+      recommendation: state.rating !== "good" ? check.fix : undefined,
+    });
+  }
+  if (emailItems.length) {
+    const bad = emailItems.filter((i) => i.rating !== "good").length;
+    s.push({ type: "heading", text: "Email Security" });
+    s.push({
+      type: "paragraph",
+      text:
+        bad === 0
+          ? "The domain's email authentication records are in place and enforcing."
+          : `${bad} of ${emailItems.length} email authentication checks need attention - the domain is not fully protected against spoofing.`,
+    });
+    s.push({ type: "checks", items: emailItems });
+  }
+
+  return s.length > 1 ? s : [];
 };
 
 const accessibilitySections = (a) => {
@@ -620,6 +690,7 @@ export function composeReport(data) {
     ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
     ...aiReadinessSections(data.aiReadiness),
     ...accessibilitySections(data.accessibility),
+    ...technologySections(data.technology),
   ];
 
   return {

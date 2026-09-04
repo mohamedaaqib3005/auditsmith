@@ -89,5 +89,20 @@
       }
     },
     "score": 44.61
+  },
+  "technology": {
+    "detected": [
+      "Google Tag Manager",
+      "Google Analytics",
+      "jQuery",
+      "Bootstrap",
+      "Tailwind CSS",
+      "Google Fonts"
+    ],
+    "server": "Microsoft-IIS/10.0",
+    "charset": "utf-8",
+    "ip": "104.211.97.138",
+    "spf": "ok",
+    "dmarc": "partial"
   }
 }
