@@ -48,16 +48,16 @@ The complete file looks like this. This is EVERYTHING a user types:
   },
 
   "technicalSeo": {
-    "sitemap": "ok",
-    "robotsTxt": "ok",
     "redirectChains": 0
   }
 }
 ```
 
-You may also see `onPageSeo` and extra `technicalSeo` numbers
-(`pagesCrawled`, `indexable`, `brokenLinks`, `https`) in the file. Those are
-written by the crawl script (section 7 below), you never type them.
+`redirectChains` is the ONLY field outside pagespeed you may type, and even
+it is optional (no value = its row simply not shown; the number comes from
+Screaming Frog's Reports menu, Redirect Chains). Everything else in
+`technicalSeo`, `onPageSeo`, and `aiReadiness` is written by the two scripts
+(section 5 below), you never type any of it.
 
 **Golden rule: numbers only, no units.** Write `2.2`, never `"2.2 s"` or
 `2.2s`. The system adds units, colours, and labels itself.
@@ -75,9 +75,9 @@ You type 5 things. The system derives the rest:
 | `scores` | The coloured score circles |
 | `fieldData` | The Field Data rows, each colour-rated, plus the Passed/Failed assessment |
 | `labMetrics` | The Lab Metrics rows, each colour-rated |
-| `technicalSeo` (3 fields) | You type only `sitemap`, `robotsTxt`, `redirectChains`. The crawl numbers come from the script (section 7) and together they build the "02 Technical SEO" chapter |
-| (the crawl script) | `onPageSeo` counts and the "03 On-Page SEO" chapter, entirely automatic |
-| `aiReadiness` (5 fields) | The "04 AI Readiness" chapter, five one-word checks you verify in a browser |
+| `redirectChains` (optional) | The one non-pagespeed field you may type; its row appears only when set |
+| (the crawl script) | `technicalSeo` crawl numbers, all `onPageSeo` counts, and `metaRobots`; chapters 02 and 03 |
+| (the site checker) | sitemap, robots.txt, llms.txt, AI crawler access, Schema.org, no-JS readability; the rest of chapters 02 and 04 |
 | (nothing) | Today's date, on the cover and in the header, automatically |
 
 You never type: dates, names, ratings, labels, section headings, or the
@@ -165,45 +165,33 @@ Units: fcp, lcp, speedIndex in **seconds**; tbt in **milliseconds**; cls
 
 ---
 
-### 3f. `technicalSeo` (three small fields, the rest is automatic)
+### 3f. `technicalSeo` (automatic; one optional field)
 
-Most of this chapter's numbers come from the crawl script (section 7). You
-type only three things the crawl cannot know:
+Everything here is written by the scripts: the crawl numbers by
+`csv-to-data.js`, and `sitemap` / `robotsTxt` by `check-ai.js`, which
+actually visits the site and records what it finds.
 
-| Field | Allowed values | How to check |
-|---|---|---|
-| `sitemap` | `"ok"`, `"stale"`, `"missing"` | Open `https://the-site.com/sitemap.xml` in a browser. Loads with current URLs = ok. Loads but lists old/removed pages = stale. Error page = missing |
-| `robotsTxt` | `"ok"`, `"missing"` | Open `https://the-site.com/robots.txt`. Loads = ok. Error = missing |
-| `redirectChains` | a number | In Screaming Frog: Reports menu, Redirect Chains. The number of chains it lists, `0` if none |
+Two things a human can still add:
 
-Lowercase, in quotes (the number without quotes). A misspelled value shows
-as "Unknown" in the report table, visibly, so you can catch it.
-
-### 3g. `aiReadiness` (five one-word checks, about five minutes)
-
-Whether AI systems (ChatGPT, Claude, Perplexity, Google AI) can read the
-site. Each field takes `"ok"`, `"partial"`, or `"missing"` (lowercase, in
-quotes; `llmsTxt` has no partial):
-
-```json
-"aiReadiness": {
-  "llmsTxt": "missing",
-  "aiCrawlers": "ok",
-  "structuredData": "missing",
-  "metaRobots": "ok",
-  "contentAccess": "ok"
-}
-```
-
-| Field | How to check |
+| Field | When |
 |---|---|
-| `llmsTxt` | Open `https://the-site.com/llms.txt`. A text file loads = ok. Error page = missing |
-| `aiCrawlers` | Open `https://the-site.com/robots.txt`. Search for GPTBot, ClaudeBot, PerplexityBot, Google-Extended. None blocked = ok. Some blocked = partial. All or everything blocked = missing |
-| `structuredData` | Paste the site URL into Google's Rich Results Test (search.google.com/test/rich-results). Markup detected = ok. Only on some pages = partial. None = missing |
-| `metaRobots` | In the Screaming Frog crawl, check the "Meta Robots 1" column. No noindex on real pages = ok. A few accidental ones = partial. Key pages blocked = missing |
-| `contentAccess` | In Chrome DevTools press Ctrl+Shift+P, type "Disable JavaScript", reload the site. Content still visible = ok. Some missing = partial. Blank page = missing |
+| `redirectChains` | Optional. Screaming Frog: Reports menu, Redirect Chains; type the number it lists. Absent = row not shown |
+| `sitemap: "stale"` | Override. The checker can prove a sitemap exists, not whether its URLs are current. If you know it lists old pages, change `"ok"` to `"stale"` by hand; the scripts will not overwrite a `"stale"` you typed |
 
-Delete any field you did not check; its row simply will not appear.
+### 3g. `aiReadiness` (automatic)
+
+All five fields are filled by the scripts, none are typed:
+
+| Field | Filled by | How it is measured |
+|---|---|---|
+| `llmsTxt` | site checker | requests `/llms.txt`; 404 = missing |
+| `aiCrawlers` | site checker | downloads robots.txt and parses it for GPTBot, ClaudeBot, PerplexityBot, Google-Extended blocks |
+| `structuredData` | site checker | scans the homepage HTML for Schema.org markup (JSON-LD or microdata) |
+| `contentAccess` | site checker | fetches the homepage WITHOUT JavaScript (exactly what AI crawlers see) and counts readable words |
+| `metaRobots` | crawl script | reads the crawl's "Meta Robots" column for accidental noindex on real pages |
+
+If a check cannot run (site unreachable, blocked), the script writes
+nothing for that field rather than guessing, and says so in its output.
 
 ### 3h. `onPageSeo` (never typed)
 
@@ -232,9 +220,10 @@ automatically when you change `site`.
 
 ---
 
-## 5. The crawl script: filling sections 02 and 03 automatically
+## 5. The two scripts: filling everything except PageSpeed
 
-Once per audit, after crawling the site:
+Once per audit, after crawling the site, two commands fill chapters 02, 03
+and 04 completely:
 
 1. Open Screaming Frog SEO Spider, enter the site URL, press Start, wait
    for the crawl to finish
@@ -246,15 +235,17 @@ Once per audit, after crawling the site:
 
 ```
 node scripts/csv-to-data.js ~/Downloads/vlncy_internal_all.csv
+node scripts/check-ai.js
 ```
 
-The script prints what it found and writes it into `audit-data.json`. The
-preview updates by itself, chapters 02 and 03 now show the crawled truth.
-It also reminds you which of the three hand-typed fields from 3f are still
-empty.
+The first reads the crawl CSV: chapter 02's numbers, all of chapter 03,
+and the metaRobots check. The second visits the live site: llms.txt,
+robots.txt and AI crawler access, sitemap, Schema.org markup, and no-JS
+readability. Both print what they found and write it into
+`audit-data.json`; the preview updates by itself.
 
-Rerun it any time, after a fresh crawl for example. It only replaces the
-numbers it derives; your three hand-typed fields are kept.
+Rerun either any time. They only replace what they measure; a hand-typed
+`redirectChains` or `"stale"` sitemap override is kept.
 
 ---
 
@@ -265,9 +256,10 @@ numbers it derives; your three hand-typed fields are kept.
 - [ ] Every metric you typed appears with a colour dot; values match Google's
 - [ ] The date on the cover is today
 - [ ] No units, quotes, or colour words crept into the numbers
-- [ ] The crawl script has been run against this site's own CSV (chapters 02
-  and 03 show its numbers, not a previous site's)
-- [ ] The three hand-typed technicalSeo fields are set and match reality
+- [ ] Both scripts have been run for THIS site (its own crawl CSV, and
+  check-ai against its own domain, not a previous client's)
+- [ ] The sitemap value reflects reality (add the "stale" override if you
+  know the sitemap lists outdated pages)
 
 ---
 
