@@ -193,6 +193,22 @@ All five fields are filled by the scripts, none are typed:
 If a check cannot run (site unreachable, blocked), the script writes
 nothing for that field rather than guessing, and says so in its output.
 
+**One typed extra: the three AI score rings.** Run the site through
+Seomator's free audit (seomator.com/free-seo-audit-tool) and copy its
+E-E-A-T, Social Signals, and Structured Data scores as plain numbers:
+
+```json
+"aiReadiness": {
+  "scores": { "eeat": 65, "socials": 40, "structuredData": 25 }
+}
+```
+
+(These sit inside the existing aiReadiness block, next to the automatic
+fields.) Delete any score you did not collect; its ring simply will not
+appear. Note `structuredData` appears twice by design: the automatic
+ok/missing check, and this typed 0-100 score, they are different
+measurements.
+
 ### 3h. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
