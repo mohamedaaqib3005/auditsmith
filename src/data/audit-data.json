@@ -54,6 +54,11 @@
     "aiCrawlers": "ok",
     "metaRobots": "ok",
     "structuredData": "missing",
-    "contentAccess": "ok"
+    "contentAccess": "ok",
+    "scores": {
+      "eeat": 65,
+      "socials": 40,
+      "structuredData": 25
+    }
   }
 }

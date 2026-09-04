@@ -436,6 +436,12 @@ const onPageSeoSections = (op, pages) => {
   return s;
 };
 
+const AI_SCORE_LABELS = {
+  eeat: "E-E-A-T",
+  socials: "Social Signals",
+  structuredData: "Structured Data",
+};
+
 const aiReadinessSections = (ai) => {
   if (!ai) return [];
   const s = [];
@@ -474,6 +480,21 @@ const aiReadinessSections = (ai) => {
         ? "All AI readiness checks passed. The site is legible to AI crawlers and assistants."
         : `${issueCount} of ${items.length} checks need attention. AI systems may be missing or misreading parts of this site.`,
   });
+
+  // Big score rings (typed from the Seomator audit for now)
+  if (ai.scores) {
+    s.push({
+      type: "scorecard",
+      items: Object.entries(ai.scores)
+        .filter(([, v]) => v != null)
+        .map(([key, v]) => ({
+          label: AI_SCORE_LABELS[key] || key,
+          score: v,
+          max: 100,
+          size: 72,
+        })),
+    });
+  }
 
   if (items.length) {
     s.push({ type: "checks", items });

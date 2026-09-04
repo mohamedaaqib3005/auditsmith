@@ -118,6 +118,26 @@
       "text": "Expected: red, amber, green, green (2/2), green. A score of exactly 90 sits in the green band; exactly 50 would sit in amber."
     },
     {
+      "type": "scorecard",
+      "items": [
+        {
+          "label": "Big ring (size 72), red band",
+          "score": 25,
+          "size": 72
+        },
+        {
+          "label": "Big ring, amber band",
+          "score": 65,
+          "size": 72
+        },
+        {
+          "label": "Big ring, green band",
+          "score": 92,
+          "size": 72
+        }
+      ]
+    },
+    {
       "type": "sectionDivider",
       "number": "04",
       "title": "Metrics",
