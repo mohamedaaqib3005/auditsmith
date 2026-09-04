@@ -38,5 +38,9 @@
     "missingH1": 22,
     "multipleH1": 14,
     "thinPages": 2
+  },
+  "aiReadiness": {
+    "llmsTxt": "missing",
+    "aiCrawlers": "ok"
   }
 }
