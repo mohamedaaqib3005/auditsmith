@@ -247,6 +247,21 @@ readability. Both print what they found and write it into
 Rerun either any time. They only replace what they measure; a hand-typed
 `redirectChains` or `"stale"` sitemap override is kept.
 
+### No terminal? Use the buttons
+
+The purple bar above the PDF preview does the same two jobs without
+commands:
+
+- **Drop the crawl CSV** onto the dashed box (or click it to pick the
+  file) = the first command
+- **Check live site** = the second command; it checks whatever `site` the
+  data currently names
+
+One difference matters: the buttons update the PREVIEW for this browser
+session only, a refresh loses it. To keep the results, either run the
+terminal commands (they write the file directly) or press **Copy JSON**
+and paste over the contents of `src/data/audit-data.json`.
+
 ---
 
 ## 6. Checklist before you call it done
@@ -258,6 +273,8 @@ Rerun either any time. They only replace what they measure; a hand-typed
 - [ ] No units, quotes, or colour words crept into the numbers
 - [ ] Both scripts have been run for THIS site (its own crawl CSV, and
   check-ai against its own domain, not a previous client's)
+- [ ] If the buttons were used instead of the terminal, the results were
+  saved (Copy JSON pasted into the file), a refresh must not lose them
 - [ ] The sitemap value reflects reality (add the "stale" override if you
   know the sitemap lists outdated pages)
 
