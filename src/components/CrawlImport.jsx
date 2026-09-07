@@ -47,7 +47,7 @@ const ui = {
   },
 };
 
-const CrawlImport = ({ data, onData }) => {
+const CrawlImport = ({ data, onData, onDownload }) => {
   const [dragOver, setDragOver] = useState(false);
   const [status, setStatus] = useState(null);
   const [error, setError] = useState(null);
@@ -170,6 +170,12 @@ const CrawlImport = ({ data, onData }) => {
       <button style={ui.button} onClick={copyJson}>
         Copy JSON
       </button>
+
+      {onDownload && (
+        <button style={ui.button} onClick={onDownload}>
+          Download PDF
+        </button>
+      )}
     </div>
   );
 };
