@@ -255,7 +255,31 @@ Facts, not verdicts: `spf` is `true`/`false`, `dmarc` is the actual policy
 shows amber in the report ("present but not enforcing"), that is the
 record's real state, not an error.
 
-### 3j. `onPageSeo` (never typed)
+### 3j. `theme` (optional brand colour)
+
+To give the report a client's brand feel, add one hex colour:
+
+```json
+"theme": { "brand": "#0B5FFF" }
+```
+
+The whole colour system derives from it: cover, headings, dividers and
+tinted boxes recolour together. Leave the block out entirely and the
+report uses the default purple. Or let the brand script find it:
+
+```
+node scripts/check-brand.js
+```
+
+It reads the colour the site declares about itself (theme-color meta tag,
+web manifest, or the most used saturated colour in its markup) and writes
+`theme.brand`. It never overwrites a brand you set by hand (add `--force`
+to insist), and eyeball the cover after, a detected colour is a good
+starting point, not a designer. The traffic-light colours (green, amber,
+red rings, dots and icons) and grade colours never change, those mean
+good/warning/bad, not brand. Layout, fonts and structure are unaffected.
+
+### 3k. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
 from the CSV (missing and duplicate titles, meta descriptions, H1 problems,
