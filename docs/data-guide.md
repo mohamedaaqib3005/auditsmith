@@ -21,30 +21,27 @@ The complete file looks like this. This is EVERYTHING a user types:
   "site": "vlncy.com",
   "pagespeed": {
     "mobile": {
-
-    "scores": {
-      "performance": 79,
-      "accessibility": 88,
-      "bestPractices": 96,
-      "seo": 92,
-      "agenticBrowsing": 2
-    },
-
-    "fieldData": {
-      "lcp": 2.2,
-      "inp": null,
-      "cls": 0,
-      "fcp": 2,
-      "ttfb": 1
-    },
-
-    "labMetrics": {
-      "fcp": 2.5,
-      "lcp": 2.5,
-      "tbt": 480,
-      "cls": 0,
-      "speedIndex": 4.6
-    }
+      "scores": {
+        "performance": 79,
+        "accessibility": 88,
+        "bestPractices": 96,
+        "seo": 92,
+        "agenticBrowsing": 2
+      },
+      "fieldData": {
+        "lcp": 2.2,
+        "inp": null,
+        "cls": 0,
+        "fcp": 2,
+        "ttfb": 1
+      },
+      "labMetrics": {
+        "fcp": 2.5,
+        "lcp": 2.5,
+        "tbt": 480,
+        "cls": 0,
+        "speedIndex": 4.6
+      }
     }
   },
 
@@ -77,7 +74,7 @@ You type 5 things. The system derives the rest:
 | `fieldData` | The Field Data rows, each colour-rated, plus the Passed/Failed assessment |
 | `labMetrics` | The Lab Metrics rows, each colour-rated |
 | `redirectChains` (optional) | The one non-pagespeed field you may type; its row appears only when set |
-| (the crawl script) | `technicalSeo` crawl numbers, all `onPageSeo` counts, and `metaRobots`; chapters 02 and 03 |
+| (the crawl script) | `technicalSeo` crawl numbers, all `onPageSeo` counts, and `noindexPages`; chapters 02 and 03 |
 | (the site checker) | sitemap, robots.txt, llms.txt, AI crawler access, Schema.org, no-JS readability; the rest of chapters 02 and 04 |
 | (nothing) | Today's date, on the cover and in the header, automatically |
 
@@ -285,10 +282,10 @@ automatically when you change `site`.
 
 ---
 
-## 5. The two scripts: filling everything except PageSpeed
+## 5. The three scripts: filling everything except PageSpeed
 
-Once per audit, after crawling the site, two commands fill chapters 02, 03
-and 04 completely:
+Once per audit, after crawling the site, three commands fill chapters 02,
+03, 04 and 06 completely:
 
 1. Open Screaming Frog SEO Spider, enter the site URL, press Start, wait
    for the crawl to finish
@@ -305,7 +302,7 @@ node scripts/check-tech.js
 ```
 
 The first reads the crawl CSV: chapter 02's numbers, all of chapter 03,
-and the metaRobots check. The second visits the live site: llms.txt,
+and the noindexPages count. The second visits the live site: llms.txt,
 robots.txt and AI crawler access, sitemap, Schema.org markup, and no-JS
 readability. The third detects the technology stack, server details, and
 email-security DNS records for chapter 06. All print what they found and
