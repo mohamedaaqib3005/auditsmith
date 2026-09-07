@@ -230,40 +230,37 @@ const AI_FACT_CHECKS = {
 };
 
 /* ---------- section builders ---------- */
-const pagespeedSections = (ps, date) => {
-  if (!ps) return [];
-  const s = [];
-  const device = ps.device === "desktop" ? "desktop" : "mobile";
-  const cond = TEST_CONDITIONS[device];
-  const assessment = assess(ps.fieldData);
+const DEVICE_LABELS = { mobile: "Mobile", desktop: "Desktop" };
 
-  s.push({
-    type: "sectionDivider",
-    number: "01",
-    title: "PageSpeed Insights",
-    description: `Google PageSpeed Insights results: real-user Core Web Vitals, Lighthouse lab metrics. Tested ${date} on ${device}.`,
-  });
+// One device's full result block: assessment, scorecard, field, lab, conditions
+const deviceBlocks = (device, ps, labelHeadings) => {
+  const b = [];
+  const cond = TEST_CONDITIONS[device] || TEST_CONDITIONS.mobile;
+  const assessment = assess(ps.fieldData);
+  const name = DEVICE_LABELS[device] || device;
+
+  if (labelHeadings) b.push({ type: "heading", text: `${name} Results` });
 
   if (ps.fieldData) {
-    s.push({ type: "heading", text: "Core Web Vitals Assessment" });
-    s.push({
+    if (!labelHeadings) b.push({ type: "heading", text: "Core Web Vitals Assessment" });
+    b.push({
       type: "paragraph",
-      text: `Field data from real users over the latest 28-day period (Chrome UX Report). Overall assessment: ${assessment}.`,
+      text: `Field data from real users over the latest 28-day period (Chrome UX Report)${labelHeadings ? `, ${name.toLowerCase()} devices` : ""}. Overall assessment: ${assessment}.`,
     });
   }
 
-  if (ps.scores) s.push({ type: "scorecard", items: scoreItems(ps.scores) });
+  if (ps.scores) b.push({ type: "scorecard", items: scoreItems(ps.scores) });
 
   if (ps.fieldData)
-    s.push({
+    b.push({
       type: "metrics",
-      title: "Field Data (Real Users)",
+      title: `Field Data (Real Users${labelHeadings ? `, ${name}` : ""})`,
       items: metricItems(ps.fieldData, FIELD_THRESHOLDS),
     });
 
   if (ps.labMetrics) {
-    s.push({ type: "heading", text: "Lab Metrics (Lighthouse)" });
-    s.push({
+    b.push({ type: "heading", text: labelHeadings ? `Lab Metrics (Lighthouse, ${name})` : "Lab Metrics (Lighthouse)" });
+    b.push({
       type: "metrics",
       title: "Single Page Session, Initial Load",
       items: metricItems(ps.labMetrics, LAB_THRESHOLDS),
@@ -271,12 +268,12 @@ const pagespeedSections = (ps, date) => {
   }
 
   if (ps.findings?.length) {
-    s.push({ type: "heading", text: "Performance Findings" });
-    s.push({ type: "findings", items: ps.findings });
+    b.push({ type: "heading", text: "Performance Findings" });
+    b.push({ type: "findings", items: ps.findings });
   }
 
-  s.push({ type: "heading", text: "Test Conditions" });
-  s.push({
+  b.push({ type: "heading", text: labelHeadings ? `Test Conditions (${name})` : "Test Conditions" });
+  b.push({
     type: "keyValue",
     items: [
       { label: "Tool", value: cond.tool },
@@ -286,6 +283,36 @@ const pagespeedSections = (ps, date) => {
       { label: "Field data", value: "Latest 28-day period, Chrome UX Report" },
     ],
   });
+
+  return b;
+};
+
+const pagespeedSections = (ps, date) => {
+  if (!ps) return [];
+
+  // v2 contract: results keyed by device, either or both.
+  // v1 (flat with a "device" field) still tolerated: wrapped as one device.
+  let byDevice;
+  if (ps.mobile || ps.desktop) {
+    byDevice = { mobile: ps.mobile, desktop: ps.desktop };
+  } else {
+    const device = ps.device === "desktop" ? "desktop" : "mobile";
+    byDevice = { [device]: ps };
+  }
+
+  const devices = ["mobile", "desktop"].filter((d) => byDevice[d]);
+  if (!devices.length) return [];
+  const multi = devices.length > 1;
+
+  const s = [];
+  s.push({
+    type: "sectionDivider",
+    number: "01",
+    title: "PageSpeed Insights",
+    description: `Google PageSpeed Insights results: real-user Core Web Vitals, Lighthouse lab metrics. Tested ${date} on ${devices.map((d) => DEVICE_LABELS[d].toLowerCase()).join(" and ")}.`,
+  });
+
+  for (const d of devices) s.push(...deviceBlocks(d, byDevice[d], multi));
 
   return s;
 };
@@ -462,6 +489,7 @@ const onPageSeoSections = (op, pages) => {
 };
 
 const AI_SCORE_LABELS = {
+  EEAT: "E-E-A-T",
   eeat: "E-E-A-T",
   socials: "Social Signals",
   structuredData: "Structured Data",

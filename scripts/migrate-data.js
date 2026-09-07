@@ -10,10 +10,19 @@ const P = "src/data/audit-data.json";
 const d = JSON.parse(fs.readFileSync(P, "utf8"));
 const log = [];
 
-const sc = d.pagespeed?.scores;
-if (sc && typeof sc.agenticBrowsing === "string") {
-  sc.agenticBrowsing = Number(sc.agenticBrowsing.split("/")[0]);
-  log.push("agenticBrowsing -> number");
+// v2 pagespeed: results keyed by device (mobile/desktop), either optional
+if (d.pagespeed && !d.pagespeed.mobile && !d.pagespeed.desktop && (d.pagespeed.scores || d.pagespeed.fieldData)) {
+  const { device, ...rest } = d.pagespeed;
+  const key = device === "desktop" ? "desktop" : "mobile";
+  d.pagespeed = { [key]: rest };
+  log.push(`pagespeed -> keyed under "${key}"`);
+}
+for (const dev of ["mobile", "desktop"]) {
+  const sc = d.pagespeed?.[dev]?.scores;
+  if (sc && typeof sc.agenticBrowsing === "string") {
+    sc.agenticBrowsing = Number(sc.agenticBrowsing.split("/")[0]);
+    log.push(`${dev} agenticBrowsing -> number`);
+  }
 }
 
 const ts = d.technicalSeo;
@@ -38,11 +47,10 @@ if (ai) {
     delete ai.metaRobots;
   }
   if ("contentAccess" in ai) { delete ai.contentAccess; log.push("contentAccess removed: rerun check-ai to measure noJsWords"); }
-  if (ai.scores) {
-    for (const k of Object.keys(ai.scores)) {
-      const lk = k === "EEAT" ? "eeat" : k;
-      if (lk !== k) { ai.scores[lk] = ai.scores[k]; delete ai.scores[k]; log.push(`scores.${k} -> ${lk}`); }
-    }
+  if (ai.scores && "eeat" in ai.scores) {
+    ai.scores.EEAT = ai.scores.eeat;
+    delete ai.scores.eeat;
+    log.push("scores.eeat -> EEAT (canonical caps)");
   }
 }
 

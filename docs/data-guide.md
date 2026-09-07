@@ -20,7 +20,7 @@ The complete file looks like this. This is EVERYTHING a user types:
 {
   "site": "vlncy.com",
   "pagespeed": {
-    "device": "mobile",
+    "mobile": {
 
     "scores": {
       "performance": 79,
@@ -44,6 +44,7 @@ The complete file looks like this. This is EVERYTHING a user types:
       "tbt": 480,
       "cls": 0,
       "speedIndex": 4.6
+    }
     }
   },
 
@@ -71,7 +72,7 @@ You type 5 things. The system derives the rest:
 | You type | The system generates from it |
 |---|---|
 | `site` | Cover title, brand name ("Prepared for: Vlncy"), reference number (AUD-VLNCY-2026-001), summary text |
-| `device` | Type `"mobile"` or `"desktop"`, whichever tab you read the results from. Generates the Test Conditions box (device model, tool version, network throttling) |
+| `mobile` / `desktop` keys | Fill one or both; each generates its own results and Test Conditions box (device model, network throttling) |
 | `scores` | The coloured score circles |
 | `fieldData` | The Field Data rows, each colour-rated, plus the Passed/Failed assessment |
 | `labMetrics` | The Lab Metrics rows, each colour-rated |
@@ -97,22 +98,22 @@ The website you audited, e.g. `"vlncy.com"`. With or without `https://` is
 fine, the system cleans it. The brand name on the cover is taken from it
 automatically (vlncy.com becomes Vlncy).
 
-### 3b. `device`
+### 3b. Devices: `mobile` and `desktop`
 
-On the PageSpeed results page there are two tabs at the top: **Mobile** and
-**Desktop**. Type whichever one you selected before reading the numbers:
+PageSpeed results live under a device key, matching the two tabs on the
+results page:
 
 ```json
-"device": "mobile"
+"pagespeed": {
+  "mobile":  { "scores": ..., "fieldData": ..., "labMetrics": ... },
+  "desktop": { "scores": ..., "fieldData": ..., "labMetrics": ... }
+}
 ```
 
-or `"desktop"`. Lowercase, in quotes. Mobile is PageSpeed's default tab and
-usually what we report.
-
-This must match the tab you copied the scores and metrics from, the numbers
-differ between tabs, and this value also selects the correct Test Conditions
-text (device model, network throttling) in the PDF. Exactly `"mobile"` or
-`"desktop"`: any other spelling is silently treated as mobile.
+Fill in whichever tabs you tested, one or both. Each device you fill gets
+its own scores, metrics, and Test Conditions block in the report; a device
+you leave out simply does not appear. Read each tab's numbers into its own
+key, the mobile and desktop numbers differ, do not mix them.
 
 ### 3c. `scores`
 
@@ -206,7 +207,7 @@ E-E-A-T, Social Signals, and Structured Data scores as plain numbers:
 
 ```json
 "aiReadiness": {
-  "scores": { "eeat": 65, "socials": 40, "structuredData": 25 }
+  "scores": { "EEAT": 65, "socials": 40, "structuredData": 25 }
 }
 ```
 
@@ -365,9 +366,9 @@ Type them in the editor, do not paste them from chat apps.
 
 **5. Misspelled keys and values.** A typo like `"speedindex"` does not
 error, the metric just silently disappears from the PDF. If a row is
-missing, check the key's spelling against this guide first. Same for
-`device`: anything other than exactly `"mobile"` or `"desktop"` is silently
-treated as mobile.
+missing, check the key's spelling against this guide first. Same for the
+device keys: only exactly `mobile` and `desktop` are recognised; a
+misspelled device key is silently ignored.
 
 VS Code underlines most of these in red before you even save. The preview's
 error message names a line number; go there and check this list.
