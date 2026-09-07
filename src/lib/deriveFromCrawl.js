@@ -96,9 +96,7 @@ export function deriveFromCrawl(parsedRows) {
     brokenLinks: C.status
       ? rows.filter((r) => statusOf(r) >= 400 && statusOf(r) < 500).length
       : undefined,
-    https: rows.every((r) => String(r[C.address]).startsWith("https://"))
-      ? "ok"
-      : "partial",
+    https: rows.every((r) => String(r[C.address]).startsWith("https://")),
     nonIndexable,
     parameterUrls: pages.filter((r) => String(r[C.address]).includes("?")).length,
     deepPages: C.depth
@@ -120,12 +118,10 @@ export function deriveFromCrawl(parsedRows) {
   // indexable-intended pages carrying noindex/none are accidents.
   let aiReadiness;
   if (C.metaRobots) {
-    const blocked = okPages.filter((r) =>
-      /noindex|\bnone\b/i.test(String(r[C.metaRobots] || ""))
-    ).length;
     aiReadiness = {
-      metaRobots:
-        blocked === 0 ? "ok" : blocked / (okPages.length || 1) >= 0.5 ? "missing" : "partial",
+      noindexPages: okPages.filter((r) =>
+        /noindex|\bnone\b/i.test(String(r[C.metaRobots] || ""))
+      ).length,
     };
   }
 

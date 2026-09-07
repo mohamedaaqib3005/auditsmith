@@ -113,9 +113,15 @@ const SCORE_LABELS = {
   agenticBrowsing: "Agentic Browsing",
 };
 
+const AGENTIC_MAX = 2; // the agentic browsing audit is always out of 2
+
 const scoreItems = (scores = {}) =>
   Object.entries(scores).map(([key, v]) => {
     const label = SCORE_LABELS[key] || key;
+    if (key === "agenticBrowsing") {
+      const num = typeof v === "string" ? Number(v.split("/")[0]) : v;
+      return { label, score: num, max: AGENTIC_MAX, display: `${num}/${AGENTIC_MAX}` };
+    }
     if (typeof v === "string" && v.includes("/")) {
       const [num, max] = v.split("/").map(Number);
       return { label, score: num, max, display: v };
@@ -129,19 +135,19 @@ const scoreItems = (scores = {}) =>
 const TECH_CHECKS = {
   sitemap: {
     label: "XML Sitemap",
-    ok: { status: "OK", notes: "Present, valid" },
+    present: { status: "OK", notes: "Present, valid" },
     stale: { status: "Issues", notes: "Present, contains stale URLs" },
     missing: { status: "Missing", notes: "Not found" },
   },
   robotsTxt: {
     label: "Robots.txt",
-    ok: { status: "OK", notes: "Present, valid" },
-    missing: { status: "Missing", notes: "Not found" },
+    true: { status: "OK", notes: "Present, valid" },
+    false: { status: "Missing", notes: "Not found" },
   },
   https: {
     label: "HTTPS",
-    ok: { status: "OK", notes: "Enforced site-wide" },
-    partial: { status: "Issues", notes: "Not enforced on all pages" },
+    true: { status: "OK", notes: "Enforced site-wide" },
+    false: { status: "Issues", notes: "Not enforced on all pages" },
   },
 };
 
@@ -167,40 +173,59 @@ const ONPAGE_CHECKS = {
    AI Readiness knowledge - can AI systems read and use this site?
    Enum values: ok | partial | missing (typed by hand; see docs 3h)
 ========================================= */
+// Boolean facts use true/false entries; the array and count facts
+// (blockedAiBots, noJsWords, noindexPages) are interpreted in the builder.
 const AI_CHECKS = {
   llmsTxt: {
     label: "llms.txt",
-    ok: { status: "OK", notes: "Present at /llms.txt" },
-    missing: { status: "Missing", notes: "No /llms.txt file found" },
+    true: { status: "OK", notes: "Present at /llms.txt" },
+    false: { status: "Missing", notes: "No /llms.txt file found" },
     fix: "Add an llms.txt file at the site root describing the site and its key pages for AI systems.",
-  },
-  aiCrawlers: {
-    label: "AI crawler access",
-    ok: { status: "OK", notes: "GPTBot, ClaudeBot, PerplexityBot allowed" },
-    partial: { status: "Issues", notes: "Some AI crawlers blocked in robots.txt" },
-    missing: { status: "Missing", notes: "AI crawlers blocked in robots.txt" },
-    fix: "Remove the robots.txt Disallow rules for the AI crawlers the site should be visible to.",
   },
   structuredData: {
     label: "Structured data (Schema.org)",
-    ok: { status: "OK", notes: "Schema.org markup present" },
-    partial: { status: "Issues", notes: "Only some pages or types marked up" },
-    missing: { status: "Missing", notes: "No Schema.org markup detected" },
+    true: { status: "OK", notes: "Schema.org markup present" },
+    false: { status: "Missing", notes: "No Schema.org markup detected" },
     fix: "Add Schema.org JSON-LD (Organization, WebSite, and page-type markup) so AI systems can interpret the site.",
   },
-  metaRobots: {
-    label: "Meta robots",
-    ok: { status: "OK", notes: "No accidental noindex or noai blocking" },
-    partial: { status: "Issues", notes: "Some pages carry blocking directives" },
-    missing: { status: "Missing", notes: "Key pages blocked from indexing" },
-    fix: "Remove accidental noindex/none directives from pages that should be visible.",
+};
+
+const AI_BOT_COUNT = 4; // GPTBot, ClaudeBot, PerplexityBot, Google-Extended
+const NOJS_OK_WORDS = 100;
+const NOJS_PARTIAL_WORDS = 20;
+
+const AI_FACT_CHECKS = {
+  blockedAiBots: {
+    label: "AI crawler access",
+    fix: "Remove the robots.txt Disallow rules for the AI crawlers the site should be visible to.",
+    interpret: (bots) =>
+      bots.length === 0
+        ? { value: "GPTBot, ClaudeBot, PerplexityBot allowed", rating: "good" }
+        : {
+            value: `Blocked in robots.txt: ${bots.join(", ")}`,
+            rating: bots.length >= AI_BOT_COUNT ? "poor" : "needs-improvement",
+          },
   },
-  contentAccess: {
+  noindexPages: {
+    label: "Meta robots",
+    fix: "Remove accidental noindex/none directives from pages that should be visible.",
+    interpret: (n, pages) =>
+      n === 0
+        ? { value: "No accidental noindex blocking", rating: "good" }
+        : {
+            value: `${n} page${n === 1 ? "" : "s"} carry noindex directives`,
+            rating: MOST_PAGES(n, pages || 0) ? "poor" : "needs-improvement",
+          },
+  },
+  noJsWords: {
     label: "Content without JavaScript",
-    ok: { status: "OK", notes: "Core content readable without JS" },
-    partial: { status: "Issues", notes: "Some content requires JS to appear" },
-    missing: { status: "Missing", notes: "Page is empty without JS execution" },
     fix: "Server-render or statically generate key content; many AI crawlers do not execute JavaScript.",
+    interpret: (words) =>
+      words >= NOJS_OK_WORDS
+        ? { value: `${words} words readable without JS`, rating: "good" }
+        : words >= NOJS_PARTIAL_WORDS
+        ? { value: `Only ${words} words readable without JS`, rating: "needs-improvement" }
+        : { value: `Page nearly empty without JS (${words} words)`, rating: "poor" },
   },
 };
 
@@ -465,14 +490,15 @@ const ACCESS_CATEGORIES = {
 const EMAIL_CHECKS = {
   spf: {
     label: "SPF record",
-    ok: { value: "Present, senders authorised", rating: "good" },
-    missing: { value: "No SPF record found", rating: "poor" },
+    true: { value: "Present, senders authorised", rating: "good" },
+    false: { value: "No SPF record found", rating: "poor" },
     fix: "Add an SPF TXT record listing the servers allowed to send mail for this domain.",
   },
   dmarc: {
     label: "DMARC record",
-    ok: { value: "Present and enforcing", rating: "good" },
-    partial: { value: "Present but not enforcing (p=none)", rating: "needs-improvement" },
+    reject: { value: "Present and enforcing (p=reject)", rating: "good" },
+    quarantine: { value: "Present and enforcing (p=quarantine)", rating: "good" },
+    none: { value: "Present but not enforcing (p=none)", rating: "needs-improvement" },
     missing: { value: "No DMARC record found", rating: "poor" },
     fix: "Publish a _dmarc record with p=quarantine or p=reject to protect the domain from spoofing.",
   },
@@ -610,25 +636,39 @@ const accessibilitySections = (a) => {
   return s;
 };
 
-const aiReadinessSections = (ai) => {
+const aiReadinessSections = (ai, pages) => {
   if (!ai) return [];
   const s = [];
 
   const STATUS_RATING = { OK: "good", Issues: "needs-improvement", Missing: "poor" };
   const items = [];
-  for (const [key, check] of Object.entries(AI_CHECKS)) {
+  // fixed order: crawl facts and fetch facts interleaved sensibly
+  const ORDER = ["llmsTxt", "blockedAiBots", "structuredData", "noindexPages", "noJsWords"];
+  for (const key of ORDER) {
     if (ai[key] == null) continue;
-    const state = check[ai[key]] || {
-      status: "Unknown",
-      notes: `Unrecognised value "${ai[key]}"`,
-    };
-    const rating = STATUS_RATING[state.status] || "na";
-    items.push({
-      label: check.label,
-      value: state.notes,
-      rating,
-      recommendation: rating !== "good" ? check.fix : undefined,
-    });
+    if (AI_CHECKS[key]) {
+      const check = AI_CHECKS[key];
+      const state = check[ai[key]] || {
+        status: "Unknown",
+        notes: `Unrecognised value "${ai[key]}"`,
+      };
+      const rating = STATUS_RATING[state.status] || "na";
+      items.push({
+        label: check.label,
+        value: state.notes,
+        rating,
+        recommendation: rating !== "good" ? check.fix : undefined,
+      });
+    } else if (AI_FACT_CHECKS[key]) {
+      const check = AI_FACT_CHECKS[key];
+      const { value, rating } = check.interpret(ai[key], pages);
+      items.push({
+        label: check.label,
+        value,
+        rating,
+        recommendation: rating !== "good" ? check.fix : undefined,
+      });
+    }
   }
   const issueCount = items.filter((i) => i.rating !== "good").length;
 
@@ -656,7 +696,7 @@ const aiReadinessSections = (ai) => {
       items: Object.entries(ai.scores)
         .filter(([, v]) => v != null)
         .map(([key, v]) => ({
-          label: AI_SCORE_LABELS[key] || key,
+          label: AI_SCORE_LABELS[key] || AI_SCORE_LABELS[key.toLowerCase?.() ?? key] || key,
           score: v,
           max: 100,
           size: 72,
@@ -688,7 +728,7 @@ export function composeReport(data) {
     ...pagespeedSections(data.pagespeed, date),
     ...technicalSeoSections(data.technicalSeo),
     ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
-    ...aiReadinessSections(data.aiReadiness),
+    ...aiReadinessSections(data.aiReadiness, data.technicalSeo?.pagesCrawled),
     ...accessibilitySections(data.accessibility),
     ...technologySections(data.technology),
   ];

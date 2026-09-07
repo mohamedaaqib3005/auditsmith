@@ -108,12 +108,12 @@ try {
 // SPF: any TXT record starting v=spf1
 try {
   const txt = (await dns.resolveTxt(host)).map((parts) => parts.join(""));
-  tech.spf = txt.some((t) => /^v=spf1/i.test(t)) ? "ok" : "missing";
-  report.push(["spf", tech.spf]);
+  tech.spf = txt.some((t) => /^v=spf1/i.test(t));
+  report.push(["spf", String(tech.spf)]);
 } catch (e) {
   if (e.code === "ENODATA" || e.code === "ENOTFOUND") {
-    tech.spf = "missing";
-    report.push(["spf", "missing (no TXT records)"]);
+    tech.spf = false;
+    report.push(["spf", "false (no TXT records)"]);
   } else report.push(["spf", `could not check (${e.code})`]);
 }
 
@@ -122,8 +122,7 @@ try {
   const txt = (await dns.resolveTxt(`_dmarc.${host}`)).map((p) => p.join(""));
   const rec = txt.find((t) => /^v=DMARC1/i.test(t));
   if (!rec) tech.dmarc = "missing";
-  else if (/p=(quarantine|reject)/i.test(rec)) tech.dmarc = "ok";
-  else tech.dmarc = "partial";
+  else tech.dmarc = ((rec.match(/p=(none|quarantine|reject)/i) || [])[1] || "none").toLowerCase();
   report.push(["dmarc", `${tech.dmarc}${rec ? ` (${rec})` : ""}`]);
 } catch (e) {
   if (e.code === "ENOTFOUND" || e.code === "ENODATA") {

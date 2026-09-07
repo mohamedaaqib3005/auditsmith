@@ -27,12 +27,12 @@ const get = async (url) => {
 
 const checkLlmsTxt = async (origin) => {
   const r = await get(`${origin}/llms.txt`);
-  if (r.status === 404) return { value: "missing", detail: "HTTP 404" };
+  if (r.status === 404) return { value: false, detail: "HTTP 404" };
   if (r.status !== 200) return { value: null, detail: `could not check (${r.error || `HTTP ${r.status}`})` };
   const looksHtml = /^\s*<(!doctype|html)/i.test(r.text);
   return looksHtml
-    ? { value: "missing", detail: "returns an HTML page, not a text file" }
-    : { value: "ok", detail: `${r.text.length} chars` };
+    ? { value: false, detail: "returns an HTML page, not a text file" }
+    : { value: true, detail: `${r.text.length} chars` };
 };
 
 const parseBlockedBots = (robotsText) => {
@@ -68,20 +68,20 @@ export async function checkSite(site) {
   const llms = await checkLlmsTxt(origin);
 
   const robotsRes = await get(`${origin}/robots.txt`);
-  let aiCrawlers, robotsTxt;
+  let blockedAiBots, robotsTxt;
   if (robotsRes.status === 200) {
     const blocked = parseBlockedBots(robotsRes.text);
-    aiCrawlers = {
-      value: blocked.length === 0 ? "ok" : blocked.length === AI_BOTS.length ? "missing" : "partial",
+    blockedAiBots = {
+      value: blocked,
       detail: blocked.length ? `blocked: ${blocked.join(", ")}` : "no AI crawlers blocked",
     };
-    robotsTxt = { value: "ok", detail: "present" };
+    robotsTxt = { value: true, detail: "present" };
   } else if (robotsRes.status === 404) {
-    aiCrawlers = { value: "ok", detail: "no robots.txt, nothing blocked" };
-    robotsTxt = { value: "missing", detail: "HTTP 404" };
+    blockedAiBots = { value: [], detail: "no robots.txt, nothing blocked" };
+    robotsTxt = { value: false, detail: "HTTP 404" };
   } else {
     const d = `could not check (${robotsRes.error || `HTTP ${robotsRes.status}`})`;
-    aiCrawlers = { value: null, detail: d };
+    blockedAiBots = { value: null, detail: d };
     robotsTxt = { value: null, detail: d };
   }
 
@@ -92,12 +92,12 @@ export async function checkSite(site) {
     const microdata = /itemtype\s*=\s*["']https?:\/\/schema\.org/i.test(html);
     structuredData =
       ldJson || microdata
-        ? { value: "ok", detail: `homepage has ${ldJson ? "JSON-LD" : "microdata"} markup` }
-        : { value: "missing", detail: "no Schema.org markup on homepage" };
+        ? { value: true, detail: `homepage has ${ldJson ? "JSON-LD" : "microdata"} markup` }
+        : { value: false, detail: "no Schema.org markup on homepage" };
   }
 
-  let contentAccess;
-  if (html == null) contentAccess = { value: null, detail: "homepage not fetched" };
+  let noJsWords;
+  if (html == null) noJsWords = { value: null, detail: "homepage not fetched" };
   else {
     const text = html
       .replace(/<script[\s\S]*?<\/script>/gi, " ")
@@ -105,19 +105,14 @@ export async function checkSite(site) {
       .replace(/<[^>]+>/g, " ")
       .replace(/&[a-z#0-9]+;/gi, " ");
     const words = text.split(/\s+/).filter((w) => w.length > 1).length;
-    contentAccess =
-      words >= 100
-        ? { value: "ok", detail: `${words} words readable without JS` }
-        : words >= 20
-        ? { value: "partial", detail: `only ${words} words without JS` }
-        : { value: "missing", detail: `page nearly empty without JS (${words} words)` };
+    noJsWords = { value: words, detail: `${words} words readable without JS` };
   }
 
   let sitemap = { value: "missing", detail: "no sitemap.xml or sitemap_index.xml" };
   for (const path of ["/sitemap.xml", "/sitemap_index.xml"]) {
     const r = await get(`${origin}${path}`);
     if (r.status === 200 && /<(urlset|sitemapindex)/i.test(r.text)) {
-      sitemap = { value: "ok", detail: `found at ${path}` };
+      sitemap = { value: "present", detail: `found at ${path}` };
       break;
     }
     if (r.status === 0) {
@@ -128,7 +123,7 @@ export async function checkSite(site) {
 
   return {
     origin,
-    aiReadiness: { llmsTxt: llms, aiCrawlers, structuredData, contentAccess },
+    aiReadiness: { llmsTxt: llms, blockedAiBots, structuredData, noJsWords },
     technicalSeo: { sitemap, robotsTxt },
   };
 }
@@ -136,9 +131,12 @@ export async function checkSite(site) {
 // Flatten to writable values (drop nulls), respecting a typed "stale" sitemap.
 export function applySiteCheck(data, result) {
   const out = { ...data, aiReadiness: { ...(data.aiReadiness || {}) }, technicalSeo: { ...(data.technicalSeo || {}) } };
-  for (const [k, r] of Object.entries(result.aiReadiness)) if (r.value) out.aiReadiness[k] = r.value;
-  if (result.technicalSeo.sitemap.value && out.technicalSeo.sitemap !== "stale")
+  // null = check failed = do not write; false/0/[] are real facts and DO write
+  for (const [k, r] of Object.entries(result.aiReadiness))
+    if (r.value !== null && r.value !== undefined) out.aiReadiness[k] = r.value;
+  if (result.technicalSeo.sitemap.value != null && out.technicalSeo.sitemap !== "stale")
     out.technicalSeo.sitemap = result.technicalSeo.sitemap.value;
-  if (result.technicalSeo.robotsTxt.value) out.technicalSeo.robotsTxt = result.technicalSeo.robotsTxt.value;
+  if (result.technicalSeo.robotsTxt.value != null)
+    out.technicalSeo.robotsTxt = result.technicalSeo.robotsTxt.value;
   return out;
 }

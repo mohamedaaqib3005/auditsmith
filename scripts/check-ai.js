@@ -22,11 +22,12 @@ const result = await checkSite(site);
 const merged = applySiteCheck(data, result);
 fs.writeFileSync(DATA_PATH, JSON.stringify(merged, null, 2) + "\n");
 
-const line = (name, r) =>
-  `  ${name.padEnd(15)}: ${(r.value || "not written").padEnd(11)} (${r.detail})`;
+const show = (v) =>
+  v === null || v === undefined ? "not written" : Array.isArray(v) ? (v.length ? v.join(",") : "[]") : String(v);
+const line = (name, r) => `  ${name.padEnd(15)}: ${show(r.value).padEnd(11)} (${r.detail})`;
 console.log(`Checked ${result.origin}:`);
 console.log("aiReadiness:");
 for (const [k, r] of Object.entries(result.aiReadiness)) console.log(line(k, r));
 console.log("technicalSeo:");
 for (const [k, r] of Object.entries(result.technicalSeo)) console.log(line(k, r));
-console.log(`\nWritten to ${DATA_PATH}. metaRobots comes from the crawl CSV; redirectChains from SF's Redirect Chains report.`);
+console.log(`\nWritten to ${DATA_PATH}. noindexPages comes from the crawl CSV; redirectChains from SF's Redirect Chains report.`);

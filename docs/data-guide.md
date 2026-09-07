@@ -27,7 +27,7 @@ The complete file looks like this. This is EVERYTHING a user types:
       "accessibility": 88,
       "bestPractices": 96,
       "seo": 92,
-      "agenticBrowsing": "2/2"
+      "agenticBrowsing": 2
     },
 
     "fieldData": {
@@ -119,7 +119,8 @@ text (device model, network throttling) in the PDF. Exactly `"mobile"` or
 The row of big circled numbers on the results page. Copy each number:
 
 - Performance, Accessibility, Best Practices, SEO: plain numbers, `79` not `"79"`
-- Agentic Browsing shows as a fraction like 2/2: type it as a string, `"2/2"`
+- Agentic Browsing shows as a fraction like 2/2: type ONLY the first number,
+  `2` (it is always out of 2; the report adds the "/2" itself)
 
 If a category is missing from your results, delete that line entirely.
 
@@ -173,22 +174,28 @@ actually visits the site and records what it finds.
 
 Two things a human can still add:
 
+The values are facts, not verdicts: `https` and `robotsTxt` are
+`true`/`false`, `sitemap` is `"present"`, `"stale"`, or `"missing"`. The
+report decides what counts as good.
+
 | Field | When |
 |---|---|
 | `redirectChains` | Optional. Screaming Frog: Reports menu, Redirect Chains; type the number it lists. Absent = row not shown |
-| `sitemap: "stale"` | Override. The checker can prove a sitemap exists, not whether its URLs are current. If you know it lists old pages, change `"ok"` to `"stale"` by hand; the scripts will not overwrite a `"stale"` you typed |
+| `sitemap: "stale"` | Override. The checker can prove a sitemap exists, not whether its URLs are current. If you know it lists old pages, change `"present"` to `"stale"` by hand; the scripts will not overwrite a `"stale"` you typed |
 
 ### 3g. `aiReadiness` (automatic)
 
 All five fields are filled by the scripts, none are typed:
 
-| Field | Filled by | How it is measured |
+All values are facts, the report turns them into verdicts:
+
+| Field | Filled by | The fact stored |
 |---|---|---|
-| `llmsTxt` | site checker | requests `/llms.txt`; 404 = missing |
-| `aiCrawlers` | site checker | downloads robots.txt and parses it for GPTBot, ClaudeBot, PerplexityBot, Google-Extended blocks |
-| `structuredData` | site checker | scans the homepage HTML for Schema.org markup (JSON-LD or microdata) |
-| `contentAccess` | site checker | fetches the homepage WITHOUT JavaScript (exactly what AI crawlers see) and counts readable words |
-| `metaRobots` | crawl script | reads the crawl's "Meta Robots" column for accidental noindex on real pages |
+| `llmsTxt` | site checker | `true`/`false`: does `/llms.txt` exist |
+| `blockedAiBots` | site checker | the list of AI crawlers robots.txt blocks, `[]` when none (GPTBot, ClaudeBot, PerplexityBot, Google-Extended) |
+| `structuredData` | site checker | `true`/`false`: Schema.org markup on the homepage |
+| `noJsWords` | site checker | the number of words readable WITHOUT JavaScript (what AI crawlers see) |
+| `noindexPages` | crawl script | how many indexable pages carry a noindex directive |
 
 If a check cannot run (site unreachable, blocked), the script writes
 nothing for that field rather than guessing, and says so in its output.
@@ -244,8 +251,10 @@ pass/fail wording are computed; you only copy the two counts per category.
 The whole "06 Technology" chapter is written by `scripts/check-tech.js`:
 detected stack (CMS, analytics, libraries), web server, IP, charset, and
 the domain's SPF and DMARC email-security records via DNS. Run it with the
-other scripts (section 5); there is nothing to type or verify by hand. A
-DMARC of `p=none` shows amber ("present but not enforcing"), that is the
+other scripts (section 5); there is nothing to type or verify by hand.
+Facts, not verdicts: `spf` is `true`/`false`, `dmarc` is the actual policy
+(`"none"`, `"quarantine"`, `"reject"`, or `"missing"`). A `p=none` policy
+shows amber in the report ("present but not enforcing"), that is the
 record's real state, not an error.
 
 ### 3j. `onPageSeo` (never typed)

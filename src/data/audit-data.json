@@ -1,34 +1,51 @@
 {
   "site": "vlncy.com",
   "pagespeed": {
-    "device": "mobile",
-    "scores": {
-      "performance": 79,
-      "accessibility": 88,
-      "bestPractices": 96,
-      "seo": 92,
-      "agenticBrowsing": "2/2"
+    "mobile": {
+      "scores": {
+        "performance": 79,
+        "accessibility": 88,
+        "bestPractices": 96,
+        "seo": 92,
+        "agenticBrowsing": 2
+      },
+      "fieldData": {
+        "lcp": 2.2,
+        "inp": null,
+        "cls": 0.3,
+        "fcp": 2.2,
+        "ttfb": 1.7
+      },
+      "labMetrics": {
+        "fcp": 2.5,
+        "lcp": 2.5,
+        "tbt": 480,
+        "cls": 0,
+        "speedIndex": 4.6
+      }
     },
-    "fieldData": {
-      "lcp": 2.2,
-      "inp": null,
-      "cls": 0.3,
-      "fcp": 2.2,
-      "ttfb": 1.7
-    },
-    "labMetrics": {
-      "fcp": 2.5,
-      "lcp": 2.5,
-      "tbt": 480,
-      "cls": 0,
-      "speedIndex": 4.6
+    "desktop": {
+      "scores": {
+        "performance": 56,
+        "accessibility": 88,
+        "bestPractices": 100,
+        "seo": 92,
+        "agenticBrowsing": 2
+      },
+      "labMetrics": {
+        "fcp": 0.7,
+        "lcp": 1.5,
+        "tbt": 1270,
+        "cls": 0.01,
+        "speedIndex": 4.2
+      }
     }
   },
   "technicalSeo": {
     "pagesCrawled": 37,
     "indexable": 36,
     "brokenLinks": 1,
-    "https": "ok",
+    "https": true,
     "nonIndexable": {
       "Client Error": 1
     },
@@ -37,8 +54,8 @@
     "weakPages": 11,
     "imagesCrawled": 69,
     "largeImages": 27,
-    "sitemap": "ok",
-    "robotsTxt": "ok"
+    "sitemap": "present",
+    "robotsTxt": true
   },
   "onPageSeo": {
     "missingTitles": 0,
@@ -50,16 +67,16 @@
     "thinPages": 2
   },
   "aiReadiness": {
-    "llmsTxt": "missing",
-    "aiCrawlers": "ok",
-    "metaRobots": "ok",
-    "structuredData": "missing",
-    "contentAccess": "ok",
+    "llmsTxt": false,
+    "structuredData": false,
     "scores": {
-      "EEAT": 65,
       "socials": 40,
-      "structuredData": 25
-    }
+      "structuredData": 25,
+      "EEAT": 65
+    },
+    "blockedAiBots": [],
+    "noindexPages": 0,
+    "noJsWords": 1063
   },
   "accessibility": {
     "categories": {
@@ -102,7 +119,7 @@
     "server": "Microsoft-IIS/10.0",
     "charset": "utf-8",
     "ip": "104.211.97.138",
-    "spf": "ok",
-    "dmarc": "partial"
+    "spf": true,
+    "dmarc": "none"
   }
 }
