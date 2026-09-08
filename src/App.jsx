@@ -10,11 +10,13 @@ import { useState } from "react";
 import { PDFViewer, pdf } from "@react-pdf/renderer";
 import ReportDocument from "./pdf/ReportDocument";
 import { composeReport } from "./lib/composeReport";
+import { applyTheme } from "./pdf/tokens/colors";
 import CrawlImport from "./components/CrawlImport";
 import rawData from "./data/audit-data.json";
 
 function App() {
   const [data, setData] = useState(rawData);
+  applyTheme(data.theme);
 
   // Brand-named PDF download: Vlncy-Website-Audit.pdf
   const downloadPdf = async () => {
