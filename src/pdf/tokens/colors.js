@@ -154,8 +154,18 @@ const brandSlots = (ramp) => ({
   bgAlt: ramp[50],
 });
 
+const normalizeBrand = (brand) => {
+  if (typeof brand !== "string") return null;
+  let x = brand.trim().replace("#", "");
+  if (/^[0-9a-f]{3}$/i.test(x)) x = x.split("").map((c) => c + c).join("");
+  return /^[0-9a-f]{6}$/i.test(x) ? `#${x}` : null;
+};
+
 export const applyTheme = (theme) => {
-  const ramp = theme?.brand ? rampFrom(theme.brand) : p.purple;
+  // Invalid or absent brand -> the default purple. A typo must never
+  // produce a broken (NaN/black) palette.
+  const brand = normalizeBrand(theme?.brand);
+  const ramp = brand ? rampFrom(brand) : p.purple;
   Object.assign(colors, brandSlots(ramp));
   return colors;
 };
