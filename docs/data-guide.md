@@ -279,6 +279,23 @@ starting point, not a designer. The traffic-light colours (green, amber,
 red rings, dots and icons) and grade colours never change, those mean
 good/warning/bad, not brand. Layout, fonts and structure are unaffected.
 
+Three behaviours worth knowing:
+
+- **The hex is a seed, not a paint colour.** The system keeps only its hue
+  (the colour direction) and rebuilds every shade at the report's designed
+  lightness levels, so contrast and legibility always survive. Eyedropping
+  the cover will show the brand's hue at the report's depth, not the exact
+  hex you typed; that is by design.
+- **Shorthand works**: `#F60` is read as `#FF6600`.
+- **A broken hex falls back to the default.** Anything that is not a real
+  hex colour (`#GGGGGG`, `"blue"`, a stray word) is ignored and the report
+  renders in the default purple, a typo can never produce a broken palette.
+  If you expected a brand colour and see purple, check the hex.
+
+When experimenting with colours, change only `theme.brand`. Never change
+`site` just to test a theme: `site` claims the measurements belong to that
+domain, and every fact in the file would then be wrongly labelled.
+
 ### 3k. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
@@ -359,8 +376,8 @@ and paste over the contents of `src/data/audit-data.json`.
 - [ ] Every metric you typed appears with a colour dot; values match Google's
 - [ ] The date on the cover is today
 - [ ] No units, quotes, or colour words crept into the numbers
-- [ ] Both scripts have been run for THIS site (its own crawl CSV, and
-  check-ai against its own domain, not a previous client's)
+- [ ] All three scripts have been run for THIS site (its own crawl CSV,
+  and the checkers against its own domain, not a previous client's)
 - [ ] If the buttons were used instead of the terminal, the results were
   saved (Copy JSON pasted into the file), a refresh must not lose them
 - [ ] The sitemap value reflects reality (add the "stale" override if you
