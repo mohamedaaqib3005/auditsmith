@@ -70,9 +70,9 @@ You type 5 things. The system derives the rest:
 |---|---|
 | `site` | Cover title, brand name ("Prepared for: Vlncy"), reference number (AUD-VLNCY-2026-001), summary text |
 | `mobile` / `desktop` keys | Fill one or both; each generates its own results and Test Conditions box (device model, network throttling) |
-| `scores` | The coloured score circles |
-| `fieldData` | The Field Data rows, each colour-rated, plus the Passed/Failed assessment |
-| `labMetrics` | The Lab Metrics rows, each colour-rated |
+| `scores` | The coloured score circles (the pagespeed script fills these; only the Agentic Browsing fraction is typed) |
+| `fieldData` | The Field Data rows, each colour-rated, plus the Passed/Failed assessment (script-filled; absent when the page has no real-user data) |
+| `labMetrics` | The Lab Metrics rows, each colour-rated (script-filled) |
 | `redirectChains` (optional) | The one non-pagespeed field you may type; its row appears only when set |
 | (the crawl script) | `technicalSeo` crawl numbers, all `onPageSeo` counts, and `noindexPages`; chapters 02 and 03 |
 | (the site checker) | sitemap, robots.txt, llms.txt, AI crawler access, Schema.org, no-JS readability; the rest of chapters 02 and 04 |
@@ -146,6 +146,15 @@ excluded from the Passed/Failed calculation.
 **If the whole panel says there is not enough real-user data**: delete the
 entire `fieldData` block. The Core Web Vitals section will simply not appear
 in the PDF.
+
+**The pagespeed script fills all of this for you** (section 5), scores,
+field data and lab metrics for both devices; only the Agentic Browsing
+fraction stays typed. One honesty rule it enforces: when a page has no
+real-user data of its own, Google substitutes domain-wide "Origin" numbers,
+on the webpage they appear with a small Origin label that is easy to miss.
+Those are not this page's data. The script detects the substitution, skips
+the block, and prints "origin-level fallback, skipped"; if you type field
+data by hand, apply the same rule and leave Origin-labelled numbers out.
 
 ### 3e. `labMetrics`
 
