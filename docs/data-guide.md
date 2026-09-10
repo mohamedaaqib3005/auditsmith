@@ -26,7 +26,7 @@ The complete file looks like this. This is EVERYTHING a user types:
         "accessibility": 88,
         "bestPractices": 96,
         "seo": 92,
-        "agenticBrowsing": 2
+        "agenticBrowsing": "2/2"
       },
       "fieldData": {
         "lcp": 2.2,
@@ -117,8 +117,9 @@ key, the mobile and desktop numbers differ, do not mix them.
 The row of big circled numbers on the results page. Copy each number:
 
 - Performance, Accessibility, Best Practices, SEO: plain numbers, `79` not `"79"`
-- Agentic Browsing shows as a fraction like 2/2: type ONLY the first number,
-  `2` (it is always out of 2; the report adds the "/2" itself)
+- Agentic Browsing: type the fraction exactly as Google shows it, as a
+  string: `"2/2"`, `"2/3"`. (A bare number like `2` still works and is
+  assumed to be out of 2.)
 
 If a category is missing from your results, delete that line entirely.
 
@@ -222,14 +223,14 @@ category's Passed and Failed counts:
 
 ```json
 "accessibility": {
-  "score": 62,
+  "score": 44.61,
   "categories": {
-    "titles": { "passed": 0, "failed": 9 },
-    "graphics": { "passed": 27, "failed": 0 },
-    "forms": { "passed": 1, "failed": 9 },
+    "titles": { "passed": 0, "failed": 11 },
+    "graphics": { "passed": 3, "failed": 4 },
+    "forms": { "passed": 0, "failed": 1 },
     "document": { "passed": 3, "failed": 0 },
-    "readability": { "passed": 75, "failed": 652 },
-    "general": { "passed": 53, "failed": 6 }
+    "readability": { "passed": 25, "failed": 88 },
+    "general": { "passed": 6, "failed": 5 }
   }
 }
 ```
