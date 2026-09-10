@@ -23,6 +23,7 @@ const target = `https://${String(site).replace(/^https?:\/\//, "").replace(/\/$/
 const ms2s = (v) => (v == null ? null : Math.round(v / 100) / 10);
 
 const runStrategy = async (strategy) => {
+
   const u = new URL("https://www.googleapis.com/pagespeedonline/v5/runPagespeed");
   u.searchParams.set("url", target);
   u.searchParams.set("strategy", strategy);
@@ -55,9 +56,14 @@ const runStrategy = async (strategy) => {
   };
 
   // Field data (CrUX). Absent for low-traffic pages -> no fieldData block.
+  // origin_fallback means the API substituted whole-domain data because the
+  // page itself has none; the webpage shows "No Data" in that case, so we
+  // skip it too rather than report origin numbers as the page's.
   let fieldData = null;
   const fx = j.loadingExperience?.metrics;
-  if (fx && Object.keys(fx).length) {
+  if (j.loadingExperience?.origin_fallback) {
+    console.log(`  (field data is origin-level fallback for ${strategy}, skipped)`);
+  } else if (fx && Object.keys(fx).length) {
     const p = (k) => fx?.[k]?.percentile;
     {
       fieldData = {

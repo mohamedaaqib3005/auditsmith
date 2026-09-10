@@ -3,41 +3,34 @@
   "pagespeed": {
     "mobile": {
       "scores": {
-        "performance": 59,
+        "performance": 61,
         "accessibility": 86,
         "bestPractices": 96,
         "seo": 100,
         "agenticBrowsing": "2/3"
       },
-      "fieldData": {
-        "lcp": 3.9,
-        "inp": 542,
-        "cls": 0.13,
-        "fcp": 2.4,
-        "ttfb": 1
-      },
       "labMetrics": {
-        "fcp": 1.1,
-        "lcp": 22.8,
-        "tbt": 310,
+        "fcp": 3.1,
+        "lcp": 7,
+        "tbt": 104,
         "cls": 0,
-        "speedIndex": 13.9
+        "speedIndex": 13.5
       }
     },
     "desktop": {
       "scores": {
-        "performance": 36,
+        "performance": 76,
         "accessibility": 86,
         "bestPractices": 96,
         "seo": 100,
         "agenticBrowsing": 2
       },
       "labMetrics": {
-        "fcp": 0.3,
-        "lcp": 6.5,
-        "tbt": 1460,
+        "fcp": 0.5,
+        "lcp": 2.3,
+        "tbt": 173,
         "cls": 0,
-        "speedIndex": 9.1
+        "speedIndex": 3.2
       }
     }
   },
