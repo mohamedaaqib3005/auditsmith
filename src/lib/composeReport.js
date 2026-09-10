@@ -18,8 +18,8 @@ const PREPARED_BY = "Mohamed Aaqib";
 const REPORT_TYPE = "Website Audit Report";
 const COVER_SUBTITLE =
   "Technical SEO, on-page SEO, AI readiness, backlinks, UI/UX, accessibility and architecture analysis.";
-const SUMMARY = (site) =>
-  `This audit reviews ${site} across seven dimensions. The site is fundamentally healthy: Core Web Vitals pass and best practices score well. The largest opportunities sit in image delivery, accessibility labelling, and AI readiness, where quick wins are available before launch traffic scales.`;
+const SUMMARY = (site, dimensions) =>
+  `This audit reviews ${site} across ${dimensions} dimensions: performance, technical health, on-page SEO, AI readiness, accessibility and the technology the site runs on. The overall grade below summarises the findings; each section then details its evidence, and every failing check carries a concrete fix.`;
 
 const TEST_CONDITIONS = {
   mobile: {
@@ -749,10 +749,92 @@ export function composeReport(data) {
   const date = todayLong();
   const reference = makeReference(brand);
 
+
+/* =========================================
+   GRADES - computed verdicts, never typed.
+   The scorer walks the BUILT sections, so every check card, metric row and
+   table row that carries a rating feeds its chapter's grade. green = 1,
+   amber = 0.5, red = 0. Performance instead uses the Lighthouse score
+   directly (that is what the number means). Bands: 90 A / 80 B / 70 C /
+   60 D / below F.
+========================================= */
+const GRADE_BANDS = [
+  [90, "A"],
+  [80, "B"],
+  [70, "C"],
+  [60, "D"],
+  [0, "F"],
+];
+const letterFor = (pct) => GRADE_BANDS.find(([min]) => pct >= min)[1];
+
+const captionFor = (pct) =>
+  pct >= 90
+    ? "This site is in excellent shape."
+    : pct >= 75
+    ? "Solid foundations with clear room to improve."
+    : pct >= 60
+    ? "This site needs attention in several areas."
+    : "This site requires urgent work across multiple areas.";
+
+const RATING_POINTS = { good: 1, "needs-improvement": 0.5, poor: 0 };
+const STATUS_POINTS = { OK: 1, Issues: 0.5, Missing: 0 };
+
+const sectionPassRate = (blocks) => {
+  let pts = 0;
+  let n = 0;
+  for (const b of blocks) {
+    const items = b.items || b.rows || [];
+    for (const it of items) {
+      const p =
+        RATING_POINTS[it.rating] ?? STATUS_POINTS[it.status] ?? null;
+      if (p != null) {
+        pts += p;
+        n += 1;
+      }
+    }
+  }
+  return n ? Math.round((pts / n) * 100) : null;
+};
+
+const computeGrades = (sections, data) => {
+  // split the built sections into chapters at their dividers
+  const chapters = [];
+  let current = null;
+  for (const b of sections) {
+    if (b.type === "sectionDivider") {
+      current = { title: b.title, blocks: [] };
+      chapters.push(current);
+    } else if (current) current.blocks.push(b);
+  }
+
+  const grades = [];
+  for (const ch of chapters) {
+    let pct;
+    if (ch.title === "PageSpeed Insights") {
+      const devs = ["mobile", "desktop"]
+        .map((d) => data.pagespeed?.[d]?.scores?.performance ?? data.pagespeed?.scores?.performance)
+        .filter((v) => v != null);
+      pct = devs.length ? Math.round(devs.reduce((a, b) => a + b, 0) / devs.length) : null;
+      if (pct != null) grades.push({ label: "Performance", grade: letterFor(pct), pct });
+      continue;
+    }
+    pct = sectionPassRate(ch.blocks);
+    if (pct != null) grades.push({ label: ch.title, grade: letterFor(pct), pct });
+  }
+
+  if (!grades.length) return null;
+  const overallPct = Math.round(grades.reduce((a, g) => a + g.pct, 0) / grades.length);
+  return {
+    type: "auditResults",
+    banner: "Audit Results",
+    overall: { grade: letterFor(overallPct), caption: captionFor(overallPct) },
+    grades: grades.map(({ label, grade }) => ({ label, grade })),
+  };
+};
+
   const sections = [
     { type: "heading", text: "Executive Summary" },
-    { type: "paragraph", text: SUMMARY(site) },
-    ...(data.auditResults ? [{ type: "auditResults", ...data.auditResults }] : []),
+    { type: "paragraph", text: SUMMARY(site, "six") },
     ...pagespeedSections(data.pagespeed, date),
     ...technicalSeoSections(data.technicalSeo),
     ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
@@ -760,6 +842,12 @@ export function composeReport(data) {
     ...accessibilitySections(data.accessibility),
     ...technologySections(data.technology),
   ];
+
+  const gradeBlock = computeGrades(sections, data);
+  if (gradeBlock) {
+    sections.splice(2, 0, gradeBlock);
+    sections[1] = { type: "paragraph", text: SUMMARY(site, ["zero","one","two","three","four","five","six","seven","eight"][gradeBlock.grades.length] || gradeBlock.grades.length) };
+  }
 
   return {
     meta: { title: REPORT_TYPE, subtitle: site, date, reference },

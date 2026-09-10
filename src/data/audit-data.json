@@ -1,138 +1,90 @@
 {
-  "site": "vlncy.com",
+  "site": "eventsfirstgroup.com",
   "pagespeed": {
     "mobile": {
       "scores": {
-        "performance": 79,
-        "accessibility": 88,
+        "performance": 59,
+        "accessibility": 86,
         "bestPractices": 96,
-        "seo": 92,
+        "seo": 100,
         "agenticBrowsing": 2
       },
       "fieldData": {
-        "lcp": 2.2,
-        "inp": null,
-        "cls": 0.3,
-        "fcp": 2.2,
-        "ttfb": 1.7
+        "lcp": 3.9,
+        "inp": 542,
+        "cls": 0.13,
+        "fcp": 2.4,
+        "ttfb": 1
       },
       "labMetrics": {
-        "fcp": 2.5,
-        "lcp": 2.5,
-        "tbt": 480,
+        "fcp": 1.1,
+        "lcp": 22.8,
+        "tbt": 310,
         "cls": 0,
-        "speedIndex": 4.6
+        "speedIndex": 13.9
       }
     },
     "desktop": {
       "scores": {
-        "performance": 56,
-        "accessibility": 88,
-        "bestPractices": 100,
-        "seo": 92,
+        "performance": 36,
+        "accessibility": 86,
+        "bestPractices": 96,
+        "seo": 100,
         "agenticBrowsing": 2
       },
       "labMetrics": {
-        "fcp": 0.7,
-        "lcp": 1.5,
-        "tbt": 1270,
-        "cls": 0.01,
-        "speedIndex": 4.2
+        "fcp": 0.3,
+        "lcp": 6.5,
+        "tbt": 1460,
+        "cls": 0,
+        "speedIndex": 9.1
       }
     }
   },
   "technicalSeo": {
-    "pagesCrawled": 37,
+    "pagesCrawled": 36,
     "indexable": 36,
-    "brokenLinks": 1,
+    "brokenLinks": 0,
     "https": true,
-    "nonIndexable": {
-      "Client Error": 1
-    },
-    "parameterUrls": 4,
+    "parameterUrls": 0,
     "deepPages": 0,
-    "weakPages": 11,
-    "imagesCrawled": 69,
-    "largeImages": 27,
+    "weakPages": 0,
+    "imagesCrawled": 4,
+    "largeImages": 1,
     "sitemap": "present",
     "robotsTxt": true
   },
   "onPageSeo": {
     "missingTitles": 0,
-    "duplicateTitles": 7,
+    "duplicateTitles": 0,
     "missingMeta": 0,
-    "duplicateMeta": 7,
-    "missingH1": 22,
-    "multipleH1": 14,
-    "thinPages": 2
+    "duplicateMeta": 0,
+    "missingH1": 3,
+    "multipleH1": 3,
+    "thinPages": 4
   },
   "aiReadiness": {
-    "llmsTxt": false,
-    "structuredData": false,
+    "llmsTxt": true,
+    "structuredData": true,
     "scores": {
-      "socials": 40,
-      "structuredData": 25,
-      "EEAT": 65
+      "socials": 100,
+      "structuredData": 100,
+      "EEAT": 83
     },
     "blockedAiBots": [],
     "noindexPages": 0,
-    "noJsWords": 1063
-  },
-  "accessibility": {
-    "categories": {
-      "titles": {
-        "passed": 0,
-        "failed": 11
-      },
-      "graphics": {
-        "passed": 3,
-        "failed": 4
-      },
-      "forms": {
-        "passed": 0,
-        "failed": 1
-      },
-      "document": {
-        "passed": 3,
-        "failed": 0
-      },
-      "readability": {
-        "passed": 25,
-        "failed": 88
-      },
-      "general": {
-        "passed": 6,
-        "failed": 5
-      }
-    },
-    "score": 44.61
+    "noJsWords": 2453
   },
   "technology": {
     "detected": [
-      "Google Tag Manager",
-      "Google Analytics",
-      "jQuery",
-      "Bootstrap",
-      "Tailwind CSS",
-      "Google Fonts"
+      "Next.js",
+      "Tailwind CSS"
     ],
-    "server": "Microsoft-IIS/10.0",
+    "server": "Vercel",
     "charset": "utf-8",
-    "ip": "104.211.97.138",
+    "ip": "216.198.79.1",
     "spf": true,
     "dmarc": "none"
   },
-  "theme": {
-    "brand": "#2C3864",
-    "fonts": {
-      "heading": "Rubik",
-      "body": "Rubik"
-    },
-    "fontFiles": {
-      "Rubik": {
-        "regular": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-B4i1UA.ttf",
-        "bold": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-4I-1UA.ttf"
-      }
-    }
-  }
+  "theme": {}
 }

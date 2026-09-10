@@ -222,14 +222,14 @@ category's Passed and Failed counts:
 
 ```json
 "accessibility": {
-  "score": 44.61,
+  "score": 62,
   "categories": {
-    "titles": { "passed": 0, "failed": 11 },
-    "graphics": { "passed": 3, "failed": 4 },
-    "forms": { "passed": 0, "failed": 1 },
+    "titles": { "passed": 0, "failed": 9 },
+    "graphics": { "passed": 27, "failed": 0 },
+    "forms": { "passed": 1, "failed": 9 },
     "document": { "passed": 3, "failed": 0 },
-    "readability": { "passed": 25, "failed": 88 },
-    "general": { "passed": 6, "failed": 5 }
+    "readability": { "passed": 75, "failed": 652 },
+    "general": { "passed": 53, "failed": 6 }
   }
 }
 ```
