@@ -323,7 +323,24 @@ When experimenting with colours, change only `theme.brand`. Never change
 `site` just to test a theme: `site` claims the measurements belong to that
 domain, and every fact in the file would then be wrongly labelled.
 
-### 3k. `onPageSeo` (never typed)
+### 3k. `keywords` (from a Semrush Keyword Gap export)
+
+In Semrush: Keyword Gap, enter the site plus its competitors, run, and
+Export the table as CSV. Then:
+
+```
+node scripts/keywords-to-data.js ~/Downloads/gap.keywords.csv
+```
+
+The script reads the positions, counts the ranking distribution (top 3 /
+10 / 20 / 100), splits the market three ways (missing, behind, ahead of
+competitors), and lists the highest-volume keywords the site is absent
+from. Everything is derived; nothing in this block is typed. Competitor
+names come from the export's own columns, so comparing against different
+rivals is just a different export. Delete the whole `keywords` block to
+drop the chapter from the report.
+
+### 3l. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
 from the CSV (missing and duplicate titles, meta descriptions, H1 problems,
@@ -378,8 +395,22 @@ email-security DNS records for chapter 06. The fourth runs Google's
 official PageSpeed Insights API for both devices and fills chapter 01's
 scores, field data and lab metrics (takes about a minute; only the
 Agentic Browsing fraction still needs typing, the API does not expose
-it). If it reports a quota error, get a free API key from Google and run
-it as `PSI_KEY=yourkey node scripts/check-pagespeed.js`. All print what
+it). If it reports a quota error, it needs your own (free, permanent) Google
+API key, a one-time 3-minute setup:
+
+1. console.cloud.google.com: create a project (any name)
+2. Search "PageSpeed Insights API", press Enable
+3. Credentials, Create credentials, API key; restrict it to the
+   PageSpeed Insights API; copy the AIza... string
+
+Then run the script as:
+
+```
+PSI_KEY=AIza-your-key node scripts/check-pagespeed.js
+```
+
+The key never goes in any file, only on the command line. Free tier is
+25,000 runs a day; an audit uses two. All print what
 they found and write it into `audit-data.json`; the preview updates by
 itself.
 
