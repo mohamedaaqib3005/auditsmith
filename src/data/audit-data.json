@@ -135,5 +135,38 @@
         "position": 16
       }
     ]
+  },
+  "accessibility": {
+    "score": 62,
+    "categories": {
+      "readability": {
+        "passed": 73,
+        "failed": 652
+      },
+      "forms": {
+        "passed": 1,
+        "failed": 9
+      },
+      "titles": {
+        "passed": 0,
+        "failed": 9
+      },
+      "general": {
+        "passed": 53,
+        "failed": 6
+      },
+      "graphics": {
+        "passed": 27,
+        "failed": 0
+      },
+      "document": {
+        "passed": 3,
+        "failed": 0
+      },
+      "clickables": {
+        "passed": 1,
+        "failed": 0
+      }
+    }
   }
 }

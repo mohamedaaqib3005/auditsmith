@@ -224,9 +224,22 @@ appear. Note `structuredData` appears twice by design: the automatic
 ok/missing check, and this typed 0-100 score, they are different
 measurements.
 
-### 3h. `accessibility` (typed from the Skynet checker)
+### 3h. `accessibility` (automatic, or typed from the Skynet checker)
 
-Run the site through
+Automatic: after a one-time setup (`npm install playwright` then
+`npx playwright install chromium`, about 120MB), one command runs the
+checker in a headless browser and fills the whole block, categories and
+score:
+
+```
+node scripts/check-access.js
+```
+
+It takes one to two minutes and drives a third-party website, so if that
+site redesigns, the script may need updating; the manual route below
+always works.
+
+Manual: run the site through
 https://www.skynettechnologies.com/accessibility-checker and copy each
 category's Passed and Failed counts:
 
