@@ -81,5 +81,59 @@
   },
   "theme": {
     "brand": "#C9935A"
+  },
+  "keywords": {
+    "analysed": 75,
+    "competitors": [
+      "tahaluf.com",
+      "dmgevents.com"
+    ],
+    "rankingDistribution": {
+      "top3": 0,
+      "top10": 0,
+      "top20": 0,
+      "top100": 0
+    },
+    "missing": 75,
+    "behind": 0,
+    "ahead": 0,
+    "topOpportunities": [
+      {
+        "keyword": "event management companies near me",
+        "volume": 2900,
+        "competitor": "dmgevents.com",
+        "position": 12
+      },
+      {
+        "keyword": "dng",
+        "volume": 2400,
+        "competitor": "dmgevents.com",
+        "position": 62
+      },
+      {
+        "keyword": "mea briefing today",
+        "volume": 2400,
+        "competitor": "dmgevents.com",
+        "position": 25
+      },
+      {
+        "keyword": "dmg online",
+        "volume": 1900,
+        "competitor": "dmgevents.com",
+        "position": 14
+      },
+      {
+        "keyword": "dng full form",
+        "volume": 1600,
+        "competitor": "dmgevents.com",
+        "position": 52
+      },
+      {
+        "keyword": "event management services",
+        "volume": 1600,
+        "competitor": "dmgevents.com",
+        "position": 16
+      }
+    ]
   }
 }
