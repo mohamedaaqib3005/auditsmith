@@ -86,5 +86,7 @@
     "spf": true,
     "dmarc": "none"
   },
-  "theme": {}
+  "theme": {
+    "brand": "#C9935A"
+  }
 }
