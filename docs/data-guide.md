@@ -292,6 +292,23 @@ Three behaviours worth knowing:
   renders in the default purple, a typo can never produce a broken palette.
   If you expected a brand colour and see purple, check the hex.
 
+**Brand fonts** work the same way, name Google Fonts families:
+
+```json
+"theme": {
+  "brand": "#2C3864",
+  "fonts": { "heading": "Rubik", "body": "Rubik" }
+}
+```
+
+Then run `node scripts/check-brand.js`, it resolves the font files and
+stores their locations in `theme.fontFiles` (script-written, never typed).
+The detector also finds fonts by itself when the site loads them from
+Google Fonts. The rules match the colour rules: hand-set beats detected,
+absent means the default fonts, and a family that is not on Google Fonts
+falls back to the default. Fonts change text widths and wrapping, so
+always eyeball a font-swapped report before sending it.
+
 When experimenting with colours, change only `theme.brand`. Never change
 `site` just to test a theme: `site` claims the measurements belong to that
 domain, and every fact in the file would then be wrongly labelled.

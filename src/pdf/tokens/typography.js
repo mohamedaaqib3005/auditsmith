@@ -49,3 +49,51 @@ export const fontWeights = global.fontWeights;
 export const fontSizes = global.fontSizeScale;
 export const lineHeights = global.lineHeightScale;
 export const letterSpacing = global.letterSpacingScale;
+
+/* =========================================
+   BRAND FONTS - like applyTheme, but for type.
+   theme.fonts names the families ({heading, body}); theme.fontFiles holds
+   the resolved TTF urls the brand script wrote ({Family: {regular, bold}}).
+   A family without resolved files is ignored: the default stays. Layout
+   metrics are tuned to the defaults, so eyeball a font-swapped report.
+========================================= */
+const DEFAULT_FONTS = {
+  heading: global.fontFamilies.heading,
+  sans: global.fontFamilies.sans,
+};
+
+export const applyFonts = (theme) => {
+  let heading = DEFAULT_FONTS.heading;
+  let body = DEFAULT_FONTS.sans;
+
+  const files = theme?.fontFiles || {};
+  const usable = (fam) => fam && files[fam]?.regular;
+
+  if (usable(theme?.fonts?.heading)) {
+    const fam = theme.fonts.heading;
+    Font.register({
+      family: fam,
+      fonts: [
+        { src: files[fam].regular, fontWeight: W.regular },
+        { src: files[fam].bold || files[fam].regular, fontWeight: W.bold },
+      ],
+    });
+    heading = fam;
+  }
+  if (usable(theme?.fonts?.body)) {
+    const fam = theme.fonts.body;
+    Font.register({
+      family: fam,
+      fonts: [
+        { src: files[fam].regular, fontWeight: W.regular },
+        { src: files[fam].bold || files[fam].regular, fontWeight: W.bold },
+      ],
+    });
+    body = fam;
+  }
+
+  fonts.heading = heading;
+  fonts.sans = body;
+  fonts.body = body;
+  return fonts;
+};

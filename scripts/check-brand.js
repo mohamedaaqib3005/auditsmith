@@ -1,6 +1,7 @@
 // scripts/check-brand.js
-// Brand-colour detector: finds the colour a site declares for itself and
-// writes it into audit-data.json's theme block. Keyless and evidence-based:
+// Brand detector: finds the colour AND the Google Fonts a site declares
+// for itself and writes them into audit-data.json's theme block. Keyless
+// and evidence-based:
 //   1. <meta name="theme-color">              (the site's own declaration)
 //   2. msapplication-TileColor meta
 //   3. theme_color in the web manifest
@@ -25,11 +26,11 @@ const site = args[0] || data.site;
 if (!site) { console.error("No site given and none in audit-data.json."); process.exit(1); }
 const origin = `https://${String(site).replace(/^https?:\/\//, "").split("/")[0]}`;
 
-const get = async (url) => {
+const get = async (url, headers) => {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
-    const res = await fetch(url, { signal: ctrl.signal, redirect: "follow", headers: { "User-Agent": "AuditsmithCheck/1.0" } });
+    const res = await fetch(url, { signal: ctrl.signal, redirect: "follow", headers: headers || { "User-Agent": "AuditsmithCheck/1.0" } });
     return { status: res.status, text: await res.text() };
   } catch (e) {
     return { status: 0, text: "", error: e.name === "AbortError" ? "timeout" : e.message };
@@ -99,16 +100,74 @@ if (!found) {
   if (top) { found = top[0]; source = `most used saturated hex in markup (${top[1]}x)`; }
 }
 
+let wrote = false;
 if (!found) {
-  console.log("No brand colour could be detected from the site's own declarations. Nothing written.");
-  process.exit(0);
+  console.log("No brand colour could be detected from the site's own declarations.");
+} else {
+  console.log(`Detected brand colour: ${found}  (source: ${source})`);
+  if (data.theme?.brand && !force) {
+    console.log(`theme.brand already set to ${data.theme.brand}, keeping it. Rerun with --force to overwrite.`);
+  } else {
+    data.theme = { ...(data.theme || {}), brand: found };
+    wrote = true;
+  }
 }
 
-console.log(`Detected brand colour: ${found}  (source: ${source})`);
-if (data.theme?.brand && !force) {
-  console.log(`theme.brand already set to ${data.theme.brand}, keeping it. Rerun with --force to overwrite.`);
-} else {
-  data.theme = { ...(data.theme || {}), brand: found };
+/* ---------- fonts: Google Fonts declarations + TTF resolution ---------- */
+const resolveGoogleFont = async (family) => {
+  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@400;700`;
+  const r = await get(url, { "User-Agent": "curl/8" });
+  if (r.status !== 200) return null;
+  const faces = [...r.text.matchAll(/font-weight: (\d+);[\s\S]*?src: url\((https:[^)]+\.ttf)\)/g)];
+  const out = {};
+  for (const [, w, u] of faces) {
+    if (w === "400") out.regular = u;
+    if (w === "700") out.bold = u;
+  }
+  return out.regular ? out : null;
+};
+
+// Families the site loads from Google Fonts (evidence in <link> tags)
+const gfLinks = [...html.matchAll(/fonts\.googleapis\.com\/css2?\?([^"']+)/g)].map((m) => m[1]);
+const declared = [];
+for (const qs of gfLinks) {
+  for (const fam of [...qs.matchAll(/family=([^&:]+)/g)].map((m) => decodeURIComponent(m[1]).replace(/\+/g, " ")))
+    if (!declared.includes(fam)) declared.push(fam);
+}
+
+const hasFonts = data.theme?.fonts?.heading || data.theme?.fonts?.body;
+if (declared.length && (!hasFonts || force)) {
+  const fonts = { heading: declared[0], body: declared[1] || declared[0] };
+  console.log(`Detected Google Fonts: ${declared.join(", ")} -> heading: ${fonts.heading}, body: ${fonts.body}`);
+  data.theme = { ...(data.theme || {}), fonts };
+  wrote = true;
+} else if (declared.length && hasFonts) {
+  console.log(`Google Fonts on site (${declared.join(", ")}), but theme.fonts already set, keeping yours. --force to overwrite.`);
+} else if (!declared.length) {
+  console.log("No Google Fonts declarations found on the site.");
+}
+
+// Resolve TTF files for whatever families the theme now names (incl. hand-set)
+const wanted = [data.theme?.fonts?.heading, data.theme?.fonts?.body].filter(Boolean);
+if (wanted.length) {
+  const fontFiles = { ...(data.theme.fontFiles || {}) };
+  for (const fam of [...new Set(wanted)]) {
+    if (fontFiles[fam]?.regular) continue;
+    const files = await resolveGoogleFont(fam);
+    if (files) {
+      fontFiles[fam] = files;
+      console.log(`Resolved "${fam}" on Google Fonts (regular${files.bold ? " + bold" : ""}).`);
+      wrote = true;
+    } else {
+      console.log(`"${fam}" not found on Google Fonts, it will fall back to the default font.`);
+    }
+  }
+  data.theme.fontFiles = fontFiles;
+}
+
+if (wrote) {
   fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2) + "\n");
   console.log(`Written to ${DATA_PATH}.`);
+} else {
+  console.log("Nothing new to write.");
 }

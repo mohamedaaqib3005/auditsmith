@@ -123,6 +123,16 @@
     "dmarc": "none"
   },
   "theme": {
-    "brand": "#2C3864"
+    "brand": "#2C3864",
+    "fonts": {
+      "heading": "Rubik",
+      "body": "Rubik"
+    },
+    "fontFiles": {
+      "Rubik": {
+        "regular": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-B4i1UA.ttf",
+        "bold": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-4I-1UA.ttf"
+      }
+    }
   }
 }
