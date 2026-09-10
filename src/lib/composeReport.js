@@ -537,6 +537,84 @@ const EMAIL_CHECKS = {
   },
 };
 
+/* =========================================
+   Keyword Visibility knowledge - Semrush Keyword Gap door (docs 3l)
+========================================= */
+const MISSING_SHARE_OK = 0.25;
+const MISSING_SHARE_WARN = 0.5;
+
+const keywordsSections = (k) => {
+  if (!k || !k.analysed) return [];
+  const s = [];
+
+  s.push({
+    type: "sectionDivider",
+    number: "07",
+    title: "Keyword Visibility",
+    description: `Where the site ranks for the keywords that matter in its market, measured against ${k.competitors?.length ? k.competitors.join(" and ") : "its competitors"} across ${k.analysed} analysed keywords.`,
+  });
+
+  const d = k.rankingDistribution || {};
+  s.push({ type: "heading", text: "Ranking Distribution" });
+  s.push({
+    type: "keyValue",
+    items: [
+      { label: "Top 3 positions", value: `${d.top3 ?? 0} keywords` },
+      { label: "Top 10 positions", value: `${d.top10 ?? 0} keywords` },
+      { label: "Top 20 positions", value: `${d.top20 ?? 0} keywords` },
+      { label: "Top 100 positions", value: `${d.top100 ?? 0} keywords` },
+    ],
+  });
+
+  const missingShare = k.missing / k.analysed;
+  const items = [
+    {
+      label: "Keyword coverage",
+      value: `Absent from ${k.missing} of ${k.analysed} market keywords`,
+      rating:
+        missingShare <= MISSING_SHARE_OK
+          ? "good"
+          : missingShare <= MISSING_SHARE_WARN
+          ? "needs-improvement"
+          : "poor",
+      recommendation:
+        missingShare > MISSING_SHARE_OK
+          ? "Create or optimise pages for the highest-volume missing keywords below; competitors already prove they can rank."
+          : undefined,
+    },
+    {
+      label: "Competitive position",
+      value: `Ahead on ${k.ahead}, behind on ${k.behind} shared keywords`,
+      rating: k.ahead >= k.behind ? "good" : k.behind > k.ahead * 2 ? "poor" : "needs-improvement",
+      recommendation:
+        k.behind > k.ahead
+          ? "Strengthen the pages already ranking: internal links, content depth and freshness close position gaps fastest."
+          : undefined,
+    },
+  ];
+  s.push({ type: "heading", text: "Competitive Gap" });
+  s.push({
+    type: "paragraph",
+    text: `Of the analysed keywords, the site is missing from ${k.missing}, ranks behind a competitor on ${k.behind}, and leads on ${k.ahead}.`,
+  });
+  s.push({ type: "checks", items });
+
+  if (k.topOpportunities?.length) {
+    s.push({ type: "heading", text: "Top Opportunities" });
+    s.push({
+      type: "paragraph",
+      text: "The highest-volume keywords the site is absent from, and the competitor currently holding each.",
+    });
+    s.push({
+      type: "table",
+      columns: ["Keyword", "Monthly volume", "Held by", "Their position"],
+      rows: k.topOpportunities.map((o) => [o.keyword, String(o.volume), o.competitor, `#${o.position}`]),
+    });
+  }
+
+  return s;
+};
+
 const technologySections = (t) => {
   if (!t) return [];
   const s = [];
@@ -846,6 +924,7 @@ const computeGrades = (sections, data) => {
     ...aiReadinessSections(data.aiReadiness, data.technicalSeo?.pagesCrawled),
     ...accessibilitySections(data.accessibility),
     ...technologySections(data.technology),
+    ...keywordsSections(data.keywords),
   ];
 
   const gradeBlock = computeGrades(sections, data);
