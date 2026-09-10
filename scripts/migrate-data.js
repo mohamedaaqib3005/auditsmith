@@ -17,13 +17,7 @@ if (d.pagespeed && !d.pagespeed.mobile && !d.pagespeed.desktop && (d.pagespeed.s
   d.pagespeed = { [key]: rest };
   log.push(`pagespeed -> keyed under "${key}"`);
 }
-for (const dev of ["mobile", "desktop"]) {
-  const sc = d.pagespeed?.[dev]?.scores;
-  if (sc && typeof sc.agenticBrowsing === "string") {
-    sc.agenticBrowsing = Number(sc.agenticBrowsing.split("/")[0]);
-    log.push(`${dev} agenticBrowsing -> number`);
-  }
-}
+// agenticBrowsing stays as the typed fraction ("2/2", "2/3"); not migrated.
 
 const ts = d.technicalSeo;
 if (ts) {

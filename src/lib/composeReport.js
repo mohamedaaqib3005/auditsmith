@@ -113,14 +113,19 @@ const SCORE_LABELS = {
   agenticBrowsing: "Agentic Browsing",
 };
 
-const AGENTIC_MAX = 2; // the agentic browsing audit is always out of 2
+const AGENTIC_DEFAULT_MAX = 2; // used only when a bare number is typed
 
 const scoreItems = (scores = {}) =>
   Object.entries(scores).map(([key, v]) => {
     const label = SCORE_LABELS[key] || key;
     if (key === "agenticBrowsing") {
-      const num = typeof v === "string" ? Number(v.split("/")[0]) : v;
-      return { label, score: num, max: AGENTIC_MAX, display: `${num}/${AGENTIC_MAX}` };
+      // Typed as the fraction Google shows: "2/2", "2/3". A bare number
+      // is tolerated and assumed out of 2.
+      const [num, max] =
+        typeof v === "string" && v.includes("/")
+          ? v.split("/").map(Number)
+          : [v, AGENTIC_DEFAULT_MAX];
+      return { label, score: num, max, display: `${num}/${max}` };
     }
     if (typeof v === "string" && v.includes("/")) {
       const [num, max] = v.split("/").map(Number);
