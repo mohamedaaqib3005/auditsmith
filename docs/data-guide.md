@@ -341,10 +341,10 @@ automatically when you change `site`.
 
 ---
 
-## 5. The three scripts: filling everything except PageSpeed
+## 5. The four scripts: filling nearly everything
 
-Once per audit, after crawling the site, three commands fill chapters 02,
-03, 04 and 06 completely:
+Once per audit, after crawling the site, four commands fill chapters 01,
+02, 03, 04 and 06 almost completely:
 
 1. Open Screaming Frog SEO Spider, enter the site URL, press Start, wait
    for the crawl to finish
@@ -358,14 +358,21 @@ Once per audit, after crawling the site, three commands fill chapters 02,
 node scripts/csv-to-data.js ~/Downloads/vlncy_internal_all.csv
 node scripts/check-ai.js
 node scripts/check-tech.js
+node scripts/check-pagespeed.js
 ```
 
 The first reads the crawl CSV: chapter 02's numbers, all of chapter 03,
 and the noindexPages count. The second visits the live site: llms.txt,
 robots.txt and AI crawler access, sitemap, Schema.org markup, and no-JS
 readability. The third detects the technology stack, server details, and
-email-security DNS records for chapter 06. All print what they found and
-write it into `audit-data.json`; the preview updates by itself.
+email-security DNS records for chapter 06. The fourth runs Google's
+official PageSpeed Insights API for both devices and fills chapter 01's
+scores, field data and lab metrics (takes about a minute; only the
+Agentic Browsing fraction still needs typing, the API does not expose
+it). If it reports a quota error, get a free API key from Google and run
+it as `PSI_KEY=yourkey node scripts/check-pagespeed.js`. All print what
+they found and write it into `audit-data.json`; the preview updates by
+itself.
 
 Rerun any of them any time. They only replace what they measure; a hand-typed
 `redirectChains` or `"stale"` sitemap override is kept.
