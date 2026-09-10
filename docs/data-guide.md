@@ -54,7 +54,7 @@ The complete file looks like this. This is EVERYTHING a user types:
 `redirectChains` is the ONLY field outside pagespeed you may type, and even
 it is optional (no value = its row simply not shown; the number comes from
 Screaming Frog's Reports menu, Redirect Chains). Everything else in
-`technicalSeo`, `onPageSeo`, and `aiReadiness` is written by the two scripts
+`technicalSeo`, `onPageSeo`, and `aiReadiness` is written by the scripts
 (section 5 below), you never type any of it.
 
 **Golden rule: numbers only, no units.** Write `2.2`, never `"2.2 s"` or
@@ -349,7 +349,7 @@ readability. The third detects the technology stack, server details, and
 email-security DNS records for chapter 06. All print what they found and
 write it into `audit-data.json`; the preview updates by itself.
 
-Rerun either any time. They only replace what they measure; a hand-typed
+Rerun any of them any time. They only replace what they measure; a hand-typed
 `redirectChains` or `"stale"` sitemap override is kept.
 
 ### No terminal? Use the buttons
