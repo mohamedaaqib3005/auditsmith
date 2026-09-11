@@ -209,6 +209,15 @@ If a check cannot run (site unreachable, blocked), the script writes
 nothing for that field rather than guessing, and says so in its output.
 
 **One typed extra: the three AI score rings.** Run the site through
+Seomator. Automatic, after the same one-time Playwright setup as
+check-access:
+
+```
+node scripts/check-seo-scores.js
+```
+
+Their app reports each category as a checks fraction (E-E-A-T 9/14); the
+script stores the equivalent 0-100 number. Or manually: run
 Seomator's free audit (seomator.com/free-seo-audit-tool) and copy its
 E-E-A-T, Social Signals, and Structured Data scores as plain numbers:
 
