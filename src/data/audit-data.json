@@ -80,10 +80,10 @@
     "dmarc": "none"
   },
   "theme": {
-    "brand": "#F06820",
+    "brand": "#635BFF",
     "fonts": {
-      "heading": "Outfit",
-      "body": "Plus Jakarta Sans"
+      "heading": "Rubik",
+      "body": "Rubik"
     },
     "fontFiles": {
       "Outfit": {
@@ -93,8 +93,13 @@
       "Plus Jakarta Sans": {
         "regular": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf",
         "bold": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf"
+      },
+      "Rubik": {
+        "regular": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-B4i1UA.ttf",
+        "bold": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-4I-1UA.ttf"
       }
-    }
+    },
+    "accent": "#0A2540"
   },
   "accessibility": {
     "score": 62,
