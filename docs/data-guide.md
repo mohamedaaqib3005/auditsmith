@@ -356,7 +356,7 @@ When experimenting with colours, change only `theme.brand`. Never change
 `site` just to test a theme: `site` claims the measurements belong to that
 domain, and every fact in the file would then be wrongly labelled.
 
-### 3k. `keywords` (from a Semrush Keyword Gap export)
+### 3l. `keywords` (from a Semrush Keyword Gap export)
 
 In Semrush: Keyword Gap, enter the site plus its competitors, run, and
 Export the table as CSV. Then:
@@ -373,7 +373,7 @@ names come from the export's own columns, so comparing against different
 rivals is just a different export. Delete the whole `keywords` block to
 drop the chapter from the report.
 
-### 3l. `onPageSeo` (never typed)
+### 3m. `onPageSeo` (never typed)
 
 Do not fill this in and do not edit it by hand. The crawl script counts it
 from the CSV (missing and duplicate titles, meta descriptions, H1 problems,
