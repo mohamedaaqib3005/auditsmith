@@ -143,18 +143,34 @@ const rampFrom = (brandHex) => {
   return ramp;
 };
 
-const brandSlots = (ramp, accentHex) => ({
+// Relative luminance (sRGB) - decides whether text on the brand colour
+// is white or dark ink, so any exact brand hex stays readable.
+const luminance = (hex) => {
+  const lin = (c) => {
+    const v = c / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  const n = parseInt(hex.slice(1), 16);
+  return 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+};
+
+const brandSlots = (ramp, accentHex, exact) => {
+  const primary = exact || ramp[900];
+  const dark = exact ? luminance(exact) < 0.45 : true;
+  return {
   surface: ramp[100],
   surfaceSoft: ramp[50],
-  primary: ramp[900],
+  primary,
   primarySoft: ramp[100],
   primaryTint: ramp[400],
   accent: accentHex || ramp[400],
-  onPrimaryMuted: ramp[300],
-  onPrimaryFaint: ramp[500],
+  onPrimary: dark ? p.neutral[0] : p.neutral[900],
+  onPrimaryMuted: dark ? ramp[300] : p.neutral[700],
+  onPrimaryFaint: dark ? ramp[500] : p.neutral[600],
   onPrimaryBorder: ramp[700],
   bgAlt: ramp[50],
-});
+  };
+};
 
 const normalizeBrand = (brand) => {
   if (typeof brand !== "string") return null;
@@ -169,6 +185,6 @@ export const applyTheme = (theme) => {
   const brand = normalizeBrand(theme?.brand);
   const ramp = brand ? rampFrom(brand) : p.purple;
   const accentHex = normalizeBrand(theme?.accent);
-  Object.assign(colors, brandSlots(ramp, accentHex));
+  Object.assign(colors, brandSlots(ramp, accentHex, brand));
   return colors;
 };

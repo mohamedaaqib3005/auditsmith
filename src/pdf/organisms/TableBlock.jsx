@@ -11,7 +11,7 @@ export const TableBlock = ({ columns = [], rows = [] }) => (
           style={{
             flex: 1,
             padding: space.sm,
-            color: colors.white,
+            color: colors.onPrimary,
             fontFamily: fonts.body,
             fontWeight: 700,
             fontSize: fontSizes.base,

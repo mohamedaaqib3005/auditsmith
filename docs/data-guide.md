@@ -342,11 +342,13 @@ good/warning/bad, not brand. Layout, fonts and structure are unaffected.
 
 Three behaviours worth knowing:
 
-- **The hex is a seed, not a paint colour.** The system keeps only its hue
-  (the colour direction) and rebuilds every shade at the report's designed
-  lightness levels, so contrast and legibility always survive. Eyedropping
-  the cover will show the brand's hue at the report's depth, not the exact
-  hex you typed; that is by design.
+- **Brand surfaces get the exact hex.** The cover, banners, headings and
+  table headers are painted in your literal brand colour, an eyedropper on
+  the cover reads exactly what you typed. Only the supporting shades
+  (tinted boxes, light strokes) are derived from it. Text on brand
+  surfaces flips automatically between white and dark ink based on the
+  colour's own brightness, so a light brand stays readable without any
+  extra setting.
 - **Shorthand works**: `#F60` is read as `#FF6600`.
 - **A broken hex falls back to the default.** Anything that is not a real
   hex colour (`#GGGGGG`, `"blue"`, a stray word) is ignored and the report
