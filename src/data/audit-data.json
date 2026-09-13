@@ -80,7 +80,21 @@
     "dmarc": "none"
   },
   "theme": {
-    "brand": "#C9935A"
+    "brand": "#F06820",
+    "fonts": {
+      "heading": "Outfit",
+      "body": "Plus Jakarta Sans"
+    },
+    "fontFiles": {
+      "Outfit": {
+        "regular": "https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4TC1C4E.ttf",
+        "bold": "https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4deyC4E.ttf"
+      },
+      "Plus Jakarta Sans": {
+        "regular": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf",
+        "bold": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf"
+      }
+    }
   },
   "accessibility": {
     "score": 62,

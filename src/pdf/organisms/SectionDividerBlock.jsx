@@ -20,7 +20,7 @@ export const SectionDividerBlock = ({ number, title, description }) => (
           style={{
             fontFamily: fonts.mono,
             fontSize: fontSizes["5xl"],
-            color: colors.primaryTint,
+            color: colors.accent,
             marginRight: space.xl,
           }}
         >

@@ -66,7 +66,51 @@ if (home.status !== 200) {
 }
 const html = home.text;
 
+const resolveGoogleFont = async (family) => {
+  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@400;700`;
+  const r = await get(url, { "User-Agent": "curl/8" });
+  if (r.status !== 200) return null;
+  const faces = [...r.text.matchAll(/font-weight: (\d+);[\s\S]*?src: url\((https:[^)]+\.ttf)\)/g)];
+  const out = {};
+  for (const [, w, u] of faces) {
+    if (w === "400") out.regular = u;
+    if (w === "700") out.bold = u;
+  }
+  return out.regular ? out : null;
+};
+
 let found = null, source = null;
+let apiFonts = null, apiAccent = null, fontsSettled = false;
+
+/* ---------- Rung 0: brand-data API (colorize.design / prefetch) when a
+   key is present. The same honesty filters apply: neutral colours are
+   rejected and the free ladder takes over. */
+if (process.env.PREFETCH_KEY) {
+  try {
+    const r = await fetch(
+      "https://api.prefetch.io/brand?url=" + encodeURIComponent(origin),
+      { headers: { "x-api-key": process.env.PREFETCH_KEY }, signal: AbortSignal.timeout(30000) }
+    );
+    if (r.ok) {
+      const j = await r.json();
+      const brand = j?.data?.brand || {};
+      const raw = brand.colors?.brand_colors || [];
+      const hexes = raw.map((c) => normHex(c.hex)).filter((h) => h && isBrandish(h));
+      if (hexes.length) {
+        found = hexes[0];
+        source = "brand API (primary)";
+        if (hexes[1] && hexes[1] !== hexes[0]) apiAccent = hexes[1];
+      } else if (raw.length) {
+        console.log(`Brand API returned only neutral colours (${raw.map((c) => c.hex).join(", ")}), falling back to the free detector.`);
+      }
+      if (brand.fonts?.families?.length) apiFonts = brand.fonts.families;
+    } else {
+      console.log(`Brand API: HTTP ${r.status}, falling back to the free detector.`);
+    }
+  } catch (e) {
+    console.log(`Brand API unreachable (${e.message}), falling back to the free detector.`);
+  }
+}
 
 const meta = (name) => (html.match(new RegExp(`<meta[^>]+name=["']${name}["'][^>]+content=["']([^"']+)`, "i")) || [])[1]
   || (html.match(new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+name=["']${name}["']`, "i")) || [])[1];
@@ -91,13 +135,53 @@ if (!found) {
 }
 
 if (!found) {
-  const tally = {};
-  for (const raw of html.match(/#[0-9a-fA-F]{3,6}\b/g) || []) {
-    const v = normHex(raw);
-    if (v && isBrandish(v)) tally[v] = (tally[v] || 0) + 1;
+  // Rung 4: the site's stylesheets, where the real palette lives (Tailwind
+  // and friends compile colours into CSS the HTML never shows). Fetch
+  // same-site linked CSS, count hexes there and in the markup.
+  const cssLinks = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]*href=["']([^"']+)/gi)]
+    .map((m) => m[1])
+    .concat([...html.matchAll(/href=["']([^"']+\.css[^"']*)["']/gi)].map((m) => m[1]))
+    .filter((h, i, a) => a.indexOf(h) === i)
+    .filter((h) => !/^https?:/i.test(h) || h.includes(new URL(origin).host))
+    .slice(0, 5);
+
+  let cssText = "";
+  for (const href of cssLinks) {
+    const url = /^https?:/i.test(href) ? href : `${origin}/${href.replace(/^\//, "")}`;
+    const r = await get(url);
+    if (r.status === 200) cssText += "\n" + r.text;
   }
-  const top = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
-  if (top) { found = top[0]; source = `most used saturated hex in markup (${top[1]}x)`; }
+
+  const tallyFrom = (text) => {
+    const tally = {};
+    for (const raw of text.match(/#[0-9a-fA-F]{3,6}\b/g) || []) {
+      const v = normHex(raw);
+      if (v && isBrandish(v)) tally[v] = (tally[v] || 0) + 1;
+    }
+    return tally;
+  };
+
+  const cssTally = tallyFrom(cssText);
+  const htmlTally = tallyFrom(html);
+
+  // Markup first: colours an author wrote into the page outrank stylesheet
+  // contents, which include framework factory palettes (Bootstrap ships its
+  // default blue whether a site uses it or not). CSS is the fallback
+  // haystack for sites whose markup carries no colours at all.
+  const pickFrom = Object.keys(htmlTally).length ? htmlTally : cssTally;
+  const pickSource = Object.keys(htmlTally).length ? "markup" : "stylesheets";
+
+  const merged = { ...cssTally };
+  for (const [k, v] of Object.entries(htmlTally)) merged[k] = (merged[k] || 0) + v;
+  const evidence = Object.entries(merged).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  if (evidence.length > 1)
+    console.log(`Palette candidates: ${evidence.map(([h, c]) => `${h} (${c}x)`).join(", ")}`);
+
+  const top = Object.entries(pickFrom).sort((a, b) => b[1] - a[1])[0];
+  if (top) {
+    found = top[0];
+    source = `most used saturated hex in ${pickSource} (${top[1]}x)`;
+  }
 }
 
 let wrote = false;
@@ -113,19 +197,54 @@ if (!found) {
   }
 }
 
-/* ---------- fonts: Google Fonts declarations + TTF resolution ---------- */
-const resolveGoogleFont = async (family) => {
-  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@400;700`;
-  const r = await get(url, { "User-Agent": "curl/8" });
-  if (r.status !== 200) return null;
-  const faces = [...r.text.matchAll(/font-weight: (\d+);[\s\S]*?src: url\((https:[^)]+\.ttf)\)/g)];
-  const out = {};
-  for (const [, w, u] of faces) {
-    if (w === "400") out.regular = u;
-    if (w === "700") out.bold = u;
+if (apiAccent) {
+  if (data.theme?.accent && !force) {
+    console.log(`theme.accent already set to ${data.theme.accent}, keeping it.`);
+  } else {
+    data.theme = { ...(data.theme || {}), accent: apiAccent };
+    console.log(`Detected accent colour: ${apiAccent}  (brand API)`);
+    wrote = true;
   }
-  return out.regular ? out : null;
-};
+}
+
+/* API font names arrive in code-ish forms ("plusJakarta", "Rubik-Bold",
+   "outfit Fallback"); normalise to Google-Fonts-resolvable candidates. */
+if (apiFonts && (!data.theme?.fonts?.heading || force)) {
+  const baseName = (f) =>
+    f.replace(/\s*Fallback$/i, "").replace(/-[A-Za-z]+$/g, "");
+  const freq = {};
+  for (const f of apiFonts.map(baseName)) freq[f] = (freq[f] || 0) + 1;
+  const ranked = Object.keys(freq).sort((x, y) => freq[y] - freq[x]);
+  const candidatesFor = (name) => {
+    const spaced = name.replace(/([a-z])([A-Z])/g, "$1 $2");
+    const title = spaced.split(/\s+/).map((w) => (w.length <= 2 ? w.toUpperCase() : w[0].toUpperCase() + w.slice(1))).join(" ");
+    return [...new Set([name, title, `${title} Sans`])];
+  };
+  const resolveFirst = async (name) => {
+    for (const cand of candidatesFor(name)) {
+      const files = await resolveGoogleFont(cand);
+      if (files) return { family: cand, files };
+    }
+    return null;
+  };
+  const first = await resolveFirst(ranked[0]);
+  // a family seen only once is usually decorative (logos, flourishes);
+  // it may not claim the body slot
+  const second = ranked[1] && freq[ranked[1]] >= 2 ? await resolveFirst(ranked[1]) : null;
+  if (first) {
+    const fonts = { heading: first.family, body: (second || first).family };
+    const fontFiles = { ...(data.theme?.fontFiles || {}), [first.family]: first.files };
+    if (second) fontFiles[second.family] = second.files;
+    data.theme = { ...(data.theme || {}), fonts, fontFiles };
+    console.log(`Brand API fonts: ${ranked.slice(0, 3).join(", ")} -> heading: ${fonts.heading}, body: ${fonts.body}`);
+    wrote = true;
+    fontsSettled = true;
+  } else {
+    console.log(`Brand API fonts (${ranked.slice(0, 3).join(", ")}) not resolvable on Google Fonts, keeping defaults.`);
+  }
+}
+
+/* ---------- fonts: Google Fonts declarations + TTF resolution ---------- */
 
 // Families the site loads from Google Fonts (evidence in <link> tags)
 const gfLinks = [...html.matchAll(/fonts\.googleapis\.com\/css2?\?([^"']+)/g)].map((m) => m[1]);
@@ -136,7 +255,7 @@ for (const qs of gfLinks) {
 }
 
 const hasFonts = data.theme?.fonts?.heading || data.theme?.fonts?.body;
-if (declared.length && (!hasFonts || force)) {
+if (declared.length && !fontsSettled && (!hasFonts || force)) {
   const fonts = { heading: declared[0], body: declared[1] || declared[0] };
   console.log(`Detected Google Fonts: ${declared.join(", ")} -> heading: ${fonts.heading}, body: ${fonts.body}`);
   data.theme = { ...(data.theme || {}), fonts };

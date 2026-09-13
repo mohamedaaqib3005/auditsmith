@@ -26,6 +26,7 @@ export const colors = {
   primary: p.purple[900],
   primarySoft: p.purple[100],
   primaryTint: p.purple[400],
+  accent: p.purple[400],
   primaryForeground: p.neutral[0],
 
   /* ON-PRIMARY (cover surface) */
@@ -142,12 +143,13 @@ const rampFrom = (brandHex) => {
   return ramp;
 };
 
-const brandSlots = (ramp) => ({
+const brandSlots = (ramp, accentHex) => ({
   surface: ramp[100],
   surfaceSoft: ramp[50],
   primary: ramp[900],
   primarySoft: ramp[100],
   primaryTint: ramp[400],
+  accent: accentHex || ramp[400],
   onPrimaryMuted: ramp[300],
   onPrimaryFaint: ramp[500],
   onPrimaryBorder: ramp[700],
@@ -166,6 +168,7 @@ export const applyTheme = (theme) => {
   // produce a broken (NaN/black) palette.
   const brand = normalizeBrand(theme?.brand);
   const ramp = brand ? rampFrom(brand) : p.purple;
-  Object.assign(colors, brandSlots(ramp));
+  const accentHex = normalizeBrand(theme?.accent);
+  Object.assign(colors, brandSlots(ramp, accentHex));
   return colors;
 };

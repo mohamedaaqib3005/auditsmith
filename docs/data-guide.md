@@ -316,7 +316,25 @@ node scripts/check-brand.js
 
 It reads the colour the site declares about itself (theme-color meta tag,
 web manifest, or the most used saturated colour in its markup) and writes
-`theme.brand`. It never overwrites a brand you set by hand (add `--force`
+`theme.brand`.
+
+**With a brand-data API key** (colorize.design / prefetch), the script
+asks the API first, one call returns the brand's true primary and accent
+colours and its font families, including self-hosted fonts the free
+detector cannot see:
+
+```
+PREFETCH_KEY=pf_your-key node scripts/check-brand.js
+```
+
+The key lives only on the command line, never in any file. The same
+honesty filters apply to API answers: neutral colours (near-white,
+near-black) are rejected with a printed reason and the free detector
+takes over; fonts not on Google Fonts fall back to the defaults; a
+decorative font seen only once may not become the body face. The API
+also supplies `theme.accent`, a second colour used for small touches
+(the big section numbers); it can equally be set by hand, and an invalid
+accent falls back to a shade derived from the primary. It never overwrites a brand you set by hand (add `--force`
 to insist), and eyeball the cover after, a detected colour is a good
 starting point, not a designer. The traffic-light colours (green, amber,
 red rings, dots and icons) and grade colours never change, those mean
