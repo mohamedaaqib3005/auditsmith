@@ -415,8 +415,16 @@ failed.
 
 **The date** is always the day you generate the PDF. There is no date field.
 
-**The reference number** is AUD + the brand + the current year. It changes
-automatically when you change `site`.
+**The reference number** is AUD + a short brand code + the current year.
+The code derives itself: initials when the domain shows separate words
+(event-first-group becomes EFG), the whole word when it is short (VLNCY),
+the first 8 letters otherwise. For a one-word domain that really is a
+multi-word brand, type the code once at the top level of the data file,
+it always wins:
+
+```json
+"brandCode": "EFG"
+```
 
 ---
 
