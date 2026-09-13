@@ -192,7 +192,15 @@ Units: fcp, lcp, speedIndex in **seconds**; tbt in **milliseconds**; cls
 
 ---
 
-### 3f. `technicalSeo` (automatic; one optional field)
+### 3f. `technicalSeo`
+
+The crawl script also derives, when the export carries the columns:
+internal redirect counts, canonical coverage (missing and
+pointing-elsewhere), shown as Crawl Hygiene cards in chapter 02, and
+readability (average Flesch score, hard pages) plus spelling error
+counts, shown as Content Quality cards in chapter 03. Nothing new to
+export or type; richer exports simply produce richer chapters.
+ (automatic; one optional field)
 
 Everything here is written by the scripts: the crawl numbers by
 `csv-to-data.js`, and `sitemap` / `robotsTxt` by `check-ai.js`, which
