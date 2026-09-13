@@ -93,9 +93,10 @@ const displaySite = (site = "") =>
 const todayLong = () =>
   new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
-// AUD-VLNCY-2026-001
+// AUD-VLNCY-2026-001. Long brand names are shortened to 8 characters so
+// the reference stays a compact code and never crowds its neighbours.
 const makeReference = (brand) =>
-  `AUD-${brand.toUpperCase()}-${new Date().getFullYear()}-001`;
+  `AUD-${brand.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8)}-${new Date().getFullYear()}-001`;
 
 // Core Web Vitals assessment: every core metric WITH data must rate "good".
 // (Google's rule: LCP, INP, CLS; metrics without field data are skipped.)

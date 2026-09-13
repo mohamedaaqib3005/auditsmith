@@ -80,10 +80,10 @@
     "dmarc": "none"
   },
   "theme": {
-    "brand": "#635BFF",
+    "brand": "#F06820",
     "fonts": {
-      "heading": "Rubik",
-      "body": "Rubik"
+      "heading": "Outfit",
+      "body": "Plus Jakarta Sans"
     },
     "fontFiles": {
       "Outfit": {
