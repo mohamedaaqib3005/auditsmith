@@ -6,6 +6,24 @@ colours, the section layout, is generated automatically.
 
 ---
 
+## 0. Starting a new client's audit
+
+One command archives the current audit and starts fresh:
+
+```
+node scripts/new-audit.js newclient.com
+```
+
+The old audit is saved to `audits/<brand>-<date>.json`, nothing is ever
+lost, and the data file resets to just the new site, ready for the
+scripts. To reopen any archived audit, copy it back:
+
+```
+cp audits/<name>.json src/data/audit-data.json
+```
+
+Commit the audits folder with everything else; it is the client history.
+
 ## 1. The one file you edit
 
 ```
