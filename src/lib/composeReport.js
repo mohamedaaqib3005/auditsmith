@@ -93,10 +93,21 @@ const displaySite = (site = "") =>
 const todayLong = () =>
   new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
-// AUD-VLNCY-2026-001. Long brand names are shortened to 8 characters so
-// the reference stays a compact code and never crowds its neighbours.
-const makeReference = (brand) =>
-  `AUD-${brand.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8)}-${new Date().getFullYear()}-001`;
+// AUD-VLNCY-2026-001. The brand token in the reference is a compact code:
+//   1. a typed data.brandCode always wins ("EFG")
+//   2. multi-word names (visible separators: event-first-group) -> initials
+//   3. short single words stay whole (VLNCY)
+//   4. long single words are cut to 8 characters
+const makeReference = (brand, code) => {
+  let token;
+  if (code) token = String(code);
+  else {
+    const parts = brand.split(/[^a-zA-Z0-9]+/).filter(Boolean);
+    if (parts.length >= 2) token = parts.map((w) => w[0]).join("");
+    else token = brand.length <= 8 ? brand : brand.slice(0, 8);
+  }
+  return `AUD-${token.toUpperCase().replace(/[^A-Z0-9]/g, "")}-${new Date().getFullYear()}-001`;
+};
 
 // Core Web Vitals assessment: every core metric WITH data must rate "good".
 // (Google's rule: LCP, INP, CLS; metrics without field data are skipped.)
@@ -873,7 +884,7 @@ export function composeReport(data) {
   const site = displaySite(data.site);
   const brand = brandFromSite(data.site);
   const date = todayLong();
-  const reference = makeReference(brand);
+  const reference = makeReference(brand, data.brandCode);
 
 
 /* =========================================
