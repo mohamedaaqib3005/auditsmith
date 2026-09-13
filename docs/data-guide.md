@@ -287,7 +287,18 @@ Facts, not verdicts: `spf` is `true`/`false`, `dmarc` is the actual policy
 shows amber in the report ("present but not enforcing"), that is the
 record's real state, not an error.
 
-### 3j. `theme` (optional brand colour)
+### 3j. `domain` (automatic, never typed)
+
+`node scripts/check-domain.js` asks free public registries about the
+domain itself: registration and expiry dates plus the transfer lock
+(RDAP, straight from the registry of record), the site's first archived
+date and archive footprint (Wayback Machine), and known subdomains from
+certificate transparency (crt.sh). Renders inside chapter 06 as Domain &
+History, with expiry and transfer-lock checks. crt.sh is slow and
+sometimes down; the script treats it as best-effort and simply writes
+what it could get. Works for any domain, no keys, no login.
+
+### 3k. `theme` (optional brand colour)
 
 To give the report a client's brand feel, add one hex colour:
 

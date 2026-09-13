@@ -615,8 +615,12 @@ const keywordsSections = (k) => {
   return s;
 };
 
-const technologySections = (t) => {
-  if (!t) return [];
+const EXPIRY_WARN_DAYS = 180;
+const EXPIRY_URGENT_DAYS = 45;
+
+const technologySections = (t, dom) => {
+  if (!t && !dom) return [];
+  t = t || {};
   const s = [];
 
   s.push({
@@ -637,6 +641,44 @@ const technologySections = (t) => {
   if (kv.length) {
     s.push({ type: "heading", text: "Stack & Server" });
     s.push({ type: "keyValue", items: kv });
+  }
+
+  if (dom) {
+    const kv = [];
+    if (dom.registered) {
+      const days = Math.floor((Date.now() - new Date(dom.registered)) / 86400000);
+      const totalMonths = Math.floor(days / 30.44);
+      const yrs = Math.floor(totalMonths / 12);
+      const months = totalMonths % 12;
+      kv.push({ label: "Domain registered", value: `${dom.registered} (${yrs ? `${yrs} year${yrs === 1 ? "" : "s"}, ` : ""}${months} month${months === 1 ? "" : "s"} ago)` });
+    }
+    if (dom.firstArchived) kv.push({ label: "First archived", value: `${dom.firstArchived} (Wayback Machine)` });
+    if (dom.archiveMonths) kv.push({ label: "Archive footprint", value: `Captured in ${dom.archiveMonths} distinct months` });
+    if (dom.subdomains?.length) kv.push({ label: "Known subdomains", value: dom.subdomains.slice(0, 6).join(", ") + (dom.subdomains.length > 6 ? ` and ${dom.subdomains.length - 6} more` : "") });
+    if (kv.length) {
+      s.push({ type: "heading", text: "Domain & History" });
+      s.push({ type: "keyValue", items: kv });
+    }
+
+    const domItems = [];
+    if (dom.expires) {
+      const daysLeft = Math.floor((new Date(dom.expires) - Date.now()) / 86400000);
+      domItems.push({
+        label: "Domain expiry",
+        value: daysLeft >= 0 ? `${dom.expires}, ${daysLeft} days away` : `Expired ${dom.expires}`,
+        rating: daysLeft > EXPIRY_WARN_DAYS ? "good" : daysLeft > EXPIRY_URGENT_DAYS ? "needs-improvement" : "poor",
+        recommendation: daysLeft <= EXPIRY_WARN_DAYS ? "Renew the domain well ahead of expiry; a lapse takes the whole site and its email offline." : undefined,
+      });
+    }
+    if (dom.transferLock != null) {
+      domItems.push({
+        label: "Registrar transfer lock",
+        value: dom.transferLock ? "Enabled, hijack-resistant" : "Not enabled",
+        rating: dom.transferLock ? "good" : "needs-improvement",
+        recommendation: dom.transferLock ? undefined : "Enable the registrar's transfer lock so the domain cannot be moved without explicit approval.",
+      });
+    }
+    if (domItems.length) s.push({ type: "checks", items: domItems });
   }
 
   const emailItems = [];
@@ -923,7 +965,7 @@ const computeGrades = (sections, data) => {
     ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
     ...aiReadinessSections(data.aiReadiness, data.technicalSeo?.pagesCrawled),
     ...accessibilitySections(data.accessibility),
-    ...technologySections(data.technology),
+    ...technologySections(data.technology, data.domain),
     ...keywordsSections(data.keywords),
   ];
 

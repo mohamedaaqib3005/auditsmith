@@ -168,5 +168,11 @@
         "failed": 0
       }
     }
+  },
+  "domain": {
+    "registered": "2023-03-06",
+    "expires": "2027-03-06",
+    "transferLock": true,
+    "archiveMonths": 13
   }
 }
