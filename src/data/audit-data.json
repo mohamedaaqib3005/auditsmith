@@ -45,7 +45,10 @@
     "imagesCrawled": 4,
     "largeImages": 1,
     "sitemap": "present",
-    "robotsTxt": true
+    "robotsTxt": true,
+    "redirectedUrls": 0,
+    "canonicalizedElsewhere": 0,
+    "missingCanonical": 0
   },
   "onPageSeo": {
     "missingTitles": 0,
@@ -54,7 +57,9 @@
     "duplicateMeta": 0,
     "missingH1": 3,
     "multipleH1": 3,
-    "thinPages": 4
+    "thinPages": 4,
+    "avgReadability": 49,
+    "hardReadingPages": 17
   },
   "aiReadiness": {
     "llmsTxt": true,

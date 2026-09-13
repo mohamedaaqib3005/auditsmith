@@ -457,6 +457,39 @@ const technicalSeoSections = (ts) => {
     s.push({ type: "metrics", title: "Structure, Linking & Images", items: archItems });
   }
 
+  const hygiene = [];
+  if (ts.redirectedUrls != null) {
+    const share = ts.pagesCrawled ? ts.redirectedUrls / ts.pagesCrawled : 0;
+    hygiene.push({
+      label: "Internal redirects",
+      value: ts.redirectedUrls === 0 ? "No redirected URLs in the crawl" : `${ts.redirectedUrls} crawled URL${ts.redirectedUrls === 1 ? "" : "s"} redirect`,
+      rating: ts.redirectedUrls === 0 ? "good" : share > 0.2 ? "poor" : "needs-improvement",
+      recommendation: ts.redirectedUrls > 0 ? "Update internal links to point at final URLs so crawlers and users skip the hop." : undefined,
+    });
+  }
+  if (ts.missingCanonical != null || ts.canonicalizedElsewhere != null) {
+    const miss = ts.missingCanonical ?? 0;
+    const elsewhere = ts.canonicalizedElsewhere ?? 0;
+    hygiene.push({
+      label: "Canonical tags",
+      value:
+        miss === 0 && elsewhere === 0
+          ? "Every page declares itself canonical"
+          : `${miss ? `Missing on ${miss} page${miss === 1 ? "" : "s"}` : ""}${miss && elsewhere ? "; " : ""}${elsewhere ? `${elsewhere} point${elsewhere === 1 ? "s" : ""} elsewhere` : ""}`,
+      rating: miss === 0 && elsewhere === 0 ? "good" : "needs-improvement",
+      recommendation:
+        miss > 0
+          ? "Add self-referencing canonical tags so duplicate URLs cannot compete with their own pages."
+          : elsewhere > 0
+          ? "Confirm the pages canonicalised to other URLs are intentional; each one gives its ranking signals away."
+          : undefined,
+    });
+  }
+  if (hygiene.length) {
+    s.push({ type: "heading", text: "Crawl Hygiene" });
+    s.push({ type: "checks", items: hygiene });
+  }
+
   return s;
 };
 
@@ -500,6 +533,29 @@ const onPageSeoSections = (op, pages) => {
 
   if (items.length) {
     s.push({ type: "metrics", title: "Titles, Descriptions & Headings", items });
+  }
+
+  const quality = [];
+  if (op.avgReadability != null) {
+    const label = op.avgReadability >= 60 ? "plain-language" : op.avgReadability >= 50 ? "fairly hard" : "hard";
+    quality.push({
+      label: "Readability",
+      value: `Average Flesch score ${op.avgReadability} (${label}), ${op.hardReadingPages ?? 0} hard-to-read page${(op.hardReadingPages ?? 0) === 1 ? "" : "s"}`,
+      rating: op.avgReadability >= 60 ? "good" : op.avgReadability >= 50 ? "needs-improvement" : "poor",
+      recommendation: op.avgReadability < 60 ? "Shorter sentences and simpler wording lift comprehension for readers, and for the AI systems summarising the site." : undefined,
+    });
+  }
+  if (op.spellingPages != null) {
+    quality.push({
+      label: "Spelling",
+      value: op.spellingPages === 0 ? "No spelling errors detected" : `Errors detected on ${op.spellingPages} page${op.spellingPages === 1 ? "" : "s"}`,
+      rating: op.spellingPages === 0 ? "good" : op.spellingPages > 5 ? "poor" : "needs-improvement",
+      recommendation: op.spellingPages > 0 ? "Fix the flagged spellings; small errors read as carelessness to visitors and quality raters alike." : undefined,
+    });
+  }
+  if (quality.length) {
+    s.push({ type: "heading", text: "Content Quality" });
+    s.push({ type: "checks", items: quality });
   }
 
   return s;

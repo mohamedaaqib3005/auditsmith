@@ -22,6 +22,9 @@ export const COLS = {
   uniqueInlinks: ["Unique Inlinks"],
   size: ["Size (bytes)", "Size (Bytes)", "Size"],
   metaRobots: ["Meta Robots 1", "Meta Robots"],
+  canonical: ["Canonical Link Element 1", "Canonical Link Element"],
+  flesch: ["Flesch Reading Ease Score"],
+  spelling: ["Spelling Errors"],
 };
 
 const DEEP_CLICKS = 4;        // pages this many clicks or more from home
@@ -112,6 +115,18 @@ export function deriveFromCrawl(parsedRows) {
       images.length && C.size
         ? images.filter((r) => Number(r[C.size]) > LARGE_IMAGE_KB * 1024).length
         : undefined,
+    redirectedUrls: C.status
+      ? rows.filter((r) => statusOf(r) >= 300 && statusOf(r) < 400).length
+      : undefined,
+    canonicalizedElsewhere: C.canonical
+      ? okPages.filter((r) => {
+          const c = String(r[C.canonical] || "").trim().replace(/\/$/, "");
+          return c && c !== String(r[C.address]).trim().replace(/\/$/, "");
+        }).length
+      : undefined,
+    missingCanonical: C.canonical
+      ? okPages.filter((r) => empty(r[C.canonical])).length
+      : undefined,
   };
 
   // aiReadiness.metaRobots from the crawl's Meta Robots column:
@@ -126,6 +141,18 @@ export function deriveFromCrawl(parsedRows) {
   }
 
   const onPageSeo = {};
+  if (C.flesch) {
+    const scores = okPages.map((r) => Number(r[C.flesch])).filter((n) => Number.isFinite(n) && n > 0);
+    if (scores.length) {
+      onPageSeo.avgReadability = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+      onPageSeo.hardReadingPages = scores.filter((n) => n < 50).length;
+    }
+  }
+  if (C.spelling) {
+    const withErrors = okPages.filter((r) => Number(r[C.spelling]) > 0).length;
+    const anyValue = okPages.some((r) => !empty(r[C.spelling]));
+    if (anyValue) onPageSeo.spellingPages = withErrors;
+  }
   if (C.title) {
     onPageSeo.missingTitles = okPages.filter((r) => empty(r[C.title])).length;
     onPageSeo.duplicateTitles = duplicateCount(okPages.map((r) => r[C.title]));
