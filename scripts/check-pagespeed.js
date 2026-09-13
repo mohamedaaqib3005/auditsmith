@@ -12,6 +12,7 @@
 //   node scripts/check-pagespeed.js example.com
 //   PSI_KEY=... node scripts/check-pagespeed.js  (optional API key for quota)
 
+import "./env.js";
 import fs from "fs";
 
 const DATA_PATH = "src/data/audit-data.json";

@@ -14,6 +14,7 @@
 //   node scripts/check-brand.js vlncy.com
 //   node scripts/check-brand.js --force
 
+import "./env.js";
 import fs from "fs";
 
 const DATA_PATH = "src/data/audit-data.json";
