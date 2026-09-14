@@ -97,6 +97,7 @@ export async function checkSite(site) {
   }
 
   let noJsWords;
+  let keywordFocus = null;
   if (html == null) noJsWords = { value: null, detail: "homepage not fetched" };
   else {
     const text = html
@@ -106,6 +107,31 @@ export async function checkSite(site) {
       .replace(/&[a-z#0-9]+;/gi, " ");
     const words = text.split(/\s+/).filter((w) => w.length > 1).length;
     noJsWords = { value: words, detail: `${words} words readable without JS` };
+
+    // Keyword focus: the page's dominant terms vs where they appear.
+    // Facts only: term, count, and presence in title / meta / first H1.
+    const STOP = new Set("the a an and or but of in on at to for with by from as is are was were be been being this that these those it its we our you your they their he she his her not no all any can will just more most other some such than then there here about into over after before during between out up down off very own same so too also do does did done have has had having i me my mine us how what when where why who which get got new now one two if because while each per via like make made using use used".split(" "));
+    const tally = {};
+    for (const w of text.toLowerCase().split(/[^a-z0-9]+/)) {
+      if (w.length < 3 || STOP.has(w) || /^\d+$/.test(w)) continue;
+      tally[w] = (tally[w] || 0) + 1;
+    }
+    const top = Object.entries(tally).sort((x, y) => y[1] - x[1]).slice(0, 5);
+    if (top.length) {
+      const grab = (re) => (html.match(re)?.[1] || "").toLowerCase();
+      const title = grab(/<title[^>]*>([\s\S]*?)<\/title>/i);
+      const meta = grab(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)/i) || grab(/<meta[^>]+content=["']([^"']*)["'][^>]+name=["']description["']/i);
+      const h1 = grab(/<h1[^>]*>([\s\S]*?)<\/h1>/i).replace(/<[^>]+>/g, " ");
+      keywordFocus = {
+        terms: top.map(([term, count]) => ({
+          term,
+          count,
+          inTitle: title.includes(term),
+          inMeta: meta.includes(term),
+          inH1: h1.includes(term),
+        })),
+      };
+    }
   }
 
   let sitemap = { value: "missing", detail: "no sitemap.xml or sitemap_index.xml" };
@@ -125,6 +151,7 @@ export async function checkSite(site) {
     origin,
     aiReadiness: { llmsTxt: llms, blockedAiBots, structuredData, noJsWords },
     technicalSeo: { sitemap, robotsTxt },
+    keywordFocus,
   };
 }
 
@@ -138,5 +165,6 @@ export function applySiteCheck(data, result) {
     out.technicalSeo.sitemap = result.technicalSeo.sitemap.value;
   if (result.technicalSeo.robotsTxt.value != null)
     out.technicalSeo.robotsTxt = result.technicalSeo.robotsTxt.value;
+  if (result.keywordFocus) out.keywordFocus = result.keywordFocus;
   return out;
 }

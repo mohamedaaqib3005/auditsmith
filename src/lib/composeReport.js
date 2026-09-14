@@ -493,7 +493,7 @@ const technicalSeoSections = (ts) => {
   return s;
 };
 
-const onPageSeoSections = (op, pages) => {
+const onPageSeoSections = (op, pages, kf) => {
   if (!op) return [];
   const s = [];
 
@@ -533,6 +533,29 @@ const onPageSeoSections = (op, pages) => {
 
   if (items.length) {
     s.push({ type: "metrics", title: "Titles, Descriptions & Headings", items });
+  }
+
+  if (kf?.terms?.length) {
+    const covered = kf.terms.filter((t) => t.inTitle || t.inH1).length;
+    s.push({ type: "heading", text: "Keyword Focus" });
+    s.push({
+      type: "paragraph",
+      text: "The words the homepage uses most, and whether each appears where search engines weigh it: the title, the meta description, and the main heading.",
+    });
+    s.push({
+      type: "table",
+      columns: ["Term", "Uses", "Title", "Meta", "H1"],
+      rows: kf.terms.map((t) => [t.term, String(t.count), t.inTitle ? "Yes" : "No", t.inMeta ? "Yes" : "No", t.inH1 ? "Yes" : "No"]),
+    });
+    s.push({
+      type: "checks",
+      items: [{
+        label: "Keyword alignment",
+        value: `${covered} of ${kf.terms.length} dominant terms appear in the title or H1`,
+        rating: covered >= 4 ? "good" : covered >= 2 ? "needs-improvement" : "poor",
+        recommendation: covered < 4 ? "Work the missing dominant terms into the title and main heading, or rewrite the copy toward the terms the page should rank for; the page currently emphasises words its metadata ignores." : undefined,
+      }],
+    });
   }
 
   const quality = [];
@@ -1030,7 +1053,7 @@ const computeGrades = (sections, data) => {
     { type: "paragraph", text: SUMMARY(site, "six") },
     ...pagespeedSections(data.pagespeed, date),
     ...technicalSeoSections(data.technicalSeo),
-    ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled),
+    ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled, data.keywordFocus),
     ...aiReadinessSections(data.aiReadiness, data.technicalSeo?.pagesCrawled),
     ...accessibilitySections(data.accessibility),
     ...technologySections(data.technology, data.domain),

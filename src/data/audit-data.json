@@ -71,7 +71,7 @@
     },
     "blockedAiBots": [],
     "noindexPages": 0,
-    "noJsWords": 2453
+    "noJsWords": 2454
   },
   "technology": {
     "detected": [
@@ -145,5 +145,44 @@
     "transferLock": true,
     "archiveMonths": 13
   },
-  "brandCode": "EFG"
+  "brandCode": "EFG",
+  "keywordFocus": {
+    "terms": [
+      {
+        "term": "first",
+        "count": 156,
+        "inTitle": true,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "digital",
+        "count": 61,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "cyber",
+        "count": 44,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "event",
+        "count": 38,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "security",
+        "count": 37,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      }
+    ]
+  }
 }
