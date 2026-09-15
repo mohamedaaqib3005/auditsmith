@@ -239,6 +239,23 @@ report decides what counts as good.
 | `redirectChains` | Optional. Screaming Frog: Reports menu, Redirect Chains; type the number it lists. Absent = row not shown |
 | `sitemap: "stale"` | Override. The checker can prove a sitemap exists, not whether its URLs are current. If you know it lists old pages, change `"present"` to `"stale"` by hand; the scripts will not overwrite a `"stale"` you typed |
 
+### 3f-c. `contentFreshness` (automatic, never typed)
+
+One command reads the sitemap's own lastmod dates:
+
+```
+node scripts/check-freshness.js
+```
+
+It writes how many URLs the sitemap lists, the newest and oldest change
+dates, and how many pages have not been touched in over a year. Renders
+as a Content Freshness card in chapter 03, and, when the sitemap lists
+noticeably more URLs than the crawl reached, a Sitemap Coverage card in
+chapter 02 (orphan candidates). Sites whose sitemaps carry no dates
+simply get no freshness card. One caveat to know: some frameworks stamp
+every URL with the build date, which makes "newest change" read as the
+last deployment rather than the last real edit.
+
 ### 3g-pre. `keywordFocus` (automatic, never typed)
 
 The check-ai script also derives the homepage's five dominant terms and
