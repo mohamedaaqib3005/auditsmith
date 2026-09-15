@@ -576,9 +576,10 @@ failed.
 **The reference number** is AUD + a short brand code + the current year.
 The code derives itself: initials when the domain shows separate words
 (event-first-group becomes EFG), the whole word when it is short (VLNCY),
-the first 8 letters otherwise. For a one-word domain that really is a
-multi-word brand, type the code once at the top level of the data file,
-it always wins:
+the first 8 letters otherwise. The brand script also derives it automatically from the site's own
+declared name (og:site_name or the title), so a glued domain like
+eventsfirstgroup still yields EFG with no typing. If the site declares
+nothing useful, type the code once at the top level, typed always wins:
 
 ```json
 "brandCode": "EFG"
@@ -694,3 +695,20 @@ misspelled device key is silently ignored.
 
 VS Code underlines most of these in red before you even save. The preview's
 error message names a line number; go there and check this list.
+
+## Appendix: where every number comes from
+
+| Report area | Source |
+|---|---|
+| Theme (colour, fonts) | Brand-data API, else the site's own markup, else hand-set (hand-set always wins) |
+| Grades, rings, radar | Computed from the report's own rated cards, no external source |
+| 01 PageSpeed | Google PageSpeed Insights API: Lighthouse lab + CrUX real-user field data; agentic fraction typed from the PSI webpage |
+| 02 Technical SEO | Screaming Frog crawl export; sitemap and robots fetched from the site; sitemap coverage and freshness from sitemap.xml lastmod; redirect chains typed; image-alt and anchor cards from the two optional SF exports |
+| 03 On-Page | The same crawl export (titles, metas, H1s, words, pixel widths, Flesch, spelling); Keyword Focus from the homepage HTML itself |
+| 04 AI Readiness | The site itself (llms.txt, robots AI rules, schema, no-JS words); rendered words from our browser; the three rings from Seomator's free checker; AI answer visibility typed from the manual protocol |
+| 05 Accessibility | axe-core run by our own browser on the site; score is our documented severity weighting |
+| 06 Technology | Direct observation (headers, DNS, markup); RDAP registry, Wayback Machine, crt.sh; off-site authority from the OpenPageRank API with typed competitors |
+| 07 Usability | PageSpeed detail audits + our browser at phone width + the three typed protocols |
+
+Every card shows only what its source said; absent sources leave absent
+cards, never guesses.

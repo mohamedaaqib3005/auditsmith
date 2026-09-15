@@ -1,0 +1,300 @@
+{
+  "site": "eventsfirstgroup.com",
+  "pagespeed": {
+    "mobile": {
+      "scores": {
+        "performance": 61,
+        "accessibility": 86,
+        "bestPractices": 96,
+        "seo": 100,
+        "agenticBrowsing": "2/3"
+      },
+      "labMetrics": {
+        "fcp": 3.1,
+        "lcp": 7,
+        "tbt": 104,
+        "cls": 0,
+        "speedIndex": 13.5
+      }
+    },
+    "desktop": {
+      "scores": {
+        "performance": 76,
+        "accessibility": 86,
+        "bestPractices": 96,
+        "seo": 100,
+        "agenticBrowsing": 2
+      },
+      "labMetrics": {
+        "fcp": 0.5,
+        "lcp": 2.3,
+        "tbt": 173,
+        "cls": 0,
+        "speedIndex": 3.2
+      }
+    }
+  },
+  "technicalSeo": {
+    "pagesCrawled": 36,
+    "indexable": 36,
+    "brokenLinks": 0,
+    "https": true,
+    "parameterUrls": 0,
+    "deepPages": 0,
+    "weakPages": 0,
+    "imagesCrawled": 4,
+    "largeImages": 1,
+    "sitemap": "present",
+    "robotsTxt": true,
+    "redirectedUrls": 0,
+    "canonicalizedElsewhere": 0,
+    "missingCanonical": 0,
+    "heavyPages": 0,
+    "avgExternalOutlinks": 9
+  },
+  "onPageSeo": {
+    "missingTitles": 0,
+    "duplicateTitles": 0,
+    "missingMeta": 0,
+    "duplicateMeta": 0,
+    "missingH1": 3,
+    "multipleH1": 3,
+    "thinPages": 4,
+    "avgReadability": 49,
+    "hardReadingPages": 17,
+    "truncatedTitles": 26,
+    "truncatedMetas": 22
+  },
+  "aiReadiness": {
+    "llmsTxt": true,
+    "structuredData": true,
+    "scores": {
+      "socials": 100,
+      "structuredData": 100,
+      "EEAT": 64
+    },
+    "blockedAiBots": [],
+    "noindexPages": 0,
+    "noJsWords": 2454,
+    "renderedWords": 2021
+  },
+  "technology": {
+    "detected": [
+      "Next.js",
+      "Tailwind CSS"
+    ],
+    "server": "Vercel",
+    "charset": "utf-8",
+    "ip": "216.198.79.1",
+    "spf": true,
+    "dmarc": "none"
+  },
+  "theme": {
+    "brand": "#F06820",
+    "fonts": {
+      "heading": "Outfit",
+      "body": "Plus Jakarta Sans"
+    },
+    "fontFiles": {
+      "Outfit": {
+        "regular": "https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4TC1C4E.ttf",
+        "bold": "https://fonts.gstatic.com/s/outfit/v15/QGYyz_MVcBeNP4NjuGObqx1XmO1I4deyC4E.ttf"
+      },
+      "Plus Jakarta Sans": {
+        "regular": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf",
+        "bold": "https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf"
+      },
+      "Rubik": {
+        "regular": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-B4i1UA.ttf",
+        "bold": "https://fonts.gstatic.com/s/rubik/v31/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-4I-1UA.ttf"
+      }
+    },
+    "accent": "#0A2540"
+  },
+  "accessibility": {
+    "engine": "axe-core",
+    "rulesPassed": 40,
+    "rulesViolated": 4,
+    "nodesByImpact": {
+      "critical": 2,
+      "serious": 26,
+      "moderate": 2,
+      "minor": 0
+    },
+    "categories": {
+      "ARIA": {
+        "passed": 10,
+        "failed": 0,
+        "elements": 0
+      },
+      "Names & Labels": {
+        "passed": 4,
+        "failed": 1,
+        "elements": 4
+      },
+      "Structure": {
+        "passed": 3,
+        "failed": 0,
+        "elements": 0
+      },
+      "Keyboard": {
+        "passed": 5,
+        "failed": 0,
+        "elements": 0
+      },
+      "Colour & Contrast": {
+        "passed": 1,
+        "failed": 1,
+        "elements": 22
+      },
+      "Text Alternatives": {
+        "passed": 3,
+        "failed": 0,
+        "elements": 0
+      },
+      "Forms": {
+        "passed": 3,
+        "failed": 1,
+        "elements": 2
+      },
+      "Semantics": {
+        "passed": 7,
+        "failed": 1,
+        "elements": 2
+      },
+      "Language": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      },
+      "Sensory Cues": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      }
+    },
+    "wcagAA": {
+      "passed": 3,
+      "failed": 1
+    },
+    "topIssues": [
+      {
+        "id": "select-name",
+        "impact": "critical",
+        "elements": 2,
+        "help": "Select element must have an accessible name"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "elements": 22,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "elements": 4,
+        "help": "Links must have discernible text"
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "elements": 2,
+        "help": "Heading levels should only increase by one"
+      }
+    ]
+  },
+  "domain": {
+    "registered": "2023-03-06",
+    "expires": "2027-03-06",
+    "transferLock": true,
+    "archiveMonths": 13,
+    "authority": {
+      "score": 0.38,
+      "rank": 36944919,
+      "referringDomains": 2,
+      "asOf": "2026-08-01",
+      "source": "OpenPageRank",
+      "competitors": [
+        {
+          "domain": "tahaluf.com",
+          "score": 3.5,
+          "referringDomains": 77
+        },
+        {
+          "domain": "dmgevents.com",
+          "score": 6.9,
+          "referringDomains": 243
+        }
+      ]
+    }
+  },
+  "brandCode": "EFG",
+  "keywordFocus": {
+    "terms": [
+      {
+        "term": "first",
+        "count": 156,
+        "inTitle": true,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "digital",
+        "count": 61,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "cyber",
+        "count": 44,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "event",
+        "count": 38,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "security",
+        "count": 37,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      }
+    ]
+  },
+  "competitors": [
+    "tahaluf.com",
+    "dmgevents.com"
+  ],
+  "contentFreshness": {
+    "sitemapUrls": 136,
+    "withDates": 136,
+    "newest": "2026-09-15",
+    "oldest": "2026-01-01",
+    "updatedLast3Months": 25,
+    "olderThanYear": 0
+  },
+  "usability": {
+    "pageWeightKb": 29231,
+    "unsizedImages": 4,
+    "consoleErrors": 2,
+    "mobileOverflow": false,
+    "searchPresent": false,
+    "navLinks": 8,
+    "formInputs": 9,
+    "labelledInputs": 6,
+    "contactReachable": true,
+    "notFound": {
+      "words": 7,
+      "hasHomeLink": true,
+      "mentions404": true
+    }
+  }
+}

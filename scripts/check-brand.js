@@ -198,6 +198,29 @@ if (!found) {
   }
 }
 
+/* ---------- brandCode from the site's own declared name ----------
+   A glued domain (eventsfirstgroup) hides its words, but the site
+   usually declares them: og:site_name, or the title's first segment.
+   Multi-word name -> initials. Typed brandCode always wins. */
+if (!data.brandCode && typeof html === "string") {
+  const grab = (re) => html.match(re)?.[1]?.trim();
+  const siteName =
+    grab(/property=["']og:site_name["'][^>]*content=["']([^"']+)/i) ||
+    grab(/content=["']([^"']+)["'][^>]*property=["']og:site_name["']/i) ||
+    (grab(/<title[^>]*>([^<|–-]+)/i) || "").trim();
+  if (siteName) {
+    const words = siteName.split(/\s+/).filter((w) => /^[A-Za-z]/.test(w));
+    if (words.length >= 2 && words.length <= 6) {
+      const code = words.map((w) => w[0]).join("").toUpperCase();
+      if (code.length >= 2 && code.length <= 6) {
+        data.brandCode = code;
+        console.log(`Derived brandCode: ${code}  (from the site's declared name "${siteName}")`);
+        wrote = true;
+      }
+    }
+  }
+}
+
 if (apiAccent) {
   if (data.theme?.accent && !force) {
     console.log(`theme.accent already set to ${data.theme.accent}, keeping it.`);
