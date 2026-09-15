@@ -332,6 +332,25 @@ History, with expiry and transfer-lock checks. crt.sh is slow and
 sometimes down; the script treats it as best-effort and simply writes
 what it could get. Works for any domain, no keys, no login.
 
+### 3j-b. `domain.authority` and `competitors` (automatic + one optional list)
+
+With a free OpenPageRank key (`OPR_KEY` in `.env`; sign up via Keywords
+Everywhere), one command adds the report's off-site signal:
+
+```
+node scripts/check-authority.js
+```
+
+It writes the site's link-graph authority score (0-10), global rank and
+referring-domain count into the domain block, rendered as an Off-site
+authority card in chapter 06, labelled approximate, because it is. To
+compare against competitors in the same call and get a comparison table,
+type them once at the top level:
+
+```json
+"competitors": ["tahaluf.com", "dmgevents.com"]
+```
+
 ### 3k. `theme` (optional brand colour)
 
 To give the report a client's brand feel, add one hex colour:

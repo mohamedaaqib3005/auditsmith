@@ -769,7 +769,34 @@ const technologySections = (t, dom) => {
         recommendation: dom.transferLock ? undefined : "Enable the registrar's transfer lock so the domain cannot be moved without explicit approval.",
       });
     }
+    if (dom.authority?.score != null) {
+      const a = dom.authority;
+      const best = a.competitors?.length ? Math.max(...a.competitors.map((c) => c.score)) : null;
+      const rating =
+        best != null
+          ? a.score >= best * 0.8 ? "good" : a.score >= best * 0.4 ? "needs-improvement" : "poor"
+          : a.score >= 4 ? "good" : a.score >= 2 ? "needs-improvement" : "poor";
+      domItems.push({
+        label: "Off-site authority",
+        value: `${a.score} of 10${a.referringDomains != null ? `, ${a.referringDomains} referring domain${a.referringDomains === 1 ? "" : "s"}` : ""} (${a.source}, approximate)`,
+        rating,
+        recommendation:
+          rating !== "good"
+            ? "Earn links from industry press, event listings and partner sites; off-site authority is the slowest lever and the one competitors are already pulling."
+            : undefined,
+      });
+    }
     if (domItems.length) s.push({ type: "checks", items: domItems });
+    if (dom.authority?.competitors?.length) {
+      s.push({
+        type: "table",
+        columns: ["Domain", "Authority", "Referring domains"],
+        rows: [
+          [`${"" + (dom.authority.source || "")}`.length ? "This site" : "This site", String(dom.authority.score), String(dom.authority.referringDomains ?? "-")],
+          ...dom.authority.competitors.map((c) => [c.domain, String(c.score), String(c.referringDomains ?? "-")]),
+        ],
+      });
+    }
   }
 
   const emailItems = [];
