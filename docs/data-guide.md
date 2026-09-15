@@ -332,6 +332,34 @@ someone searching this page's target phrase actually want, and does the
 page give it? Note mismatches as findings in your meeting notes; this
 one stays human judgment and has no data field by design.
 
+### 3g-c. `usability` (automatic, plus optional typed protocols)
+
+One command measures the friction facts, PageSpeed's detailed audits
+(page weight, unsized images, console errors, viewport, font sizes, tap
+targets) plus our own browser checking search, nav, form labelling,
+mobile overflow, and the 404 page's usefulness:
+
+```
+node scripts/check-usability.js
+```
+
+Same keys and setup as check-pagespeed and check-access; renders as
+chapter 07 Usability, and the grade page and radar gain the dimension
+automatically. Three optional human protocols deepen it, typed into the
+same block when done (each is a 5-15 minute ritual):
+
+```json
+"usability": {
+  "heuristics": { "evaluatedOn": "2026-09-15", "items": [
+    { "label": "Consistency & standards", "rating": "good", "note": "Nav and footer stable across pages" } ] },
+  "firstImpression": { "testedOn": "2026-09-15", "clear": true, "trusted": false, "note": "Purpose obvious; no trust signals above the fold" },
+  "tasks": { "testedOn": "2026-09-15", "items": [
+    { "task": "Find the next event in my country", "rating": "needs-improvement", "note": "Three clicks and a PDF; no filter by country" } ] }
+}
+```
+
+Ratings use the usual three words: good, needs-improvement, poor.
+
 ### 3h. `accessibility` (automatic via axe-core)
 
 One command runs axe-core, the open-source industry accessibility

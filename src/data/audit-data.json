@@ -280,5 +280,21 @@
     "oldest": "2026-01-01",
     "updatedLast3Months": 25,
     "olderThanYear": 0
+  },
+  "usability": {
+    "pageWeightKb": 29231,
+    "unsizedImages": 4,
+    "consoleErrors": 2,
+    "mobileOverflow": false,
+    "searchPresent": false,
+    "navLinks": 8,
+    "formInputs": 9,
+    "labelledInputs": 6,
+    "contactReachable": true,
+    "notFound": {
+      "words": 7,
+      "hasHomeLink": true,
+      "mentions404": true
+    }
   }
 }

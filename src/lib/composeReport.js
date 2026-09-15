@@ -791,6 +791,107 @@ const keywordsSections = (k) => {
 const EXPIRY_WARN_DAYS = 180;
 const EXPIRY_URGENT_DAYS = 45;
 
+
+const usabilitySections = (u) => {
+  if (!u) return [];
+  const s = [];
+  s.push({
+    type: "sectionDivider",
+    number: "07",
+    title: "Usability",
+    description:
+      "Whether visitors can accomplish what they came for without friction: page weight, mobile fit, search, forms, error recovery, measured directly, with room for expert evaluation alongside.",
+  });
+
+  const items = [];
+  if (u.pageWeightKb != null)
+    items.push({
+      label: "Page weight",
+      value: `${(u.pageWeightKb / 1024).toFixed(1)} MB transferred on mobile`,
+      rating: u.pageWeightKb < 2048 ? "good" : u.pageWeightKb < 5120 ? "needs-improvement" : "poor",
+      recommendation: u.pageWeightKb >= 2048 ? "Compress and lazy-load media; every megabyte is seconds of waiting on a mobile connection." : undefined,
+    });
+  if (u.unsizedImages != null)
+    items.push({
+      label: "Unsized images",
+      value: u.unsizedImages === 0 ? "All images declare dimensions" : `${u.unsizedImages} image${u.unsizedImages === 1 ? "" : "s"} without width/height`,
+      rating: u.unsizedImages === 0 ? "good" : "needs-improvement",
+      recommendation: u.unsizedImages > 0 ? "Declare width and height so the layout cannot jump as images load." : undefined,
+    });
+  if (u.consoleErrors != null)
+    items.push({
+      label: "Console errors",
+      value: u.consoleErrors === 0 ? "No errors logged at load" : `${u.consoleErrors} error${u.consoleErrors === 1 ? "" : "s"} logged at load`,
+      rating: u.consoleErrors === 0 ? "good" : "needs-improvement",
+      recommendation: u.consoleErrors > 0 ? "Fix logged errors; each one is behaviour some visitor is missing." : undefined,
+    });
+  if (u.mobileOverflow != null)
+    items.push({
+      label: "Mobile viewport fit",
+      value: u.mobileOverflow ? "Content wider than a phone screen, horizontal scrolling required" : "Content fits a phone screen",
+      rating: u.mobileOverflow ? "poor" : "good",
+      recommendation: u.mobileOverflow ? "Constrain wide elements; horizontal scrolling on mobile loses visitors." : undefined,
+    });
+  if (u.viewportOk != null)
+    items.push({ label: "Viewport configuration", value: u.viewportOk ? "Correct mobile viewport" : "Viewport meta missing or wrong", rating: u.viewportOk ? "good" : "poor", recommendation: u.viewportOk ? undefined : "Add the standard responsive viewport meta tag." });
+  if (u.fontLegible != null)
+    items.push({ label: "Font legibility", value: u.fontLegible ? "Text sized for reading on mobile" : "Text too small on mobile", rating: u.fontLegible ? "good" : "needs-improvement", recommendation: u.fontLegible ? undefined : "Use at least 12px-equivalent sizes for body text." });
+  if (u.tapTargetsOk != null)
+    items.push({ label: "Tap targets", value: u.tapTargetsOk ? "Buttons and links comfortably tappable" : "Some controls too small or close to tap reliably", rating: u.tapTargetsOk ? "good" : "needs-improvement", recommendation: u.tapTargetsOk ? undefined : "Give interactive elements at least 44px of touchable space." });
+  if (u.searchPresent != null)
+    items.push({
+      label: "Site search",
+      value: u.searchPresent ? "Search available" : "No search anywhere on the page",
+      rating: u.searchPresent ? "good" : "needs-improvement",
+      recommendation: u.searchPresent ? undefined : "Offer search; visitors who cannot find what they came for leave.",
+    });
+  if (u.formInputs)
+    items.push({
+      label: "Form labelling",
+      value: `${u.labelledInputs} of ${u.formInputs} inputs labelled`,
+      rating: u.labelledInputs === u.formInputs ? "good" : u.labelledInputs / u.formInputs >= 0.7 ? "needs-improvement" : "poor",
+      recommendation: u.labelledInputs < u.formInputs ? "Label every input; unlabelled fields confuse both people and assistive tech." : undefined,
+    });
+  if (u.notFound) {
+    const nf = u.notFound;
+    const okay = nf.mentions404 && nf.hasHomeLink;
+    items.push({
+      label: "404 page",
+      value: `${nf.mentions404 ? "Acknowledges the error" : "Does not say the page is missing"}${nf.hasHomeLink ? ", offers a way home" : ", no way home"} (${nf.words} words)`,
+      rating: okay && nf.words >= 15 ? "good" : nf.hasHomeLink ? "needs-improvement" : "poor",
+      recommendation: okay && nf.words >= 15 ? undefined : "A useful 404 admits the miss and offers routes onward: home, search, popular pages.",
+    });
+  }
+  if (items.length) {
+    s.push({ type: "heading", text: "Measured Checks" });
+    s.push({ type: "checks", items });
+  }
+
+  const proto = [];
+  if (u.heuristics?.items?.length) {
+    s.push({ type: "heading", text: `Expert Evaluation${u.heuristics.evaluatedOn ? ` (${u.heuristics.evaluatedOn})` : ""}` });
+    s.push({
+      type: "checks",
+      items: u.heuristics.items.map((h) => ({ label: h.label, value: h.note || h.rating, rating: h.rating })),
+    });
+  }
+  if (u.firstImpression) {
+    const fi = u.firstImpression;
+    proto.push({
+      label: "First impression (5-second test)",
+      value: fi.note || `${fi.clear ? "Purpose clear" : "Purpose unclear"}, ${fi.trusted ? "felt trustworthy" : "trust not established"}`,
+      rating: fi.clear && fi.trusted ? "good" : fi.clear || fi.trusted ? "needs-improvement" : "poor",
+    });
+  }
+  if (u.tasks?.items?.length)
+    for (const t of u.tasks.items) proto.push({ label: `Task: ${t.task}`, value: t.note || t.rating, rating: t.rating });
+  if (proto.length) {
+    s.push({ type: "heading", text: "Walked Journeys" });
+    s.push({ type: "checks", items: proto });
+  }
+  return s;
+};
+
 const technologySections = (t, dom) => {
   if (!t && !dom) return [];
   t = t || {};
@@ -1255,6 +1356,7 @@ const computeGrades = (sections, data) => {
     ...aiReadinessSections(data.aiReadiness, data.technicalSeo?.pagesCrawled),
     ...accessibilitySections(data.accessibility),
     ...technologySections(data.technology, data.domain),
+    ...usabilitySections(data.usability),
     ...keywordsSections(data.keywords),
   ];
 
