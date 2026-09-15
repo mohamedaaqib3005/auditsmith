@@ -837,8 +837,20 @@ const accessibilitySections = (a) => {
       title: "Accessibility",
       description: "Whether every visitor, including those using assistive technology, can perceive and operate the site. Measured with axe-core, the open-source engine behind industry accessibility audits.",
     });
+    // Headline score: severity-weighted. Each failed rule costs by impact;
+    // a plain pass-rate would hide that one critical outweighs ten minors.
+    const IMPACT_COST = { critical: 15, serious: 10, moderate: 5, minor: 2 };
+    let headline = null;
+    if (a.topIssues || a.rulesViolated != null) {
+      const ruleImpacts = (a.topIssues || []).map((t) => t.impact);
+      // topIssues holds up to 6; any uncounted violations cost the mildest rate
+      let cost = ruleImpacts.reduce((sum, i) => sum + (IMPACT_COST[i] || 2), 0);
+      const uncounted = Math.max(0, (a.rulesViolated || 0) - ruleImpacts.length);
+      cost += uncounted * IMPACT_COST.minor;
+      headline = Math.max(0, 100 - cost);
+    }
     const rings = [];
-    if (score != null) rings.push({ label: "Rules passing", score, max: 100 });
+    if (headline != null) rings.push({ label: "Accessibility Score", score: headline, max: 100 });
     if (a.wcagAA && a.wcagAA.passed + a.wcagAA.failed > 0)
       rings.push({
         label: "WCAG AA",
