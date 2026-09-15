@@ -236,6 +236,16 @@ const AI_FACT_CHECKS = {
             rating: MOST_PAGES(n, pages || 0) ? "poor" : "needs-improvement",
           },
   },
+  jsDependence: {
+    label: "JavaScript dependence",
+    fix: "Server-render the missing share; content that exists only after JavaScript runs is invisible to non-rendering crawlers, including most AI bots.",
+    interpret: (pct) =>
+      pct >= 80
+        ? { value: `${pct}% of rendered content survives without JavaScript`, rating: "good" }
+        : pct >= 40
+        ? { value: `Only ${pct}% of rendered content survives without JavaScript`, rating: "needs-improvement" }
+        : { value: `${pct}% of content exists without JavaScript, the rest is JS-only`, rating: "poor" },
+  },
   noJsWords: {
     label: "Content without JavaScript",
     fix: "Server-render or statically generate key content; many AI crawlers do not execute JavaScript.",
@@ -1051,7 +1061,12 @@ const aiReadinessSections = (ai, pages) => {
   const STATUS_RATING = { OK: "good", Issues: "needs-improvement", Missing: "poor" };
   const items = [];
   // fixed order: crawl facts and fetch facts interleaved sensibly
-  const ORDER = ["llmsTxt", "blockedAiBots", "structuredData", "noindexPages", "noJsWords"];
+  const ORDER = ["llmsTxt", "blockedAiBots", "structuredData", "noindexPages", "noJsWords", "jsDependence"];
+  // derived pair-check: rendered vs no-JS content
+  if (ai.renderedWords != null && ai.noJsWords != null && ai.renderedWords > 0) {
+    const pct = Math.round((Math.min(ai.noJsWords, ai.renderedWords) / ai.renderedWords) * 100);
+    ai = { ...ai, jsDependence: pct };
+  }
   for (const key of ORDER) {
     if (ai[key] == null) continue;
     if (AI_CHECKS[key]) {

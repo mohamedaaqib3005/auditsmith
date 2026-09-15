@@ -277,6 +277,7 @@ All values are facts, the report turns them into verdicts:
 | `structuredData` | site checker | `true`/`false`: Schema.org markup on the homepage |
 | `noJsWords` | site checker | the number of words readable WITHOUT JavaScript (what AI crawlers see) |
 | `noindexPages` | crawl script | how many indexable pages carry a noindex directive |
+| `renderedWords` | render script | words on the fully rendered page (`node scripts/check-render.js`, same Playwright setup as check-access); together with `noJsWords` it yields the JavaScript-dependence card, how much content exists only after JavaScript runs |
 
 If a check cannot run (site unreachable, blocked), the script writes
 nothing for that field rather than guessing, and says so in its output.
