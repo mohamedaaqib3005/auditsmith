@@ -267,22 +267,25 @@ appear. Note `structuredData` appears twice by design: the automatic
 ok/missing check, and this typed 0-100 score, they are different
 measurements.
 
-### 3h. `accessibility` (automatic, or typed from the Skynet checker)
+### 3h. `accessibility` (automatic via axe-core)
 
-Automatic: after a one-time setup (`npm install playwright` then
-`npx playwright install chromium`, about 120MB), one command runs the
-checker in a headless browser and fills the whole block, categories and
-score:
+One command runs axe-core, the open-source industry accessibility
+engine (the same one behind Lighthouse's accessibility audits), in our
+own headless browser against the site directly, no third-party checker
+involved:
 
 ```
 node scripts/check-access.js
 ```
 
-It takes one to two minutes and drives a third-party website, so if that
-site redesigns, the script may need updating; the manual route below
-always works.
+One-time setup: `npm install playwright @axe-core/playwright` then
+`npx playwright install chromium`. It writes the rules passed and
+violated, affected elements by impact level (critical / serious /
+moderate / minor), and the top named issues; the report derives the
+score and renders each issue as a card. Older audits saved with the
+previous checker's shape still render.
 
-Manual: run the site through
+Manual fallback: run the site through
 https://www.skynettechnologies.com/accessibility-checker and copy each
 category's Passed and Failed counts:
 

@@ -107,37 +107,41 @@
     "accent": "#0A2540"
   },
   "accessibility": {
-    "score": 62,
-    "categories": {
-      "readability": {
-        "passed": 73,
-        "failed": 652
+    "engine": "axe-core",
+    "rulesPassed": 40,
+    "rulesViolated": 4,
+    "nodesByImpact": {
+      "critical": 2,
+      "serious": 26,
+      "moderate": 2,
+      "minor": 0
+    },
+    "topIssues": [
+      {
+        "id": "select-name",
+        "impact": "critical",
+        "elements": 2,
+        "help": "Select element must have an accessible name"
       },
-      "forms": {
-        "passed": 1,
-        "failed": 9
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "elements": 22,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
       },
-      "titles": {
-        "passed": 0,
-        "failed": 9
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "elements": 4,
+        "help": "Links must have discernible text"
       },
-      "general": {
-        "passed": 53,
-        "failed": 6
-      },
-      "graphics": {
-        "passed": 27,
-        "failed": 0
-      },
-      "document": {
-        "passed": 3,
-        "failed": 0
-      },
-      "clickables": {
-        "passed": 1,
-        "failed": 0
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "elements": 2,
+        "help": "Heading levels should only increase by one"
       }
-    }
+    ]
   },
   "domain": {
     "registered": "2023-03-06",

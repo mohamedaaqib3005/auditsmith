@@ -827,6 +827,38 @@ const technologySections = (t, dom) => {
 };
 
 const accessibilitySections = (a) => {
+  if (a?.engine === "axe-core") {
+    const total = (a.rulesPassed || 0) + (a.rulesViolated || 0);
+    const score = total ? Math.round((a.rulesPassed / total) * 100) : null;
+    const s = [];
+    s.push({
+      type: "sectionDivider",
+      number: "05",
+      title: "Accessibility",
+      description: "Whether every visitor, including those using assistive technology, can perceive and operate the site. Measured with axe-core, the open-source engine behind industry accessibility audits.",
+    });
+    if (score != null)
+      s.push({ type: "scorecard", items: [{ label: "Rules passing", score, max: 100 }] });
+    const imp = a.nodesByImpact || {};
+    s.push({
+      type: "paragraph",
+      text: `Of ${total} applicable checks, ${a.rulesViolated} failed, affecting ${Object.entries(imp).filter(([, n]) => n).map(([k, n]) => `${n} element${n === 1 ? "" : "s"} (${k})`).join(", ") || "no elements"}.`,
+    });
+    if (a.topIssues?.length) {
+      s.push({ type: "heading", text: "Issues Found" });
+      s.push({
+        type: "checks",
+        items: a.topIssues.map((t) => ({
+          label: t.help.length > 60 ? t.help.slice(0, 57) + "..." : t.help,
+          value: `${t.elements} element${t.elements === 1 ? "" : "s"} (${t.impact})`,
+          rating: t.impact === "critical" || t.impact === "serious" ? "poor" : "needs-improvement",
+          recommendation: undefined,
+        })),
+      });
+    }
+    return s;
+  }
+
   if (!a || !a.categories) return [];
   const s = [];
 

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@react-pdf/renderer": "^4.6.1",
     "papaparse": "^5.7.0",
     "playwright": "^1.63.0",
