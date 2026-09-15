@@ -13,6 +13,7 @@ import { composeReport } from "./lib/composeReport";
 import { applyTheme } from "./pdf/tokens/colors";
 import { applyFonts } from "./pdf/tokens/typography";
 import CrawlImport from "./components/CrawlImport";
+import ControlPanel from "./components/ControlPanel";
 import rawData from "./data/audit-data.json";
 
 function App() {
@@ -34,6 +35,8 @@ function App() {
   };
 
   return (
+    <div style={{ display: "flex" }}>
+      <ControlPanel onData={setData} />
     <div style={{ display: "flex", flexDirection: "column", height: "100vh", margin: 0 }}>
       <CrawlImport data={data} onData={setData} onDownload={downloadPdf} />
       <div style={{ flex: 1 }}>
@@ -42,6 +45,7 @@ function App() {
         </PDFViewer>
       </div>
     </div>
+      </div>
   );
 }
 
