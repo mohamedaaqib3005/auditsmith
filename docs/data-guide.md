@@ -75,8 +75,18 @@ Screaming Frog's Reports menu, Redirect Chains). Everything else in
 `technicalSeo`, `onPageSeo`, and `aiReadiness` is written by the scripts
 (section 5 below), you never type any of it.
 
-**Golden rule: numbers only, no units.** Write `2.2`, never `"2.2 s"` or
+**Golden rule: numbers only, no units.** Type `2.2`, never `"2.2 s"` or
 `2.2s`. The system adds units, colours, and labels itself.
+
+**One typed extra: the Agentic Browsing fraction**, the one number
+Google's API does not expose (an automatic reader was tried and
+retired, their app resisted reliable automation). Read it from the PSI
+webpage, then one command types it for you, mobile first, desktop
+second:
+
+```
+node scripts/set-agentic.js 2/3 3/3
+```
 
 ---
 
@@ -154,7 +164,7 @@ metrics. Type ONLY the number part of what Google shows:
 | FCP 2.0 s | `"fcp": 2` |
 | TTFB 1.0 s | `"ttfb": 1` |
 
-Units to know: lcp, fcp, ttfb are in **seconds**; inp is in
+Units to know: lcp, fcp, ttfb are in seconds**; inp is in
 **milliseconds**; cls has **no unit**.
 
 **If a metric shows no data** (grey, or "N/A", common for new sites): type
