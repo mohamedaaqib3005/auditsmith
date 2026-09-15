@@ -837,13 +837,45 @@ const accessibilitySections = (a) => {
       title: "Accessibility",
       description: "Whether every visitor, including those using assistive technology, can perceive and operate the site. Measured with axe-core, the open-source engine behind industry accessibility audits.",
     });
-    if (score != null)
-      s.push({ type: "scorecard", items: [{ label: "Rules passing", score, max: 100 }] });
+    const rings = [];
+    if (score != null) rings.push({ label: "Rules passing", score, max: 100 });
+    if (a.wcagAA && a.wcagAA.passed + a.wcagAA.failed > 0)
+      rings.push({
+        label: "WCAG AA",
+        score: Math.round((a.wcagAA.passed / (a.wcagAA.passed + a.wcagAA.failed)) * 100),
+        max: 100,
+      });
+    const cats = Object.entries(a.categories || {});
+    if (cats.length)
+      rings.push({
+        label: "Categories clean",
+        score: Math.round((cats.filter(([, v]) => !v.failed).length / cats.length) * 100),
+        max: 100,
+      });
+    if (rings.length) s.push({ type: "scorecard", items: rings });
     const imp = a.nodesByImpact || {};
     s.push({
       type: "paragraph",
       text: `Of ${total} applicable checks, ${a.rulesViolated} failed, affecting ${Object.entries(imp).filter(([, n]) => n).map(([k, n]) => `${n} element${n === 1 ? "" : "s"} (${k})`).join(", ") || "no elements"}.`,
     });
+    if (cats.length) {
+      s.push({ type: "heading", text: "Category Checks" });
+      s.push({
+        type: "checks",
+        items: cats
+          .sort((x, y) => (y[1].failed - x[1].failed) || (y[1].elements - x[1].elements))
+          .map(([label, v]) => {
+            const totalRules = v.passed + v.failed;
+            return {
+              label,
+              value: v.failed
+                ? `${v.failed} of ${totalRules} rule${totalRules === 1 ? "" : "s"} failed, ${v.elements} element${v.elements === 1 ? "" : "s"}`
+                : `All ${totalRules} rule${totalRules === 1 ? "" : "s"} passed`,
+              rating: v.failed === 0 ? "good" : v.failed / totalRules >= 0.5 ? "poor" : "needs-improvement",
+            };
+          }),
+      });
+    }
     if (a.topIssues?.length) {
       s.push({ type: "heading", text: "Issues Found" });
       s.push({

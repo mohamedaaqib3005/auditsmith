@@ -116,6 +116,62 @@
       "moderate": 2,
       "minor": 0
     },
+    "categories": {
+      "ARIA": {
+        "passed": 10,
+        "failed": 0,
+        "elements": 0
+      },
+      "Names & Labels": {
+        "passed": 4,
+        "failed": 1,
+        "elements": 4
+      },
+      "Structure": {
+        "passed": 3,
+        "failed": 0,
+        "elements": 0
+      },
+      "Keyboard": {
+        "passed": 5,
+        "failed": 0,
+        "elements": 0
+      },
+      "Colour & Contrast": {
+        "passed": 1,
+        "failed": 1,
+        "elements": 22
+      },
+      "Text Alternatives": {
+        "passed": 3,
+        "failed": 0,
+        "elements": 0
+      },
+      "Forms": {
+        "passed": 3,
+        "failed": 1,
+        "elements": 2
+      },
+      "Semantics": {
+        "passed": 7,
+        "failed": 1,
+        "elements": 2
+      },
+      "Language": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      },
+      "Sensory Cues": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      }
+    },
+    "wcagAA": {
+      "passed": 3,
+      "failed": 1
+    },
     "topIssues": [
       {
         "id": "select-name",

@@ -281,8 +281,14 @@ node scripts/check-access.js
 One-time setup: `npm install playwright @axe-core/playwright` then
 `npx playwright install chromium`. It writes the rules passed and
 violated, affected elements by impact level (critical / serious /
-moderate / minor), and the top named issues; the report derives the
-score and renders each issue as a card. Older audits saved with the
+moderate / minor), a category breakdown from axe's own rule taxonomy
+(Colour & Contrast, Forms, Keyboard, ARIA and so on), WCAG AA coverage,
+and the top named issues. The report renders three score rings, a card per category, and a card
+per named issue. The headline Accessibility Score is severity-weighted:
+each failed rule costs points by impact (critical 15, serious 10,
+moderate 5, minor 2), so one critical failure outweighs several minor
+ones, a plain pass-rate would hide that. The other rings show WCAG AA
+coverage and the share of categories with zero failures. Older audits saved with the
 previous checker's shape still render.
 
 Manual fallback: run the site through

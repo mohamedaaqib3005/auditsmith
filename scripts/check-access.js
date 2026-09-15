@@ -34,6 +34,37 @@ try {
   for (const v of res.violations)
     if (v.impact in nodesByImpact) nodesByImpact[v.impact] += v.nodes.length;
 
+  // Categories from axe's own rule taxonomy (cat.* tags)
+  const CAT_LABELS = {
+    "cat.color": "Colour & Contrast", "cat.forms": "Forms", "cat.name-role-value": "Names & Labels",
+    "cat.structure": "Structure", "cat.semantics": "Semantics", "cat.text-alternatives": "Text Alternatives",
+    "cat.aria": "ARIA", "cat.keyboard": "Keyboard", "cat.language": "Language", "cat.tables": "Tables",
+    "cat.time-and-media": "Media", "cat.sensory-and-visual-cues": "Sensory Cues", "cat.parsing": "Parsing",
+  };
+  const categories = {};
+  const catOf = (rule) => {
+    const t = (rule.tags || []).find((x) => x.startsWith("cat."));
+    return t ? (CAT_LABELS[t] || t.replace("cat.", "")) : "Other";
+  };
+  for (const r of res.passes) {
+    const c = catOf(r);
+    categories[c] = categories[c] || { passed: 0, failed: 0, elements: 0 };
+    categories[c].passed++;
+  }
+  for (const r of res.violations) {
+    const c = catOf(r);
+    categories[c] = categories[c] || { passed: 0, failed: 0, elements: 0 };
+    categories[c].failed++;
+    categories[c].elements += r.nodes.length;
+  }
+
+  // WCAG AA coverage (rules tagged wcag2aa / wcag21aa / wcag22aa)
+  const isAA = (r) => (r.tags || []).some((t) => /^wcag2(1|2)?aa$/.test(t));
+  const wcagAA = {
+    passed: res.passes.filter(isAA).length,
+    failed: res.violations.filter(isAA).length,
+  };
+
   const topIssues = [...res.violations]
     .sort((a, b) => {
       const w = { critical: 0, serious: 1, moderate: 2, minor: 3 };
@@ -47,6 +78,8 @@ try {
     rulesPassed: res.passes.length,
     rulesViolated: res.violations.length,
     nodesByImpact,
+    categories,
+    wcagAA,
     topIssues,
   };
   fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2) + "\n");
@@ -55,6 +88,8 @@ try {
   console.log(`  rules passed   : ${res.passes.length}`);
   console.log(`  rules violated : ${res.violations.length}`);
   console.log(`  elements       : ${Object.entries(nodesByImpact).filter(([,n])=>n).map(([k,n])=>`${n} ${k}`).join(", ") || "none"}`);
+  for (const [c, v] of Object.entries(categories))
+    console.log(`  ${c.padEnd(18)}: ${v.failed ? `${v.failed} of ${v.passed + v.failed} rules failed (${v.elements} elements)` : `all ${v.passed} rules passed`}`);
   for (const t of topIssues) console.log(`  - [${t.impact}] ${t.id}: ${t.elements} element(s)`);
   console.log(`\nWritten to ${DATA_PATH}.`);
 } finally {
