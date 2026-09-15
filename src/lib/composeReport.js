@@ -336,7 +336,7 @@ const pagespeedSections = (ps, date) => {
   return s;
 };
 
-const technicalSeoSections = (ts) => {
+const technicalSeoSections = (ts, cf) => {
   if (!ts) return [];
   const s = [];
 
@@ -469,6 +469,14 @@ const technicalSeoSections = (ts) => {
       recommendation: ts.redirectedUrls > 0 ? "Update internal links to point at final URLs so crawlers and users skip the hop." : undefined,
     });
   }
+  if (cf?.sitemapUrls && ts.pagesCrawled && cf.sitemapUrls > ts.pagesCrawled * 1.2) {
+    hygiene.push({
+      label: "Sitemap coverage",
+      value: `${cf.sitemapUrls} URLs listed in the sitemap, ${ts.pagesCrawled} reached by the crawl`,
+      rating: "needs-improvement",
+      recommendation: "Pages the sitemap lists but internal links never reach are orphan candidates: linked from nowhere, they depend entirely on the sitemap to be found. Review whether they deserve links or removal.",
+    });
+  }
   if (ts.heavyPages != null) {
     hygiene.push({
       label: "Page weight",
@@ -536,7 +544,7 @@ const technicalSeoSections = (ts) => {
   return s;
 };
 
-const onPageSeoSections = (op, pages, kf) => {
+const onPageSeoSections = (op, pages, kf, cf) => {
   if (!op) return [];
   const s = [];
 
@@ -609,6 +617,16 @@ const onPageSeoSections = (op, pages, kf) => {
       value: `Average Flesch score ${op.avgReadability} (${label}), ${op.hardReadingPages ?? 0} hard-to-read page${(op.hardReadingPages ?? 0) === 1 ? "" : "s"}`,
       rating: op.avgReadability >= 60 ? "good" : op.avgReadability >= 50 ? "needs-improvement" : "poor",
       recommendation: op.avgReadability < 60 ? "Shorter sentences and simpler wording lift comprehension for readers, and for the AI systems summarising the site." : undefined,
+    });
+  }
+  if (cf?.withDates) {
+    const monthsSince = Math.floor((Date.now() - new Date(cf.newest)) / (30.44 * 86400000));
+    const staleShare = cf.olderThanYear / cf.withDates;
+    quality.push({
+      label: "Content freshness",
+      value: `Newest change ${cf.newest}${cf.olderThanYear ? `; ${cf.olderThanYear} of ${cf.withDates} pages untouched for over a year` : ""}`,
+      rating: monthsSince <= 3 && staleShare < 0.5 ? "good" : monthsSince <= 12 ? "needs-improvement" : "poor",
+      recommendation: monthsSince > 3 || staleShare >= 0.5 ? "Refresh or retire stale pages; both readers and ranking systems favour sites that visibly maintain their content." : undefined,
     });
   }
   if (op.spellingPages != null) {
@@ -1198,8 +1216,8 @@ const computeGrades = (sections, data) => {
     { type: "heading", text: "Executive Summary" },
     { type: "paragraph", text: SUMMARY(site, "six") },
     ...pagespeedSections(data.pagespeed, date),
-    ...technicalSeoSections(data.technicalSeo),
-    ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled, data.keywordFocus),
+    ...technicalSeoSections(data.technicalSeo, data.contentFreshness),
+    ...onPageSeoSections(data.onPageSeo, data.technicalSeo?.pagesCrawled, data.keywordFocus, data.contentFreshness),
     ...aiReadinessSections(data.aiReadiness, data.technicalSeo?.pagesCrawled),
     ...accessibilitySections(data.accessibility),
     ...technologySections(data.technology, data.domain),

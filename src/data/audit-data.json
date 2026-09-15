@@ -271,5 +271,13 @@
   "competitors": [
     "tahaluf.com",
     "dmgevents.com"
-  ]
+  ],
+  "contentFreshness": {
+    "sitemapUrls": 136,
+    "withDates": 136,
+    "newest": "2026-09-15",
+    "oldest": "2026-01-01",
+    "updatedLast3Months": 25,
+    "olderThanYear": 0
+  }
 }
