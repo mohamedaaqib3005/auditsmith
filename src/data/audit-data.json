@@ -48,7 +48,9 @@
     "robotsTxt": true,
     "redirectedUrls": 0,
     "canonicalizedElsewhere": 0,
-    "missingCanonical": 0
+    "missingCanonical": 0,
+    "heavyPages": 0,
+    "avgExternalOutlinks": 9
   },
   "onPageSeo": {
     "missingTitles": 0,
@@ -59,7 +61,9 @@
     "multipleH1": 3,
     "thinPages": 4,
     "avgReadability": 49,
-    "hardReadingPages": 17
+    "hardReadingPages": 17,
+    "truncatedTitles": 26,
+    "truncatedMetas": 22
   },
   "aiReadiness": {
     "llmsTxt": true,

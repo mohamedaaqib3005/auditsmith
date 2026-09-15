@@ -198,8 +198,30 @@ The crawl script also derives, when the export carries the columns:
 internal redirect counts, canonical coverage (missing and
 pointing-elsewhere), shown as Crawl Hygiene cards in chapter 02, and
 readability (average Flesch score, hard pages) plus spelling error
-counts, shown as Content Quality cards in chapter 03. Nothing new to
-export or type; richer exports simply produce richer chapters.
+counts, shown as Content Quality cards in chapter 03; titles and meta
+descriptions truncated in Google's results (pixel widths vs the ~580px /
+~990px display limits); pages transferring over 2 MB; average external
+outlinks; and the top pages by internal Link Score, shown as the
+Internal Link Equity table. Nothing new to export or type; richer
+exports simply produce richer chapters.
+
+**Two more optional Screaming Frog doors**, both free exports:
+
+Image alt-text coverage, from Images tab, Export (or Bulk Export,
+Images, All Images):
+
+```
+node scripts/images-to-data.js ~/Downloads/images_all.csv
+```
+
+Internal anchor-text quality, from Bulk Export, Links, All Inlinks:
+
+```
+node scripts/inlinks-to-data.js ~/Downloads/all_inlinks.csv
+```
+
+Each writes its facts and adds a Crawl Hygiene card; skip either and its
+card simply does not render.
  (automatic; one optional field)
 
 Everything here is written by the scripts: the crawl numbers by

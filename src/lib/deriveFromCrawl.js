@@ -23,6 +23,11 @@ export const COLS = {
   size: ["Size (bytes)", "Size (Bytes)", "Size"],
   metaRobots: ["Meta Robots 1", "Meta Robots"],
   canonical: ["Canonical Link Element 1", "Canonical Link Element"],
+  titlePx: ["Title 1 Pixel Width"],
+  metaPx: ["Meta Description 1 Pixel Width"],
+  linkScore: ["Link Score"],
+  totalTransferred: ["Total Transferred (Bytes)"],
+  extOutlinks: ["External Outlinks"],
   flesch: ["Flesch Reading Ease Score"],
   spelling: ["Spelling Errors"],
 };
@@ -127,6 +132,18 @@ export function deriveFromCrawl(parsedRows) {
     missingCanonical: C.canonical
       ? okPages.filter((r) => empty(r[C.canonical])).length
       : undefined,
+    heavyPages: C.totalTransferred
+      ? okPages.filter((r) => Number(r[C.totalTransferred]) > 2 * 1024 * 1024).length || (okPages.some((r) => !empty(r[C.totalTransferred])) ? 0 : undefined)
+      : undefined,
+    avgExternalOutlinks: C.extOutlinks && okPages.some((r) => !empty(r[C.extOutlinks]))
+      ? Math.round(okPages.reduce((sum, r) => sum + (Number(r[C.extOutlinks]) || 0), 0) / (okPages.length || 1))
+      : undefined,
+    topByLinkEquity: C.linkScore && okPages.some((r) => Number(r[C.linkScore]) > 0)
+      ? okPages
+          .map((r) => ({ url: String(r[C.address]).replace(/^https?:\/\/[^/]+/, "") || "/", score: Number(r[C.linkScore]) || 0 }))
+          .sort((x, y) => y.score - x.score)
+          .slice(0, 5)
+      : undefined,
   };
 
   // aiReadiness.metaRobots from the crawl's Meta Robots column:
@@ -147,6 +164,14 @@ export function deriveFromCrawl(parsedRows) {
       onPageSeo.avgReadability = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
       onPageSeo.hardReadingPages = scores.filter((n) => n < 50).length;
     }
+  }
+  if (C.titlePx) {
+    const n = okPages.filter((r) => Number(r[C.titlePx]) > 580).length;
+    if (okPages.some((r) => !empty(r[C.titlePx]))) onPageSeo.truncatedTitles = n;
+  }
+  if (C.metaPx) {
+    const n = okPages.filter((r) => Number(r[C.metaPx]) > 990).length;
+    if (okPages.some((r) => !empty(r[C.metaPx]))) onPageSeo.truncatedMetas = n;
   }
   if (C.spelling) {
     const withErrors = okPages.filter((r) => Number(r[C.spelling]) > 0).length;

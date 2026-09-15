@@ -184,6 +184,8 @@ const ONPAGE_CHECKS = {
   missingH1: { label: "H1 headings", issue: (n) => `Missing on ${n} page${n === 1 ? "" : "s"}`, severe: MOST_PAGES },
   multipleH1: { label: "Multiple H1s", issue: (n) => `${n} page${n === 1 ? "" : "s"} have more than one`, severe: MOST_PAGES },
   thinPages: { label: "Thin content", issue: (n) => `${n} page${n === 1 ? "" : "s"} under 200 words` },
+  truncatedTitles: { label: "Titles truncated in search", issue: (n) => `${n} title${n === 1 ? "" : "s"} exceed Google's ~580px display width` },
+  truncatedMetas: { label: "Descriptions truncated in search", issue: (n) => `${n} description${n === 1 ? "" : "s"} exceed the ~990px display width` },
 };
 
 /* =========================================
@@ -467,6 +469,34 @@ const technicalSeoSections = (ts) => {
       recommendation: ts.redirectedUrls > 0 ? "Update internal links to point at final URLs so crawlers and users skip the hop." : undefined,
     });
   }
+  if (ts.heavyPages != null) {
+    hygiene.push({
+      label: "Page weight",
+      value: ts.heavyPages === 0 ? "No pages over 2 MB transferred" : `${ts.heavyPages} page${ts.heavyPages === 1 ? "" : "s"} transfer over 2 MB`,
+      rating: ts.heavyPages === 0 ? "good" : "needs-improvement",
+      recommendation: ts.heavyPages > 0 ? "Compress media and defer non-critical assets on the heavy pages; page weight is the raw material of slow load times." : undefined,
+    });
+  }
+  if (ts.imageAlt?.total != null) {
+    const ia = ts.imageAlt;
+    hygiene.push({
+      label: "Image alt text",
+      value: ia.missingAlt == null ? `${ia.total} images crawled` : ia.missingAlt === 0 ? `All ${ia.total} images have alt text` : `Missing on ${ia.missingAlt} of ${ia.total} images`,
+      rating: ia.missingAlt === 0 ? "good" : ia.missingAlt / ia.total > 0.3 ? "poor" : "needs-improvement",
+      recommendation: ia.missingAlt > 0 ? "Add descriptive alt text; it serves screen-reader users and image search alike." : undefined,
+    });
+  }
+  if (ts.internalAnchors?.total) {
+    const an = ts.internalAnchors;
+    const weak = an.generic + an.empty;
+    const share = weak / an.total;
+    hygiene.push({
+      label: "Anchor text",
+      value: weak === 0 ? `All ${an.total} internal links use descriptive anchors` : `${weak} of ${an.total} internal links use generic or empty anchors`,
+      rating: weak === 0 ? "good" : share > 0.2 ? "poor" : "needs-improvement",
+      recommendation: weak > 0 ? 'Replace "click here" and empty anchors with descriptive text; anchors tell search engines what the destination page is about.' : undefined,
+    });
+  }
   if (ts.missingCanonical != null || ts.canonicalizedElsewhere != null) {
     const miss = ts.missingCanonical ?? 0;
     const elsewhere = ts.canonicalizedElsewhere ?? 0;
@@ -488,6 +518,19 @@ const technicalSeoSections = (ts) => {
   if (hygiene.length) {
     s.push({ type: "heading", text: "Crawl Hygiene" });
     s.push({ type: "checks", items: hygiene });
+  }
+
+  if (ts.topByLinkEquity?.length) {
+    s.push({ type: "heading", text: "Internal Link Equity" });
+    s.push({
+      type: "paragraph",
+      text: `The pages the site's own internal linking strengthens most${ts.avgExternalOutlinks != null ? `; pages link out ${ts.avgExternalOutlinks} time${ts.avgExternalOutlinks === 1 ? "" : "s"} on average` : ""}. Pages that should rank belong on this list.`,
+    });
+    s.push({
+      type: "table",
+      columns: ["Page", "Link score"],
+      rows: ts.topByLinkEquity.map((p) => [p.url, String(p.score)]),
+    });
   }
 
   return s;
