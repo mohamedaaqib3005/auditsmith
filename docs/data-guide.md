@@ -217,6 +217,14 @@ report decides what counts as good.
 | `redirectChains` | Optional. Screaming Frog: Reports menu, Redirect Chains; type the number it lists. Absent = row not shown |
 | `sitemap: "stale"` | Override. The checker can prove a sitemap exists, not whether its URLs are current. If you know it lists old pages, change `"present"` to `"stale"` by hand; the scripts will not overwrite a `"stale"` you typed |
 
+### 3g-pre. `keywordFocus` (automatic, never typed)
+
+The check-ai script also derives the homepage's five dominant terms and
+whether each appears in the title, meta description and main heading,
+rendered as the Keyword Focus table and alignment card in chapter 03.
+Runs with the same command; no extra step. Delete the `keywordFocus`
+block to drop it from the report.
+
 ### 3g. `aiReadiness` (automatic)
 
 All five fields are filled by the scripts, none are typed:
