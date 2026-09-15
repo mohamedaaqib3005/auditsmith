@@ -307,6 +307,31 @@ appear. Note `structuredData` appears twice by design: the automatic
 ok/missing check, and this typed 0-100 score, they are different
 measurements.
 
+### 3g-b. AI visibility spot-check and search intent (typed, manual protocols)
+
+Two checks no script can honestly run; both are 15-minute human
+protocols documented here.
+
+**AI visibility.** Write the five questions the site should win, real
+buyer questions, not brand searches ("best cybersecurity conference in
+Qatar", "operational excellence events in Saudi Arabia"). Ask each in
+ChatGPT, Perplexity, or Gemini (fresh chats, no history). Count the
+answers that mention or cite the brand at all. Type the result:
+
+```json
+"aiReadiness": {
+  "visibilityCheck": { "asked": 5, "mentioned": 1, "checkedOn": "2026-09-15" }
+}
+```
+
+The AI answer visibility card renders from it, labelled as a manual
+spot-check. Redo it each audit; the date keeps it honest.
+
+**Search intent.** For the five most important pages, ask: what would
+someone searching this page's target phrase actually want, and does the
+page give it? Note mismatches as findings in your meeting notes; this
+one stays human judgment and has no data field by design.
+
 ### 3h. `accessibility` (automatic via axe-core)
 
 One command runs axe-core, the open-source industry accessibility

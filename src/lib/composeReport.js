@@ -236,6 +236,17 @@ const AI_FACT_CHECKS = {
             rating: MOST_PAGES(n, pages || 0) ? "poor" : "needs-improvement",
           },
   },
+  aiVisibility: {
+    label: "AI answer visibility",
+    fix: "AI assistants cite sources they trust; referring domains, llms.txt reach and consistent entity information drive mentions. The off-site authority work is the same work.",
+    interpret: (pct) => {
+      return pct >= 60
+        ? { value: `Mentioned in ${pct}% of relevant AI answers (manual spot-check)`, rating: "good" }
+        : pct >= 20
+        ? { value: `Mentioned in only ${pct}% of relevant AI answers (manual spot-check)`, rating: "needs-improvement" }
+        : { value: `Mentioned in ${pct}% of relevant AI answers (manual spot-check)`, rating: "poor" };
+    },
+  },
   jsDependence: {
     label: "JavaScript dependence",
     fix: "Server-render the missing share; content that exists only after JavaScript runs is invisible to non-rendering crawlers, including most AI bots.",
@@ -1061,7 +1072,12 @@ const aiReadinessSections = (ai, pages) => {
   const STATUS_RATING = { OK: "good", Issues: "needs-improvement", Missing: "poor" };
   const items = [];
   // fixed order: crawl facts and fetch facts interleaved sensibly
-  const ORDER = ["llmsTxt", "blockedAiBots", "structuredData", "noindexPages", "noJsWords", "jsDependence"];
+  const ORDER = ["llmsTxt", "blockedAiBots", "structuredData", "noindexPages", "noJsWords", "jsDependence", "aiVisibility"];
+  // typed spot-check: mentioned in X of Y relevant AI answers
+  if (ai.visibilityCheck?.asked > 0) {
+    const vc = ai.visibilityCheck;
+    ai = { ...ai, aiVisibility: Math.round((vc.mentioned / vc.asked) * 100) };
+  }
   // derived pair-check: rendered vs no-JS content
   if (ai.renderedWords != null && ai.noJsWords != null && ai.renderedWords > 0) {
     const pct = Math.round((Math.min(ai.noJsWords, ai.renderedWords) / ai.renderedWords) * 100);
