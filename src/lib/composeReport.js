@@ -1235,12 +1235,15 @@ const computeGrades = (sections, data) => {
 
   if (!grades.length) return null;
   const overallPct = Math.round(grades.reduce((a, g) => a + g.pct, 0) / grades.length);
-  return {
-    type: "auditResults",
-    banner: "Audit Results",
-    overall: { grade: letterFor(overallPct), caption: captionFor(overallPct) },
-    grades: grades.map(({ label, grade }) => ({ label, grade })),
-  };
+  return [
+    {
+      type: "auditResults",
+      banner: "Audit Results",
+      overall: { grade: letterFor(overallPct), caption: captionFor(overallPct) },
+      grades: grades.map(({ label, grade }) => ({ label, grade })),
+    },
+    grades.length >= 3 ? { type: "radar", items: grades.map(({ label, pct }) => ({ label, pct })) } : null,
+  ].filter(Boolean);
 };
 
   const sections = [
@@ -1255,10 +1258,10 @@ const computeGrades = (sections, data) => {
     ...keywordsSections(data.keywords),
   ];
 
-  const gradeBlock = computeGrades(sections, data);
-  if (gradeBlock) {
-    sections.splice(2, 0, gradeBlock);
-    sections[1] = { type: "paragraph", text: SUMMARY(site, ["zero","one","two","three","four","five","six","seven","eight"][gradeBlock.grades.length] || gradeBlock.grades.length) };
+  const gradeBlocks = computeGrades(sections, data);
+  if (gradeBlocks) {
+    sections.splice(2, 0, ...gradeBlocks);
+    sections[1] = { type: "paragraph", text: SUMMARY(site, ["zero","one","two","three","four","five","six","seven","eight"][gradeBlocks[0].grades.length] || gradeBlocks[0].grades.length) };
   }
 
   return {

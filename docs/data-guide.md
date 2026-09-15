@@ -465,7 +465,10 @@ accent falls back to a shade derived from the primary. It never overwrites a bra
 to insist), and eyeball the cover after, a detected colour is a good
 starting point, not a designer. The traffic-light colours (green, amber,
 red rings, dots and icons) and grade colours never change, those mean
-good/warning/bad, not brand. Layout, fonts and structure are unaffected.
+good/warning/bad, not brand. Layout, fonts and structure are unaffected. The grade page (page 2)
+computes itself from the built sections: an overall letter, one ring
+per dimension, and a radar chart drawing the same scores as a shape,
+all derived, nothing to type.
 
 Three behaviours worth knowing:
 

@@ -11,6 +11,7 @@ import { FindingsBlock } from "./FindingsBlock";
 import { TableBlock } from "./TableBlock";
 import { SectionDividerBlock } from "./SectionDividerBlock";
 import { AuditResultsBlock } from "./AuditResultsBlock";
+import { RadarBlock } from "./RadarBlock";
 import { ChecksBlock } from "./ChecksBlock";
 
 export {
@@ -36,5 +37,6 @@ export const blockMap = {
   table: TableBlock,
   sectionDivider: SectionDividerBlock,
   auditResults: AuditResultsBlock,
+  radar: RadarBlock,
   checks: ChecksBlock,
 };
