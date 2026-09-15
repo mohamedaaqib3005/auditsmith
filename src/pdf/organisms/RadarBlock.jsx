@@ -4,9 +4,10 @@
 import { View, Svg, Polygon, Line, Text as SvgText } from "@react-pdf/renderer";
 import { colors, fonts, fontSizes, space } from "../tokens";
 
-const SIZE = 262;
-const CX = SIZE / 2;
-const CY = SIZE / 2;
+const W = 380;
+const H = 262;
+const CX = W / 2;
+const CY = H / 2;
 const R = 78;
 
 const point = (i, n, r) => {
@@ -24,8 +25,8 @@ export const RadarBlock = ({ items = [] }) => {
     .map((p) => p.map((v) => v.toFixed(1)).join(","))
     .join(" ");
   return (
-    <View wrap={false} style={{ alignItems: "center", marginTop: space.md, height: SIZE + 8 }}>
-      <Svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
+    <View wrap={false} style={{ alignItems: "center", marginTop: space.md, height: H + 8 }}>
+      <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
         {[0.25, 0.5, 0.75, 1].map((f) => (
           <Polygon key={f} points={ring(n, f)} fill="none" stroke={colors.border} strokeWidth={f === 1 ? 1 : 0.6} strokeDasharray="3 3" />
         ))}
