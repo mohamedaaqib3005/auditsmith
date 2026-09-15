@@ -1,6 +1,20 @@
 {
   "site": "makeo.app",
+  "aiReadiness": {
+    "llmsTxt": true,
+    "blockedAiBots": [],
+    "structuredData": true,
+    "noJsWords": 3817,
+    "noindexPages": 9,
+    "scores": {
+      "EEAT": 57,
+      "socials": 89,
+      "structuredData": 75
+    }
+  },
   "technicalSeo": {
+    "sitemap": "present",
+    "robotsTxt": true,
     "pagesCrawled": 142,
     "indexable": 115,
     "brokenLinks": 1,
@@ -18,34 +32,7 @@
     "canonicalizedElsewhere": 19,
     "missingCanonical": 6,
     "heavyPages": 0,
-    "avgExternalOutlinks": 14,
-    "sitemap": "present",
-    "robotsTxt": true
-  },
-  "onPageSeo": {
-    "avgReadability": 63,
-    "hardReadingPages": 12,
-    "truncatedTitles": 35,
-    "truncatedMetas": 44,
-    "missingTitles": 0,
-    "duplicateTitles": 26,
-    "missingMeta": 7,
-    "duplicateMeta": 22,
-    "missingH1": 30,
-    "multipleH1": 4,
-    "thinPages": 0
-  },
-  "aiReadiness": {
-    "noindexPages": 9,
-    "llmsTxt": true,
-    "blockedAiBots": [],
-    "structuredData": true,
-    "noJsWords": 3817,
-    "scores": {
-      "EEAT": 57,
-      "socials": 89,
-      "structuredData": 75
-    }
+    "avgExternalOutlinks": 14
   },
   "keywordFocus": {
     "terms": [
@@ -92,61 +79,25 @@
       "Next.js"
     ],
     "charset": "utf-8",
-    "ip": "13.226.69.104",
-    "spf": true,
-    "dmarc": "none"
+    "ip": "18.161.216.123",
+    "spf": true
   },
   "theme": {
     "brand": "#E03C31",
     "accent": "#C0E8F0"
   },
-  "pagespeed": {
-    "mobile": {
-      "scores": {
-        "performance": 48,
-        "accessibility": 80,
-        "bestPractices": 54,
-        "seo": 92,
-        "agenticBrowsing": "2/3"
-      },
-      "fieldData": {
-        "lcp": 2,
-        "inp": 427,
-        "cls": 0.13,
-        "fcp": 1.8,
-        "ttfb": 0.6
-      },
-      "labMetrics": {
-        "fcp": 2.1,
-        "lcp": 6.9,
-        "tbt": 1100,
-        "cls": 0,
-        "speedIndex": 5
-      }
-    },
-    "desktop": {
-      "scores": {
-        "performance": 66,
-        "accessibility": 77,
-        "bestPractices": 54,
-        "seo": 92,
-        "agenticBrowsing": "2/3"
-      },
-      "fieldData": {
-        "lcp": 0.8,
-        "inp": 193,
-        "cls": 0.03,
-        "fcp": 0.6,
-        "ttfb": 0.2
-      },
-      "labMetrics": {
-        "fcp": 0.4,
-        "lcp": 1.1,
-        "tbt": 2072,
-        "cls": 0.02,
-        "speedIndex": 1.8
-      }
-    }
+  "onPageSeo": {
+    "avgReadability": 63,
+    "hardReadingPages": 12,
+    "truncatedTitles": 35,
+    "truncatedMetas": 44,
+    "missingTitles": 0,
+    "duplicateTitles": 26,
+    "missingMeta": 7,
+    "duplicateMeta": 22,
+    "missingH1": 30,
+    "multipleH1": 4,
+    "thinPages": 0
   },
   "accessibility": {
     "engine": "axe-core",
@@ -279,19 +230,14 @@
       "source": "OpenPageRank",
       "competitors": [
         {
-          "domain": "invisalign.com",
-          "score": 7.39,
-          "referringDomains": 986
+          "domain": "name1.com",
+          "score": 0.39,
+          "referringDomains": 2
         },
         {
-          "domain": "clearcorrect.com",
-          "score": 3.89,
-          "referringDomains": 63
-        },
-        {
-          "domain": "yesmadam.com",
-          "score": 2.91,
-          "referringDomains": 36
+          "domain": "name2.com",
+          "score": 0.29,
+          "referringDomains": 1
         }
       ]
     }
@@ -318,6 +264,54 @@
       "words": 121,
       "hasHomeLink": false,
       "mentions404": false
+    }
+  },
+  "pagespeed": {
+    "mobile": {
+      "agenticBrowsing": "2/3",
+      "scores": {
+        "performance": 52,
+        "accessibility": 80,
+        "bestPractices": 54,
+        "seo": 92
+      },
+      "fieldData": {
+        "lcp": 2,
+        "inp": 427,
+        "cls": 0.12,
+        "fcp": 1.8,
+        "ttfb": 0.6
+      },
+      "labMetrics": {
+        "fcp": 2.1,
+        "lcp": 4.8,
+        "tbt": 1521,
+        "cls": 0,
+        "speedIndex": 4.6
+      }
+    },
+    "desktop": {
+      "agenticBrowsing": "3/3",
+      "scores": {
+        "performance": 68,
+        "accessibility": 77,
+        "bestPractices": 54,
+        "seo": 92
+      },
+      "fieldData": {
+        "lcp": 0.8,
+        "inp": 204,
+        "cls": 0.04,
+        "fcp": 0.7,
+        "ttfb": 0.1
+      },
+      "labMetrics": {
+        "fcp": 0.4,
+        "lcp": 1.1,
+        "tbt": 1109,
+        "cls": 0.02,
+        "speedIndex": 1.3
+      }
     }
   },
   "competitors": [

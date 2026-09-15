@@ -1,0 +1,144 @@
+{
+  "site": "makeo.app",
+  "technicalSeo": {
+    "pagesCrawled": 142,
+    "indexable": 115,
+    "brokenLinks": 1,
+    "https": true,
+    "nonIndexable": {
+      "Canonicalised,noindex": 2,
+      "Canonicalised": 17,
+      "noindex": 7,
+      "Client Error": 1
+    },
+    "parameterUrls": 21,
+    "deepPages": 0,
+    "weakPages": 13,
+    "redirectedUrls": 3,
+    "canonicalizedElsewhere": 19,
+    "missingCanonical": 6,
+    "heavyPages": 0,
+    "avgExternalOutlinks": 14,
+    "sitemap": "present",
+    "robotsTxt": true
+  },
+  "onPageSeo": {
+    "avgReadability": 63,
+    "hardReadingPages": 12,
+    "truncatedTitles": 35,
+    "truncatedMetas": 44,
+    "missingTitles": 0,
+    "duplicateTitles": 26,
+    "missingMeta": 7,
+    "duplicateMeta": 22,
+    "missingH1": 30,
+    "multipleH1": 4,
+    "thinPages": 0
+  },
+  "aiReadiness": {
+    "noindexPages": 9,
+    "llmsTxt": true,
+    "blockedAiBots": [],
+    "structuredData": true,
+    "noJsWords": 3817
+  },
+  "keywordFocus": {
+    "terms": [
+      {
+        "term": "aligners",
+        "count": 107,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "teeth",
+        "count": 88,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "makeo",
+        "count": 53,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "toothsi",
+        "count": 53,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "hair",
+        "count": 52,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      }
+    ]
+  },
+  "technology": {
+    "detected": [
+      "Google Tag Manager",
+      "Next.js"
+    ],
+    "charset": "utf-8",
+    "ip": "18.161.216.98",
+    "spf": true,
+    "dmarc": "none"
+  },
+  "theme": {
+    "brand": "#E03C31",
+    "accent": "#C0E8F0"
+  },
+  "pagespeed": {
+    "mobile": {
+      "scores": {
+        "performance": 31,
+        "accessibility": 80,
+        "bestPractices": 54,
+        "seo": 92
+      },
+      "fieldData": {
+        "lcp": 2,
+        "inp": 427,
+        "cls": 0.13,
+        "fcp": 1.8,
+        "ttfb": 0.6
+      },
+      "labMetrics": {
+        "fcp": 4.2,
+        "lcp": 15.9,
+        "tbt": 2047,
+        "cls": 0,
+        "speedIndex": 8.5
+      }
+    },
+    "desktop": {
+      "scores": {
+        "performance": 66,
+        "accessibility": 77,
+        "bestPractices": 54,
+        "seo": 92
+      },
+      "fieldData": {
+        "lcp": 0.8,
+        "inp": 193,
+        "cls": 0.03,
+        "fcp": 0.6,
+        "ttfb": 0.2
+      },
+      "labMetrics": {
+        "fcp": 0.4,
+        "lcp": 1.3,
+        "tbt": 1117,
+        "cls": 0.02,
+        "speedIndex": 1.5
+      }
+    }
+  }
+}

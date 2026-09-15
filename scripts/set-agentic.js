@@ -16,8 +16,13 @@ if (!ok(mobile) || (desktop && !ok(desktop))) {
 
 const data = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
 data.pagespeed = data.pagespeed || {};
-data.pagespeed.mobile = { ...(data.pagespeed.mobile || {}), agenticBrowsing: mobile };
-if (desktop) data.pagespeed.desktop = { ...(data.pagespeed.desktop || {}), agenticBrowsing: desktop };
+const put = (device, frac) => {
+  data.pagespeed[device] = data.pagespeed[device] || {};
+  data.pagespeed[device].scores = { ...(data.pagespeed[device].scores || {}), agenticBrowsing: frac };
+  delete data.pagespeed[device].agenticBrowsing; // clean any stray from the old helper
+};
+put("mobile", mobile);
+if (desktop) put("desktop", desktop);
 fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2) + "\n");
 
 console.log(`Set: mobile ${mobile}${desktop ? `, desktop ${desktop}` : ""}. Written to ${DATA_PATH}.`);

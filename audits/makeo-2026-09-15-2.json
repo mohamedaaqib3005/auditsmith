@@ -1,0 +1,253 @@
+{
+  "site": "makeo.app.com",
+  "technicalSeo": {
+    "pagesCrawled": 142,
+    "indexable": 115,
+    "brokenLinks": 1,
+    "https": true,
+    "nonIndexable": {
+      "Canonicalised,noindex": 2,
+      "Canonicalised": 17,
+      "noindex": 7,
+      "Client Error": 1
+    },
+    "parameterUrls": 21,
+    "deepPages": 0,
+    "weakPages": 13,
+    "redirectedUrls": 3,
+    "canonicalizedElsewhere": 19,
+    "missingCanonical": 6,
+    "heavyPages": 0,
+    "avgExternalOutlinks": 14,
+    "sitemap": "missing",
+    "robotsTxt": true
+  },
+  "onPageSeo": {
+    "avgReadability": 63,
+    "hardReadingPages": 12,
+    "truncatedTitles": 35,
+    "truncatedMetas": 44,
+    "missingTitles": 0,
+    "duplicateTitles": 26,
+    "missingMeta": 7,
+    "duplicateMeta": 22,
+    "missingH1": 30,
+    "multipleH1": 4,
+    "thinPages": 0
+  },
+  "aiReadiness": {
+    "noindexPages": 9,
+    "llmsTxt": false,
+    "blockedAiBots": [],
+    "structuredData": true,
+    "noJsWords": 294,
+    "scores": {
+      "EEAT": 43,
+      "socials": 89,
+      "structuredData": 100
+    }
+  },
+  "keywordFocus": {
+    "terms": [
+      {
+        "term": "today",
+        "count": 5,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "news",
+        "count": 3,
+        "inTitle": true,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "daily",
+        "count": 3,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "usa",
+        "count": 3,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "asbury",
+        "count": 2,
+        "inTitle": true,
+        "inMeta": false,
+        "inH1": false
+      }
+    ]
+  },
+  "technology": {
+    "detected": [],
+    "charset": "utf-8",
+    "ip": "151.101.194.189",
+    "spf": false,
+    "dmarc": "missing"
+  },
+  "theme": {
+    "brand": "#0098FE"
+  },
+  "brandCode": "APPN",
+  "pagespeed": {
+    "mobile": {
+      "scores": {
+        "performance": 39,
+        "accessibility": 82,
+        "bestPractices": 54,
+        "seo": 85
+      },
+      "fieldData": {
+        "lcp": 1.5,
+        "inp": 124,
+        "cls": 0,
+        "fcp": 1.3,
+        "ttfb": 0.8
+      },
+      "labMetrics": {
+        "fcp": 3,
+        "lcp": 5.1,
+        "tbt": 1752,
+        "cls": 0,
+        "speedIndex": 21.9
+      },
+      "agenticBrowsing": "2/3"
+    },
+    "desktop": {
+      "scores": {
+        "performance": 54,
+        "accessibility": 93,
+        "bestPractices": 54,
+        "seo": 85
+      },
+      "fieldData": {
+        "lcp": 1.4,
+        "inp": 141,
+        "cls": 0.03,
+        "fcp": 0.8,
+        "ttfb": 0.4
+      },
+      "labMetrics": {
+        "fcp": 0.9,
+        "lcp": 1.5,
+        "tbt": 1834,
+        "cls": 0.07,
+        "speedIndex": 5.4
+      },
+      "agenticBrowsing": "2/3"
+    }
+  },
+  "accessibility": {
+    "engine": "axe-core",
+    "rulesPassed": 47,
+    "rulesViolated": 6,
+    "nodesByImpact": {
+      "critical": 0,
+      "serious": 7,
+      "moderate": 1,
+      "minor": 2
+    },
+    "categories": {
+      "ARIA": {
+        "passed": 12,
+        "failed": 1,
+        "elements": 1
+      },
+      "Names & Labels": {
+        "passed": 4,
+        "failed": 2,
+        "elements": 5
+      },
+      "Structure": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      },
+      "Keyboard": {
+        "passed": 5,
+        "failed": 0,
+        "elements": 0
+      },
+      "Colour & Contrast": {
+        "passed": 2,
+        "failed": 1,
+        "elements": 1
+      },
+      "Text Alternatives": {
+        "passed": 5,
+        "failed": 1,
+        "elements": 2
+      },
+      "Forms": {
+        "passed": 3,
+        "failed": 0,
+        "elements": 0
+      },
+      "Semantics": {
+        "passed": 10,
+        "failed": 1,
+        "elements": 1
+      },
+      "Language": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      },
+      "Sensory Cues": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      }
+    },
+    "wcagAA": {
+      "passed": 3,
+      "failed": 1
+    },
+    "topIssues": [
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "elements": 3,
+        "help": "Links must have discernible text"
+      },
+      {
+        "id": "frame-title",
+        "impact": "serious",
+        "elements": 2,
+        "help": "Frames must have an accessible name"
+      },
+      {
+        "id": "aria-prohibited-attr",
+        "impact": "serious",
+        "elements": 1,
+        "help": "Elements must only use permitted ARIA attributes"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "elements": 1,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "elements": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination"
+      },
+      {
+        "id": "empty-heading",
+        "impact": "minor",
+        "elements": 2,
+        "help": "Headings should not be empty"
+      }
+    ]
+  }
+}
