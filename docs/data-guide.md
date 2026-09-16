@@ -506,7 +506,11 @@ red rings, dots and icons) and grade colours never change, those mean
 good/warning/bad, not brand. Layout, fonts and structure are unaffected. The grade page (page 2)
 computes itself from the built sections: an overall letter, one ring
 per dimension, and a radar chart drawing the same scores as a shape,
-all derived, nothing to type.
+all derived, nothing to type. So do the two summary layers: the
+Findings by Severity table after the grades (every failing check,
+high severity first) and the closing 08 Priority Action Plan chapter
+(every fix, ordered by severity, with its evidence). Fix a finding,
+rerun its script, and both update themselves.
 
 Three behaviours worth knowing:
 

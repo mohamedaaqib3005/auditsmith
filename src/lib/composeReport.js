@@ -1308,6 +1308,65 @@ const sectionPassRate = (blocks) => {
   return n ? Math.round((pts / n) * 100) : null;
 };
 
+
+// Walk built sections and collect every failing card as a finding.
+const collectFindings = (sections) => {
+  const out = [];
+  let where = "Overview";
+  for (const b of sections) {
+    if (b.type === "sectionDivider") where = b.title;
+    if (b.type === "checks")
+      for (const it of b.items || []) {
+        if (it.rating === "poor" || it.rating === "needs-improvement")
+          out.push({
+            where,
+            label: it.label,
+            value: it.value,
+            severity: it.rating === "poor" ? "High" : "Medium",
+            action: it.recommendation,
+          });
+      }
+  }
+  return out.sort((a, b) => (a.severity === b.severity ? 0 : a.severity === "High" ? -1 : 1));
+};
+
+const findingsDigest = (findings) => {
+  if (!findings.length) return [];
+  const high = findings.filter((f) => f.severity === "High").length;
+  const med = findings.length - high;
+  return [
+    { type: "heading", text: "Findings by Severity" },
+    {
+      type: "paragraph",
+      text: `${findings.length} findings across the audit: ${high} high severity, ${med} medium. The most consequential first; every one is detailed, with its fix, in its own chapter.`,
+    },
+    {
+      type: "table",
+      columns: ["Severity", "Finding", "Where"],
+      rows: findings.slice(0, 10).map((f) => [f.severity, `${f.label}: ${f.value}`, f.where]),
+    },
+  ];
+};
+
+const actionPlan = (findings) => {
+  const actions = findings.filter((f) => f.action);
+  if (!actions.length) return [];
+  return [
+    {
+      type: "sectionDivider",
+      number: "08",
+      title: "Priority Action Plan",
+      description:
+        "Every failing check's fix, ordered by severity. Work top to bottom: the high-severity items move the grades and the visitor experience most.",
+    },
+    {
+      type: "table",
+      columns: ["#", "Priority", "Action", "Evidence"],
+      rows: actions.slice(0, 14).map((f, i) => [String(i + 1), f.severity, f.action, `${f.where}: ${f.label} (${f.value})`]),
+    },
+  ];
+};
+
 const computeGrades = (sections, data) => {
   // split the built sections into chapters at their dividers
   const chapters = [];
@@ -1360,9 +1419,11 @@ const computeGrades = (sections, data) => {
     ...keywordsSections(data.keywords),
   ];
 
+  const findings = collectFindings(sections);
+  sections.push(...actionPlan(findings));
   const gradeBlocks = computeGrades(sections, data);
   if (gradeBlocks) {
-    sections.splice(2, 0, ...gradeBlocks);
+    sections.splice(2, 0, ...gradeBlocks, ...findingsDigest(findings));
     sections[1] = { type: "paragraph", text: SUMMARY(site, ["zero","one","two","three","four","five","six","seven","eight"][gradeBlocks[0].grades.length] || gradeBlocks[0].grades.length) };
   }
 
