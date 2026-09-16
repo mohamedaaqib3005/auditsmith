@@ -4,7 +4,7 @@ import { Heading, Body } from "../atoms";
 import { colors, fonts, fontSizes, space, borders } from "../tokens";
 
 export const SectionDividerBlock = ({ number, title, description }) => (
-  <View style={{ marginBottom: space["2xl"] + 2, paddingTop: space.lg }} minPresenceAhead={300}>
+  <View style={{ marginBottom: space["2xl"] + 2 }} break>
     <View
       style={{
         flexDirection: "row",
