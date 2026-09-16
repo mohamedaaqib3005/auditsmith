@@ -14,12 +14,12 @@
 /* =========================================
    CONSTANTS - change once, applies to every report
 ========================================= */
-const PREPARED_BY = "Mohamed Aaqib";
+const PREPARED_BY = "AuditSmith";
 const REPORT_TYPE = "Website Audit Report";
 const COVER_SUBTITLE =
-  "Technical SEO, on-page SEO, AI readiness, backlinks, UI/UX, accessibility and architecture analysis.";
-const SUMMARY = (site, dimensions) =>
-  `This audit reviews ${site} across ${dimensions} dimensions: performance, technical health, on-page SEO, AI readiness, accessibility and the technology the site runs on. The overall grade below summarises the findings; each section then details its evidence, and every failing check carries a concrete fix.`;
+  "Performance, technical SEO, on-page content, AI readiness, accessibility, technology and usability analysis.";
+const SUMMARY = (site, dimensions, labels) =>
+  `This audit reviews ${site} across ${dimensions} dimensions: ${labels ? labels.join(", ").replace(/, ([^,]*)$/, " and $1") : "the sections that follow"}. The overall grade below summarises the findings; each section then details its evidence, and every failing check carries a concrete fix.`;
 
 const TEST_CONDITIONS = {
   mobile: {
@@ -46,6 +46,13 @@ const FIELD_THRESHOLDS = {
   ttfb: { good: 0.8, poor: 1.8, unit: "s", label: "Time to First Byte (TTFB)" },
 };
 
+const LAB_THRESHOLDS_DESKTOP = {
+  fcp: { good: 0.9, poor: 1.6, unit: "s", label: "First Contentful Paint" },
+  lcp: { good: 1.2, poor: 2.4, unit: "s", label: "Largest Contentful Paint" },
+  tbt: { good: 150, poor: 350, unit: "ms", label: "Total Blocking Time" },
+  cls: { good: 0.1, poor: 0.25, unit: "", label: "Cumulative Layout Shift" },
+  speedIndex: { good: 1.3, poor: 2.3, unit: "s", label: "Speed Index" },
+};
 const LAB_THRESHOLDS = {
   fcp: { good: 1.8, poor: 3.0, unit: "s", label: "First Contentful Paint" },
   lcp: { good: 2.5, poor: 4.0, unit: "s", label: "Largest Contentful Paint" },
@@ -303,7 +310,7 @@ const deviceBlocks = (device, ps, labelHeadings) => {
     b.push({
       type: "metrics",
       title: "Single Page Session, Initial Load",
-      items: metricItems(ps.labMetrics, LAB_THRESHOLDS),
+      items: metricItems(ps.labMetrics, name === "Desktop" ? LAB_THRESHOLDS_DESKTOP : LAB_THRESHOLDS),
     });
   }
 
@@ -1424,7 +1431,7 @@ const computeGrades = (sections, data) => {
   const gradeBlocks = computeGrades(sections, data);
   if (gradeBlocks) {
     sections.splice(2, 0, ...gradeBlocks, ...findingsDigest(findings));
-    sections[1] = { type: "paragraph", text: SUMMARY(site, ["zero","one","two","three","four","five","six","seven","eight"][gradeBlocks[0].grades.length] || gradeBlocks[0].grades.length) };
+    sections[1] = { type: "paragraph", text: SUMMARY(site, ["zero","one","two","three","four","five","six","seven","eight"][gradeBlocks[0].grades.length] || gradeBlocks[0].grades.length, gradeBlocks[0].grades.map((g) => g.label)) };
   }
 
   return {
