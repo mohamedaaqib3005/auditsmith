@@ -765,3 +765,21 @@ status and output stream in the job JSON, and the PDF renders
 server-side at the end. The brand API (paid credits) runs only when
 BRAND_CREDITS=on; AUDIT_STEPS can override the step list. Failures in
 optional steps mark the step and continue, absent cards stay honest.
+
+The server also serves the public page: open http://localhost:8787 in
+a browser for the type-a-domain experience, the input, a live step
+feed, and the download button, all talking to the same API. Guards for
+strangers are built in: a few audits per visitor per hour, and a queue
+cap; both refuse politely with a JSON error. The page lives in
+public/index.html and needs no build step.
+
+**Going live (the deploy kit).** The deploy/ folder holds everything a
+rented Ubuntu box needs: setup.sh provisions it (Node, Caddy, a
+dedicated user, the repo, Playwright's Chromium), auditsmith.service
+keeps the server alive through crashes and reboots, the Caddyfile is
+the HTTPS front door (put the real domain on line 1), and
+deploy/README.md walks the whole errand in six steps. Three things stay
+human and never enter git: the .env keys (created by hand on the box),
+the domain, and the box itself. Anything in those files written like
+yourdomain.com or YOUR-SERVER-IP is a placeholder, never typed
+literally.
