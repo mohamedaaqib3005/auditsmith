@@ -202,6 +202,22 @@ Units: fcp, lcp, speedIndex in **seconds**; tbt in **milliseconds**; cls
 
 ---
 
+### 3f-0. Crawling without Screaming Frog (crawl-lite)
+
+One command crawls the site itself, no export, no upload:
+
+```
+node scripts/crawl-lite.js
+```
+
+Our own polite spider (same host only, robots.txt respected, capped at
+150 pages, delayed between requests) walks the site from the homepage
+and feeds the SAME derive logic the CSV door uses, so every crawl fact
+fills identically. In the panel it is the "Crawl automatically" button.
+The Screaming Frog export remains the advanced door: bigger sites, Link
+Score, spelling, and the Images and Inlinks exports. Pixel widths on
+this path are close estimates, not Screaming Frog's exact measurements.
+
 ### 3f. `technicalSeo`
 
 The crawl script also derives, when the export carries the columns:
@@ -726,3 +742,26 @@ error message names a line number; go there and check this list.
 
 Every card shows only what its source said; absent sources leave absent
 cards, never guesses.
+
+## Server mode (the product backend)
+
+The same machine behind an HTTP API, for the public site era:
+
+```
+node server/auditsmith-server.js
+```
+
+POST a domain, poll the job, download the PDF:
+
+```
+curl -X POST localhost:8787/api/audit -d '{"site":"example.com"}'
+curl localhost:8787/api/job/<id>
+curl -o report.pdf localhost:8787/api/job/<id>/report.pdf
+```
+
+One audit runs at a time (the repo's single audit slot, queued), each
+step is one of the same scripts the terminal and panel use, per-step
+status and output stream in the job JSON, and the PDF renders
+server-side at the end. The brand API (paid credits) runs only when
+BRAND_CREDITS=on; AUDIT_STEPS can override the step list. Failures in
+optional steps mark the step and continue, absent cards stay honest.

@@ -40,6 +40,29 @@ const jobs = new Map();
 const queue = [];
 let working = false;
 
+// public-era guards: polite limits for strangers
+const MAX_QUEUE = 10;
+const RATE = { perHour: 4 };
+const hits = new Map(); // ip -> [timestamps]
+const allowed = (ip) => {
+  const now = Date.now();
+  const list = (hits.get(ip) || []).filter((t) => now - t < 3600000);
+  if (list.length >= RATE.perHour) { hits.set(ip, list); return false; }
+  list.push(now);
+  hits.set(ip, list);
+  return true;
+};
+
+const PUBLIC_DIR = path.join(ROOT, "public");
+const MIME = { ".html": "text/html; charset=utf-8", ".png": "image/png", ".svg": "image/svg+xml", ".ico": "image/x-icon" };
+const serveStatic = (res, rel) => {
+  const file = path.join(PUBLIC_DIR, rel);
+  if (!file.startsWith(PUBLIC_DIR) || !fs.existsSync(file)) return false;
+  res.writeHead(200, { "Content-Type": MIME[path.extname(file)] || "application/octet-stream" });
+  fs.createReadStream(file).pipe(res);
+  return true;
+};
+
 const runStep = (job, id) =>
   new Promise((resolve) => {
     const args =
@@ -86,7 +109,16 @@ const body = (req) => new Promise((r) => { const c = []; req.on("data", (d) => c
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://x`);
+  if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/index.html")) {
+    if (serveStatic(res, "index.html")) return;
+  }
+  if (req.method === "GET" && !url.pathname.startsWith("/api/")) {
+    if (serveStatic(res, url.pathname.slice(1))) return;
+  }
   if (req.method === "POST" && url.pathname === "/api/audit") {
+    const ip = req.socket.remoteAddress || "?";
+    if (queue.length >= MAX_QUEUE) return json(res, 429, { error: "queue is full, try again soon" });
+    if (!allowed(ip)) return json(res, 429, { error: "rate limit: a few audits per hour per visitor" });
     let site;
     try { site = String(JSON.parse(await body(req)).site || ""); } catch { return json(res, 400, { error: "bad json" }); }
     site = site.replace(/^https?:\/\//, "").replace(/\/.*$/, "").toLowerCase();
