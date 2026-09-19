@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 .env
 .env
+build/
+jobs/
+uploads/
+server-report.pdf

@@ -102,7 +102,7 @@
   "pagespeed": {
     "mobile": {
       "scores": {
-        "performance": 80,
+        "performance": 64,
         "accessibility": 94,
         "bestPractices": 96,
         "seo": 100
@@ -116,25 +116,25 @@
       },
       "labMetrics": {
         "fcp": 2.6,
-        "lcp": 3.4,
-        "tbt": 239,
+        "lcp": 3.5,
+        "tbt": 749,
         "cls": 0.04,
-        "speedIndex": 4.5
+        "speedIndex": 5.8
       }
     },
     "desktop": {
       "scores": {
-        "performance": 85,
+        "performance": 61,
         "accessibility": 94,
         "bestPractices": 100,
         "seo": 100
       },
       "labMetrics": {
         "fcp": 0.7,
-        "lcp": 1.8,
-        "tbt": 195,
+        "lcp": 2.9,
+        "tbt": 490,
         "cls": 0.01,
-        "speedIndex": 1.4
+        "speedIndex": 1.5
       }
     }
   },
@@ -235,7 +235,19 @@
     "registered": "2023-09-19",
     "expires": "2031-09-19",
     "transferLock": true,
-    "archiveMonths": 20,
+    "certCount": 69,
+    "subdomains": [
+      "api.vlncy.com",
+      "autoconfig.vlncy.com",
+      "autodiscover.vlncy.com",
+      "cp.vlncy.com",
+      "cpanel.vlncy.com",
+      "cpcalendars.vlncy.com",
+      "cpcontacts.vlncy.com",
+      "mail.vlncy.com",
+      "webdisk.vlncy.com",
+      "webmail.vlncy.com"
+    ],
     "authority": {
       "score": 0.09,
       "rank": 111808467,
@@ -253,9 +265,6 @@
     "olderThanYear": 0
   },
   "usability": {
-    "pageWeightKb": 4937,
-    "unsizedImages": 11,
-    "consoleErrors": 1,
     "mobileOverflow": false,
     "searchPresent": false,
     "navLinks": 7,
