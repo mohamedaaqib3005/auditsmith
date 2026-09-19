@@ -1,166 +1,155 @@
 {
-  "site": "apple.com",
+  "site": "vlncy.com",
   "technicalSeo": {
-    "pagesCrawled": 140,
-    "indexable": 118,
-    "brokenLinks": 2,
+    "pagesCrawled": 37,
+    "indexable": 36,
+    "brokenLinks": 1,
     "https": true,
     "nonIndexable": {
-      "noindex": 2,
-      "Redirected": 17,
-      "Canonicalised": 3
+      "Client Error": 1
     },
-    "parameterUrls": 3,
+    "parameterUrls": 4,
     "deepPages": 0,
-    "weakPages": 4,
-    "imagesCrawled": 130,
-    "largeImages": 46,
-    "redirectedUrls": 71,
-    "canonicalizedElsewhere": 3,
-    "missingCanonical": 6,
-    "heavyPages": 0,
-    "avgExternalOutlinks": 15,
+    "weakPages": 0,
+    "redirectedUrls": 0,
+    "canonicalizedElsewhere": 0,
+    "missingCanonical": 36,
+    "avgExternalOutlinks": 37,
     "sitemap": "present",
     "robotsTxt": true
   },
   "onPageSeo": {
-    "avgReadability": 70,
-    "hardReadingPages": 7,
-    "truncatedTitles": 0,
-    "truncatedMetas": 5,
-    "missingTitles": 3,
-    "duplicateTitles": 8,
-    "missingMeta": 14,
+    "avgReadability": 39,
+    "hardReadingPages": 27,
+    "truncatedTitles": 3,
+    "truncatedMetas": 8,
+    "missingTitles": 0,
+    "duplicateTitles": 5,
+    "missingMeta": 0,
     "duplicateMeta": 5,
-    "missingH1": 8,
-    "multipleH1": 2,
-    "thinPages": 8
+    "missingH1": 27,
+    "multipleH1": 9,
+    "thinPages": 0
   },
   "aiReadiness": {
-    "noindexPages": 2,
+    "noindexPages": 0,
     "llmsTxt": false,
     "blockedAiBots": [],
-    "structuredData": true,
-    "noJsWords": 1062,
+    "structuredData": false,
+    "noJsWords": 1269,
     "scores": {
       "EEAT": 50,
-      "socials": 67,
-      "structuredData": 100
+      "socials": 56,
+      "structuredData": 75
     }
   },
+  "crawlSource": "crawl-lite",
   "keywordFocus": {
     "terms": [
       {
-        "term": "apple",
-        "count": 78,
+        "term": "vlncy",
+        "count": 22,
         "inTitle": true,
         "inMeta": true,
-        "inH1": true
+        "inH1": false
       },
       {
-        "term": "card",
-        "count": 18,
-        "inTitle": false,
+        "term": "date",
+        "count": 16,
+        "inTitle": true,
         "inMeta": false,
         "inH1": false
       },
       {
-        "term": "available",
-        "count": 15,
-        "inTitle": false,
-        "inMeta": false,
-        "inH1": false
-      },
-      {
-        "term": "learn",
+        "term": "dating",
         "count": 12,
         "inTitle": false,
         "inMeta": false,
         "inH1": false
       },
       {
-        "term": "shop",
+        "term": "app",
+        "count": 12,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "truth",
         "count": 10,
         "inTitle": false,
-        "inMeta": true,
+        "inMeta": false,
         "inH1": false
       }
     ]
   },
   "technology": {
-    "detected": [],
-    "server": "Apple",
+    "detected": [
+      "Google Tag Manager",
+      "Google Analytics",
+      "jQuery",
+      "Bootstrap",
+      "Tailwind CSS",
+      "Google Fonts"
+    ],
+    "server": "Microsoft-IIS/10.0",
     "charset": "utf-8",
-    "ip": "2620:149:af0::10",
-    "dmarc": "quarantine"
-  },
-  "theme": {
-    "brand": "#0066CC"
+    "ip": "104.211.97.138",
+    "spf": true,
+    "dmarc": "none"
   },
   "pagespeed": {
     "mobile": {
       "scores": {
-        "performance": 56,
-        "accessibility": 92,
-        "bestPractices": 100,
-        "seo": 92
+        "performance": 64,
+        "accessibility": 94,
+        "bestPractices": 96,
+        "seo": 100
       },
       "fieldData": {
-        "lcp": 1.5,
-        "inp": 127,
+        "lcp": 1.4,
+        "inp": 135,
         "cls": 0,
-        "fcp": 1.1,
+        "fcp": 1.4,
         "ttfb": 0.6
       },
       "labMetrics": {
-        "fcp": 8.9,
-        "lcp": 10.5,
-        "tbt": 0,
-        "cls": 0,
-        "speedIndex": 8.9
+        "fcp": 2.6,
+        "lcp": 3.5,
+        "tbt": 749,
+        "cls": 0.04,
+        "speedIndex": 5.8
       }
     },
     "desktop": {
       "scores": {
-        "performance": 90,
-        "accessibility": 89,
+        "performance": 61,
+        "accessibility": 94,
         "bestPractices": 100,
-        "seo": 92
-      },
-      "fieldData": {
-        "lcp": 1,
-        "inp": 45,
-        "cls": 0.04,
-        "fcp": 0.7,
-        "ttfb": 0.4
+        "seo": 100
       },
       "labMetrics": {
-        "fcp": 1.2,
-        "lcp": 1.8,
-        "tbt": 0,
-        "cls": 0,
-        "speedIndex": 1.2
+        "fcp": 0.7,
+        "lcp": 2.9,
+        "tbt": 490,
+        "cls": 0.01,
+        "speedIndex": 1.5
       }
     }
   },
   "accessibility": {
     "engine": "axe-core",
-    "rulesPassed": 46,
+    "rulesPassed": 37,
     "rulesViolated": 4,
     "nodesByImpact": {
-      "critical": 2,
-      "serious": 1,
-      "moderate": 1,
-      "minor": 4
+      "critical": 0,
+      "serious": 6,
+      "moderate": 17,
+      "minor": 0
     },
     "categories": {
       "ARIA": {
-        "passed": 14,
-        "failed": 2,
-        "elements": 6
-      },
-      "Names & Labels": {
-        "passed": 4,
+        "passed": 10,
         "failed": 0,
         "elements": 0
       },
@@ -169,15 +158,20 @@
         "failed": 0,
         "elements": 0
       },
+      "Names & Labels": {
+        "passed": 3,
+        "failed": 0,
+        "elements": 0
+      },
       "Keyboard": {
-        "passed": 4,
-        "failed": 1,
-        "elements": 1
+        "passed": 3,
+        "failed": 2,
+        "elements": 12
       },
       "Colour & Contrast": {
-        "passed": 2,
+        "passed": 1,
         "failed": 1,
-        "elements": 1
+        "elements": 5
       },
       "Text Alternatives": {
         "passed": 4,
@@ -191,11 +185,11 @@
       },
       "Semantics": {
         "passed": 8,
-        "failed": 0,
-        "elements": 0
+        "failed": 1,
+        "elements": 6
       },
       "Language": {
-        "passed": 4,
+        "passed": 2,
         "failed": 0,
         "elements": 0
       },
@@ -206,62 +200,67 @@
       }
     },
     "wcagAA": {
-      "passed": 4,
+      "passed": 3,
       "failed": 1
     },
     "topIssues": [
       {
-        "id": "aria-required-children",
-        "impact": "critical",
-        "elements": 2,
-        "help": "Certain ARIA roles must contain particular children"
-      },
-      {
         "id": "color-contrast",
         "impact": "serious",
-        "elements": 1,
+        "elements": 5,
         "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "nested-interactive",
+        "impact": "serious",
+        "elements": 1,
+        "help": "Interactive controls must not be nested"
       },
       {
         "id": "region",
         "impact": "moderate",
-        "elements": 1,
+        "elements": 11,
         "help": "All page content should be contained by landmarks"
       },
       {
-        "id": "aria-allowed-role",
-        "impact": "minor",
-        "elements": 4,
-        "help": "ARIA role should be appropriate for the element"
+        "id": "heading-order",
+        "impact": "moderate",
+        "elements": 6,
+        "help": "Heading levels should only increase by one"
       }
     ]
   },
   "domain": {
-    "registered": "1987-02-19",
-    "expires": "2027-02-20",
+    "registered": "2023-09-19",
+    "expires": "2031-09-19",
     "transferLock": true,
-    "certCount": 2561,
+    "certCount": 69,
     "subdomains": [
-      "2gactivation.apple.com",
-      "\\303\\202\\302\\240affiliate.itunes.apple.com",
-      "\\303\\202\\302\\240autolinkmaker.itunes.apple.com",
-      "\\303\\202\\302\\240collection.itunes.apple.com",
-      "\\303\\202\\302\\240gsxappld.apple.com",
-      "\\303\\202\\302\\240salesdownloadit.corp.apple.com",
-      "\\303\\202\\302\\240stations.itunes.apple.com",
-      "\\303\\202\\302\\240storeqa1.corp.apple.com",
-      "aacs.apple.com",
-      "aamt.apple.com",
-      "aamtit.apple.com",
-      "aamtt.apple.com",
-      "aatcportal.apple.com",
-      "abs.apple.com",
-      "absolem01.rno.apple.com",
-      "absolem02.rno.apple.com",
-      "absolem03.rno.apple.com",
-      "absolem04.rno.apple.com",
-      "absolem06.rno.apple.com",
-      "ac-netstorage.apple.com"
-    ]
+      "api.vlncy.com",
+      "autoconfig.vlncy.com",
+      "autodiscover.vlncy.com",
+      "cp.vlncy.com",
+      "cpanel.vlncy.com",
+      "cpcalendars.vlncy.com",
+      "cpcontacts.vlncy.com",
+      "mail.vlncy.com",
+      "webdisk.vlncy.com",
+      "webmail.vlncy.com"
+    ],
+    "authority": {
+      "score": 0.09,
+      "rank": 111808467,
+      "referringDomains": 0,
+      "asOf": "2026-08-01",
+      "source": "OpenPageRank"
+    }
+  },
+  "contentFreshness": {
+    "sitemapUrls": 22,
+    "withDates": 22,
+    "newest": "2026-08-27",
+    "oldest": "2026-08-27",
+    "updatedLast3Months": 22,
+    "olderThanYear": 0
   }
 }
