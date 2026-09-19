@@ -1,0 +1,14 @@
+[Unit]
+Description=Auditsmith audit server
+After=network.target
+
+[Service]
+User=audit
+WorkingDirectory=/home/audit/auditsmith
+ExecStart=/usr/bin/node server/auditsmith-server.js
+Restart=always
+RestartSec=5
+Environment=PORT=8787
+
+[Install]
+WantedBy=multi-user.target

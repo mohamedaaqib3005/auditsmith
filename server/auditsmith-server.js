@@ -116,7 +116,7 @@ const server = http.createServer(async (req, res) => {
     if (serveStatic(res, url.pathname.slice(1))) return;
   }
   if (req.method === "POST" && url.pathname === "/api/audit") {
-    const ip = req.socket.remoteAddress || "?";
+    const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket.remoteAddress || "?";
     if (queue.length >= MAX_QUEUE) return json(res, 429, { error: "queue is full, try again soon" });
     if (!allowed(ip)) return json(res, 429, { error: "rate limit: a few audits per hour per visitor" });
     let site;
