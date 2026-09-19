@@ -1,0 +1,274 @@
+{
+  "site": "aeon.co",
+  "technicalSeo": {
+    "pagesCrawled": 223,
+    "indexable": 218,
+    "brokenLinks": 1,
+    "https": true,
+    "nonIndexable": {
+      "Canonicalised": 4,
+      "Client Error": 1
+    },
+    "parameterUrls": 3,
+    "deepPages": 0,
+    "weakPages": 36,
+    "redirectedUrls": 0,
+    "canonicalizedElsewhere": 4,
+    "missingCanonical": 0,
+    "heavyPages": 0,
+    "avgExternalOutlinks": 19,
+    "sitemap": "missing",
+    "robotsTxt": true
+  },
+  "onPageSeo": {
+    "avgReadability": 61,
+    "hardReadingPages": 29,
+    "truncatedTitles": 110,
+    "truncatedMetas": 32,
+    "missingTitles": 0,
+    "duplicateTitles": 4,
+    "missingMeta": 2,
+    "duplicateMeta": 10,
+    "missingH1": 0,
+    "multipleH1": 4,
+    "thinPages": 16
+  },
+  "aiReadiness": {
+    "noindexPages": 0,
+    "llmsTxt": false,
+    "blockedAiBots": [
+      "GPTBot",
+      "ClaudeBot",
+      "Google-Extended"
+    ],
+    "structuredData": true,
+    "noJsWords": 836,
+    "scores": {
+      "EEAT": 50,
+      "socials": 78,
+      "structuredData": 100
+    }
+  },
+  "keywordFocus": {
+    "terms": [
+      {
+        "term": "save",
+        "count": 29,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "essay",
+        "count": 20,
+        "inTitle": false,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "video",
+        "count": 9,
+        "inTitle": false,
+        "inMeta": true,
+        "inH1": false
+      },
+      {
+        "term": "minutes",
+        "count": 9,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "aeon",
+        "count": 8,
+        "inTitle": true,
+        "inMeta": true,
+        "inH1": false
+      }
+    ]
+  },
+  "technology": {
+    "detected": [
+      "Next.js",
+      "Tailwind CSS"
+    ],
+    "server": "Vercel",
+    "charset": "utf-8",
+    "ip": "216.150.1.1",
+    "spf": true,
+    "dmarc": "reject"
+  },
+  "theme": {
+    "brand": "#9D120D"
+  },
+  "pagespeed": {
+    "mobile": {
+      "scores": {
+        "performance": 57,
+        "accessibility": 85,
+        "bestPractices": 96,
+        "seo": 100,
+        "agenticBrowsing": "2/3"
+      },
+      "fieldData": {
+        "lcp": 2.1,
+        "inp": 140,
+        "cls": 0,
+        "fcp": 1.6,
+        "ttfb": 0.6
+      },
+      "labMetrics": {
+        "fcp": 3.9,
+        "lcp": 12.3,
+        "tbt": 221,
+        "cls": 0,
+        "speedIndex": 6.9
+      }
+    },
+    "desktop": {
+      "scores": {
+        "performance": 91,
+        "accessibility": 87,
+        "bestPractices": 96,
+        "seo": 100,
+        "agenticBrowsing": "2/3"
+      },
+      "fieldData": {
+        "lcp": 1.7,
+        "inp": 214,
+        "cls": 0,
+        "fcp": 1.1,
+        "ttfb": 0.4
+      },
+      "labMetrics": {
+        "fcp": 0.3,
+        "lcp": 1.8,
+        "tbt": 110,
+        "cls": 0,
+        "speedIndex": 1
+      }
+    }
+  },
+  "accessibility": {
+    "engine": "axe-core",
+    "rulesPassed": 41,
+    "rulesViolated": 3,
+    "nodesByImpact": {
+      "critical": 2,
+      "serious": 1,
+      "moderate": 1,
+      "minor": 0
+    },
+    "categories": {
+      "ARIA": {
+        "passed": 10,
+        "failed": 0,
+        "elements": 0
+      },
+      "Names & Labels": {
+        "passed": 4,
+        "failed": 1,
+        "elements": 1
+      },
+      "Forms": {
+        "passed": 4,
+        "failed": 1,
+        "elements": 2
+      },
+      "Structure": {
+        "passed": 1,
+        "failed": 0,
+        "elements": 0
+      },
+      "Keyboard": {
+        "passed": 3,
+        "failed": 0,
+        "elements": 0
+      },
+      "Colour & Contrast": {
+        "passed": 1,
+        "failed": 0,
+        "elements": 0
+      },
+      "Text Alternatives": {
+        "passed": 4,
+        "failed": 0,
+        "elements": 0
+      },
+      "Semantics": {
+        "passed": 10,
+        "failed": 1,
+        "elements": 1
+      },
+      "Language": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      },
+      "Sensory Cues": {
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
+      }
+    },
+    "wcagAA": {
+      "passed": 4,
+      "failed": 0
+    },
+    "topIssues": [
+      {
+        "id": "label",
+        "impact": "critical",
+        "elements": 2,
+        "help": "Form elements must have labels"
+      },
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "elements": 1,
+        "help": "Links must have discernible text"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "elements": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination"
+      }
+    ]
+  },
+  "domain": {
+    "certCount": 369,
+    "subdomains": [
+      "2a57j783bl6ld41605czl9llbfixbb7.id-staging.aeon.co",
+      "2a57j783s6vpx7irxfjiy9kwh194jx3.id.aeon.co",
+      "alpha.aeon.co",
+      "analytics-staging.aeon.co",
+      "analytics.aeon.co",
+      "analytics.staging.aeon.co",
+      "assets.aeon.co",
+      "epsilon.aeon.co",
+      "id-staging.aeon.co",
+      "id.aeon.co",
+      "metrics.aeon.co",
+      "nu.aeon.co",
+      "omicron.aeon.co",
+      "staging.aeon.co",
+      "www.metrics.aeon.co"
+    ],
+    "authority": {
+      "score": 8.24,
+      "rank": 16195,
+      "referringDomains": 5493,
+      "asOf": "2026-08-01",
+      "source": "OpenPageRank"
+    }
+  },
+  "competitors": [
+    "Psyche",
+    "3:AMMagazine",
+    "Nautilus",
+    "Edge",
+    "TheAtlantic"
+  ]
+}

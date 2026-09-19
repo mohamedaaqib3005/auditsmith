@@ -1,328 +1,267 @@
 {
-  "site": "makeo.app",
+  "site": "apple.com",
   "technicalSeo": {
-    "pagesCrawled": 142,
-    "indexable": 115,
-    "brokenLinks": 1,
+    "pagesCrawled": 140,
+    "indexable": 118,
+    "brokenLinks": 2,
     "https": true,
     "nonIndexable": {
-      "Canonicalised,noindex": 2,
-      "Canonicalised": 17,
-      "noindex": 7,
-      "Client Error": 1
+      "noindex": 2,
+      "Redirected": 17,
+      "Canonicalised": 3
     },
-    "parameterUrls": 21,
+    "parameterUrls": 3,
     "deepPages": 0,
-    "weakPages": 13,
-    "redirectedUrls": 3,
-    "canonicalizedElsewhere": 19,
+    "weakPages": 4,
+    "imagesCrawled": 130,
+    "largeImages": 46,
+    "redirectedUrls": 71,
+    "canonicalizedElsewhere": 3,
     "missingCanonical": 6,
     "heavyPages": 0,
-    "avgExternalOutlinks": 14,
+    "avgExternalOutlinks": 15,
     "sitemap": "present",
     "robotsTxt": true
   },
   "onPageSeo": {
-    "avgReadability": 63,
-    "hardReadingPages": 12,
-    "truncatedTitles": 35,
-    "truncatedMetas": 44,
-    "missingTitles": 0,
-    "duplicateTitles": 26,
-    "missingMeta": 7,
-    "duplicateMeta": 22,
-    "missingH1": 30,
-    "multipleH1": 4,
-    "thinPages": 0
+    "avgReadability": 70,
+    "hardReadingPages": 7,
+    "truncatedTitles": 0,
+    "truncatedMetas": 5,
+    "missingTitles": 3,
+    "duplicateTitles": 8,
+    "missingMeta": 14,
+    "duplicateMeta": 5,
+    "missingH1": 8,
+    "multipleH1": 2,
+    "thinPages": 8
   },
   "aiReadiness": {
-    "noindexPages": 9,
-    "llmsTxt": true,
+    "noindexPages": 2,
+    "llmsTxt": false,
     "blockedAiBots": [],
     "structuredData": true,
-    "noJsWords": 3817,
+    "noJsWords": 1062,
     "scores": {
-      "EEAT": 57,
-      "socials": 89,
-      "structuredData": 75
+      "EEAT": 50,
+      "socials": 67,
+      "structuredData": 100
     }
   },
   "keywordFocus": {
     "terms": [
       {
-        "term": "aligners",
-        "count": 107,
+        "term": "apple",
+        "count": 78,
         "inTitle": true,
         "inMeta": true,
-        "inH1": false
+        "inH1": true
       },
       {
-        "term": "teeth",
-        "count": 88,
+        "term": "card",
+        "count": 18,
         "inTitle": false,
         "inMeta": false,
         "inH1": false
       },
       {
-        "term": "makeo",
-        "count": 53,
-        "inTitle": true,
-        "inMeta": true,
-        "inH1": false
-      },
-      {
-        "term": "toothsi",
-        "count": 53,
+        "term": "available",
+        "count": 15,
         "inTitle": false,
         "inMeta": false,
         "inH1": false
       },
       {
-        "term": "hair",
-        "count": 52,
-        "inTitle": true,
+        "term": "learn",
+        "count": 12,
+        "inTitle": false,
+        "inMeta": false,
+        "inH1": false
+      },
+      {
+        "term": "shop",
+        "count": 10,
+        "inTitle": false,
         "inMeta": true,
         "inH1": false
       }
     ]
   },
   "technology": {
-    "detected": [
-      "Google Tag Manager",
-      "Next.js"
-    ],
+    "detected": [],
+    "server": "Apple",
     "charset": "utf-8",
-    "ip": "13.226.69.104",
-    "spf": true,
-    "dmarc": "none"
+    "ip": "2620:149:af0::10",
+    "dmarc": "quarantine"
   },
   "theme": {
-    "brand": "#E03C31",
-    "accent": "#C0E8F0"
+    "brand": "#0066CC"
   },
   "pagespeed": {
     "mobile": {
       "scores": {
-        "performance": 48,
-        "accessibility": 80,
-        "bestPractices": 54,
-        "seo": 92,
-        "agenticBrowsing": "2/3"
+        "performance": 56,
+        "accessibility": 92,
+        "bestPractices": 100,
+        "seo": 92
       },
       "fieldData": {
-        "lcp": 2,
-        "inp": 427,
-        "cls": 0.13,
-        "fcp": 1.8,
+        "lcp": 1.5,
+        "inp": 127,
+        "cls": 0,
+        "fcp": 1.1,
         "ttfb": 0.6
       },
       "labMetrics": {
-        "fcp": 2.1,
-        "lcp": 6.9,
-        "tbt": 1100,
+        "fcp": 8.9,
+        "lcp": 10.5,
+        "tbt": 0,
         "cls": 0,
-        "speedIndex": 5
+        "speedIndex": 8.9
       }
     },
     "desktop": {
       "scores": {
-        "performance": 66,
-        "accessibility": 77,
-        "bestPractices": 54,
-        "seo": 92,
-        "agenticBrowsing": "2/3"
+        "performance": 90,
+        "accessibility": 89,
+        "bestPractices": 100,
+        "seo": 92
       },
       "fieldData": {
-        "lcp": 0.8,
-        "inp": 193,
-        "cls": 0.03,
-        "fcp": 0.6,
-        "ttfb": 0.2
+        "lcp": 1,
+        "inp": 45,
+        "cls": 0.04,
+        "fcp": 0.7,
+        "ttfb": 0.4
       },
       "labMetrics": {
-        "fcp": 0.4,
-        "lcp": 1.1,
-        "tbt": 2072,
-        "cls": 0.02,
-        "speedIndex": 1.8
+        "fcp": 1.2,
+        "lcp": 1.8,
+        "tbt": 0,
+        "cls": 0,
+        "speedIndex": 1.2
       }
     }
   },
   "accessibility": {
     "engine": "axe-core",
-    "rulesPassed": 37,
-    "rulesViolated": 9,
+    "rulesPassed": 46,
+    "rulesViolated": 4,
     "nodesByImpact": {
-      "critical": 0,
-      "serious": 77,
-      "moderate": 2,
-      "minor": 13
+      "critical": 2,
+      "serious": 1,
+      "moderate": 1,
+      "minor": 4
     },
     "categories": {
       "ARIA": {
-        "passed": 11,
-        "failed": 0,
-        "elements": 0
+        "passed": 14,
+        "failed": 2,
+        "elements": 6
       },
       "Names & Labels": {
         "passed": 4,
-        "failed": 3,
-        "elements": 27
+        "failed": 0,
+        "elements": 0
       },
       "Structure": {
         "passed": 3,
-        "failed": 2,
-        "elements": 2
+        "failed": 0,
+        "elements": 0
       },
       "Keyboard": {
+        "passed": 4,
+        "failed": 1,
+        "elements": 1
+      },
+      "Colour & Contrast": {
+        "passed": 2,
+        "failed": 1,
+        "elements": 1
+      },
+      "Text Alternatives": {
         "passed": 4,
         "failed": 0,
         "elements": 0
       },
-      "Colour & Contrast": {
+      "Parsing": {
         "passed": 1,
-        "failed": 1,
-        "elements": 50
-      },
-      "Text Alternatives": {
-        "passed": 3,
-        "failed": 1,
-        "elements": 11
-      },
-      "Forms": {
-        "passed": 3,
         "failed": 0,
         "elements": 0
       },
       "Semantics": {
-        "passed": 5,
-        "failed": 1,
-        "elements": 1
+        "passed": 8,
+        "failed": 0,
+        "elements": 0
       },
       "Language": {
-        "passed": 2,
+        "passed": 4,
         "failed": 0,
         "elements": 0
       },
       "Sensory Cues": {
-        "passed": 1,
-        "failed": 1,
-        "elements": 1
+        "passed": 2,
+        "failed": 0,
+        "elements": 0
       }
     },
     "wcagAA": {
-      "passed": 2,
-      "failed": 2
+      "passed": 4,
+      "failed": 1
     },
     "topIssues": [
       {
+        "id": "aria-required-children",
+        "impact": "critical",
+        "elements": 2,
+        "help": "Certain ARIA roles must contain particular children"
+      },
+      {
         "id": "color-contrast",
         "impact": "serious",
-        "elements": 50,
+        "elements": 1,
         "help": "Elements must meet minimum color contrast ratio thresholds"
       },
       {
-        "id": "link-name",
-        "impact": "serious",
-        "elements": 15,
-        "help": "Links must have discernible text"
-      },
-      {
-        "id": "aria-hidden-focus",
-        "impact": "serious",
-        "elements": 10,
-        "help": "ARIA hidden element must not be focusable or contain focusable elements"
-      },
-      {
-        "id": "list",
-        "impact": "serious",
-        "elements": 1,
-        "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements"
-      },
-      {
-        "id": "listitem",
-        "impact": "serious",
-        "elements": 1,
-        "help": "<li> elements must be contained in a <ul> or <ol>"
-      },
-      {
-        "id": "meta-viewport",
+        "id": "region",
         "impact": "moderate",
         "elements": 1,
-        "help": "Zooming and scaling must not be disabled"
+        "help": "All page content should be contained by landmarks"
+      },
+      {
+        "id": "aria-allowed-role",
+        "impact": "minor",
+        "elements": 4,
+        "help": "ARIA role should be appropriate for the element"
       }
     ]
   },
   "domain": {
-    "registered": "2022-08-26",
-    "expires": "2029-08-26",
+    "registered": "1987-02-19",
+    "expires": "2027-02-20",
     "transferLock": true,
-    "archiveMonths": 42,
-    "certCount": 189,
+    "certCount": 2561,
     "subdomains": [
-      "capiskinnsi.makeo.app",
-      "capitoothsi.makeo.app",
-      "dev.doctors.makeo.app",
-      "doctors.makeo.app",
-      "install.makeo.app",
-      "s2stoothsi.makeo.app",
-      "skinnsi.makeo.app",
-      "stores.makeo.app",
-      "toothsi.makeo.app",
-      "www.stores.makeo.app"
-    ],
-    "authority": {
-      "score": 3.66,
-      "rank": 1269660,
-      "referringDomains": 53,
-      "asOf": "2026-08-01",
-      "source": "OpenPageRank",
-      "competitors": [
-        {
-          "domain": "invisalign.com",
-          "score": 7.39,
-          "referringDomains": 986
-        },
-        {
-          "domain": "clearcorrect.com",
-          "score": 3.89,
-          "referringDomains": 63
-        },
-        {
-          "domain": "yesmadam.com",
-          "score": 2.91,
-          "referringDomains": 36
-        }
-      ]
-    }
-  },
-  "contentFreshness": {
-    "sitemapUrls": 1414,
-    "withDates": 1414,
-    "newest": "2026-09-10",
-    "oldest": "2026-09-10",
-    "updatedLast3Months": 1414,
-    "olderThanYear": 0
-  },
-  "usability": {
-    "pageWeightKb": 3778,
-    "unsizedImages": 0,
-    "consoleErrors": 1,
-    "mobileOverflow": false,
-    "searchPresent": true,
-    "navLinks": 0,
-    "formInputs": 1,
-    "labelledInputs": 1,
-    "contactReachable": true,
-    "notFound": {
-      "words": 121,
-      "hasHomeLink": false,
-      "mentions404": false
-    }
-  },
-  "competitors": [
-    "invisalign.com",
-    "clearcorrect.com",
-    "yesmadam.com"
-  ]
+      "2gactivation.apple.com",
+      "\\303\\202\\302\\240affiliate.itunes.apple.com",
+      "\\303\\202\\302\\240autolinkmaker.itunes.apple.com",
+      "\\303\\202\\302\\240collection.itunes.apple.com",
+      "\\303\\202\\302\\240gsxappld.apple.com",
+      "\\303\\202\\302\\240salesdownloadit.corp.apple.com",
+      "\\303\\202\\302\\240stations.itunes.apple.com",
+      "\\303\\202\\302\\240storeqa1.corp.apple.com",
+      "aacs.apple.com",
+      "aamt.apple.com",
+      "aamtit.apple.com",
+      "aamtt.apple.com",
+      "aatcportal.apple.com",
+      "abs.apple.com",
+      "absolem01.rno.apple.com",
+      "absolem02.rno.apple.com",
+      "absolem03.rno.apple.com",
+      "absolem04.rno.apple.com",
+      "absolem06.rno.apple.com",
+      "ac-netstorage.apple.com"
+    ]
+  }
 }
