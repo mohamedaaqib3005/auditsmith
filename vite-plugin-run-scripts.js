@@ -8,6 +8,7 @@ import fs from "fs";
 const SCRIPTS = {
   "new-audit": { file: "scripts/new-audit.js", args: 1 },
   "csv": { file: "scripts/csv-to-data.js", args: 1 },
+  "crawl-lite": { file: "scripts/crawl-lite.js" },
   "check-ai": { file: "scripts/check-ai.js" },
   "check-tech": { file: "scripts/check-tech.js" },
   "check-brand": { file: "scripts/check-brand.js" },
@@ -18,6 +19,7 @@ const SCRIPTS = {
   "check-authority": { file: "scripts/check-authority.js" },
   "check-freshness": { file: "scripts/check-freshness.js" },
   "check-usability": { file: "scripts/check-usability.js" },
+  "check-render": { file: "scripts/check-render.js" },
   "set-agentic": { file: "scripts/set-agentic.js", args: 2 },
   "set-competitors": { file: "scripts/set-competitors.js", args: 9 },
 };

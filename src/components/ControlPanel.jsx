@@ -25,6 +25,7 @@ const ROBOTS = [
   ["check-authority", "Off-site authority"],
   ["check-freshness", "Content freshness"],
   ["check-usability", "Usability"],
+  ["check-render", "JavaScript dependence"],
 ];
 
 export default function ControlPanel({ onData }) {
@@ -104,6 +105,20 @@ export default function ControlPanel({ onData }) {
           <div style={{ fontSize: 12, color: "#5a5470", margin: "6px 0" }}>
             In Screaming Frog: crawl {site || "the site"}, then Internal tab, filter All, Export. Choose that CSV here.
           </div>
+          <button style={{ ...btn(true, busy === "csv"), width: "100%", marginBottom: 8 }} disabled={busy}
+            onClick={async () => {
+              setBusy("csv");
+              try {
+                const r = await fetch("/api/run", { method: "POST", body: JSON.stringify({ id: "crawl-lite" }) });
+                const j = await r.json();
+                mark("csv", j.ok, j.output);
+                if (j.ok) await refresh();
+              } catch (e) { mark("csv", false, String(e)); }
+              setBusy(null);
+            }}>
+            {busy === "csv" ? "Crawling (2-4 min)..." : "Crawl automatically (no Screaming Frog)"}
+          </button>
+          <div style={{ fontSize: 11, color: "#8a84a0", margin: "2px 0 6px" }}>or, for deeper crawls, the Screaming Frog export:</div>
           <input ref={fileRef} type="file" accept=".csv" style={{ fontSize: 12 }} onChange={(e) => e.target.files[0] && uploadCsv(e.target.files[0])} />
           <Out id="csv" />
         </div>
